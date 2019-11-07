@@ -1,0 +1,5 @@
+#+TITLE: Cosmological parameter estimation using Bayesian accelerated machine learning. 
+#+AUTHOR: Aleksandr Petrosyan
+
+* Cosmological aprameter estimation for the LCDM model. 
+
