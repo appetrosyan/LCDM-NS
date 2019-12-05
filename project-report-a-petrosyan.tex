@@ -1,0 +1,357 @@
+% Created 2019-12-03 Tue 20:08
+\documentclass[12pt]{article}
+\usepackage[autocite=superscript,style=numeric]{biblatex}
+\addbibresource{bibliography.bib}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{marvosym}
+\usepackage{multicol}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{hyperref}
+
+\usepackage[ruled,vlined]{algorithm2e}
+\usepackage[a4paper, total={7.5in, 10in}]{geometry}
+\tolerance=1000
+\author{Aleksandr Petrosyan}
+\date{\today}
+\title{Cosmological parameter estimation using Bayesian accelerated machine learning.}
+\hypersetup{
+  pdfkeywords={},
+  pdfsubject={},
+  pdfcreator={Emacs 25.2.2 (Org mode 8.2.10)}}
+\begin{document}
+\renewcommand*{\bibfont}{\small}
+
+\maketitle
+\abstract{In the era of precision cosmology, physicists use
+  astronomical data to extract precise measurements of our universe's
+  global properties. In order to do this, we develop of advanced
+  inference and machine learning algorithms.  Cosmological parameter
+  estimation is generally performed using Markov-Chain Monte-Carlo
+  algorithms, such as Metropolis-Hastings, Hamiltonian Monte-Carlo or
+  Nested sampling. This project will focus on extending recent work by
+  the astrophysics group on prior re-partitioning to allow nested
+  sampling to take the additional information usually provided to
+  other algorithms into account, for accelerating inference. Such an
+  extension for nested sampling would be highly desirable, and is the
+  basis for the following research project.
+
+}
+
+\vspace{0.9in}
+%\begin{multicols}{2}
+\section{Introduction}\label{sec:introduction}
+
+The standard cosmological model for the expansion and origin of the
+universe is the accepted $\Lambda$CDM\autocite{Condon2018} (Cold Dark
+Matter). It has six major parameters: \emph{physical baryon density
+  parameter; physical dark matter density parameter; the age of the
+  universe; scalar spectral index; curvature fluctuation amplitude;
+  and reionization optical depth}, which we will try to estimate. The
+data from which we estimate the parameters \autocite[See. ]{planck},
+often contain a plethora of other less-important data e.g.~the
+calibration of the equipment known, as nuisance parameters, in which
+case the parameter space can have more than 40 dimensions. The main
+issues with said nuisance parameters is that they cannot easily be
+decoupled from the cosmological parameters of $\Lambda$CDM.
+
+Among the possible approaches to parameter estimation, of particular
+interest is Bayesian inference, which allows us not only to estimate
+the likelihood of the parameters having particular values, but also
+determine the validity of our physical model. As an added bonus,
+Bayesian inference automatically accounts for nuisance parameters in
+its formalism, including them in the analysis, but excluding them from
+the end results.Bayesian inference in such a high dimensional
+parameter space is carried out using a form of Markov-Chain
+Monte-Carlo integration, the most common example being the
+Metropolis-Hastings algorithm\autocite{Metropolis}, or more recently
+Nested Sampling\autocite{polychord,skilling2006}.
+
+In the following sections we shall outline the basics of Bayesian
+parameter fitting (Section.~\ref{sec-2}), the basics of Nested
+Sampling (Section.~\ref{sec-4}) and outline the methods of Prior
+re-partitioning applied to Nested sampling (Section.~\ref{sec-4-2}).
+\goodbreak%
+\section{Bayesian parameter estimation}\label{sec-2}
+
+Let's assume that a scientific theory has a model for a process \(m \)
+which has \( n \) parameters \( \lbrace \theta \rbrace \) (we shall drop the braces
+from now on). The real world observations give us a some data \( D
+\). To verify the theory we're interested in the posterior:
+\( {\cal P} = P(\theta | D, M) \) and the evidence
+\( Z = P ( D | M ) \). Usually, the predictions of the model can
+straightforwardly give us two things: the prior
+\( \pi (\theta) = P (\theta | D)\) and the Likelihood
+\( L(\theta) = P ( D | \theta, M) \). These quantities are linked via Bayes'
+theorem: \[ Z {\cal P}(\theta) = L (\theta) \pi(\theta), \] which is a straightforward
+result, with profound implications
+\autocite[p.~31]{jeffreys2010scientific}.
+
+It is important to note the significance of \( Z
+\). Some\autocite[p.~32]{jeffreys2010scientific} regard it as a simple
+normalisation factor, and deem it completely irrelevant to our
+analysis, indeed even the name ``Evidence'' is, while agreed-upon, not
+standardised like the terms ``prior'' and ``posterior''. Of course
+it's an important factor determining the fitness of the $\Lambda$CDM model,
+and we need it just as much if not more than the posterior
+distribution.
+
+To evaluate the \emph{evidence}, we shall make use of its definition
+as a normalisation factor:
+
+\begin{equation}
+Z  = \int L (\theta) \pi (\theta) d \theta.
+\end{equation}
+
+For a completely new theory, determining the probability of each
+parameter given the model is difficult, so the prior is usually
+uniform within some
+constraints\autocite{skilling2006, polychord}. The probability of
+data, conditional on the data and the model is usually a Gaussian
+distribution, due to the central limit theorem.  Thus we can both
+estimate how well our model fits the data, i.e.~how certain are we
+that the universe is indeed $\Lambda$CDM and determine the distribution of
+the parameters.
+
+The above task is more computationally expensive thus the scientific
+community rarely if ever goes beyond simple approximate but
+computationally inexpensive parameter fitting algorithms. For example,
+most experimental results are quoted with a single symmetric
+uncertainty value (e.g.~\(a = 1.0 \pm 0.2 \)), and model suitability,
+if investigated at all, is done via the \( \chi^2 \)
+test\autocite{Pearson1900}, which makes further assumptions about the
+nature of experimental data distribution.
+
+In Section~\ref{sec-3}, we shall explore various approaches to
+performing full Bayesian inference.
+
+\section{Evaluating the evidence}\label{sec-3}
+
+\subsection{Full rasterisation}\label{sec-3-1}
+
+To find the evidence \( Z \) What we're doing is essentially
+evaluating a high-dimensional integral over the possible values of the
+parameters (Let's assume that all the physical quantities are
+normalised: \( \lbrace \theta \rbrace \in [0, 1] \)). Under such conditions, the integral
+can be approximated by the Riemann Sum, with higher accuracy of the
+integral as a result of a larger number of
+points.
+
+Needless to say that if we choose to rasterise with \( n \) points,
+the number of samples for \(D \) dimensional parameter space is
+\( n^{D} \). Thus these techniques are inefficient compared to Nested Sampling\autocite{polychord}.
+
+\subsection{Metropolis-Hastings and other forms of Markov-chain Monte-Carlo}\label{sec-3-2}
+
+These approaches are a form of rejection sampling, thus only a subset
+of points is used in the evaluation of the integral. Markov Chain
+Monte-Carlo algorithms also suffer from arbitrary halting
+criteria\autocite{Metropolis,Metropolis-hastings-gibbs}. For
+example, when simulating an Ising Spin array, the time taken to fully
+equilibrate the system near critical temperature is not easily
+predictable, and determining whether a system has equilibrated at
+later stages is simply not practical.\autocite{me-ising}
+
+Another drawback to MC-MC methods is that they're not easily made
+concurrent.\autocite{Metropolis-hastings-gibbs} In my previous work, I have
+shown that the multi-process scaling of such parallel implementations is
+sub-optimal, and a more significant speedup can be obtained simply by
+running several simulations as full POSIX processes in parallel.\autocite{me-ising}
+
+\subsection{The need for nested sampling}\label{sec-3-3}
+
+As we can see, all naive approaches brute force the multidimensional
+integral.  In other words, we may see a speedup by sampling from
+representative points, and avoiding other non-representative samples
+as much as possible.
+
+This was the basis for the paper due to John
+Skilling\autocite{skilling2006}, on a new machine learning technique, that
+allowed to minimise the number of so-called live points.
+
+\section{Nested sampling}\label{sec-4}
+
+There were multiple
+improvements\autocite{polychord,Feroz2009MultiNestAE,Higson2018DynamicNS}
+on the original algorithm, so we shall only present the ideas and
+avoid the unnecessary and obsolete details as much as possible.
+
+We want to accumulate a quantity called \emph{prior mass} (for reasons that
+will become clear soon), defined as:
+
+\begin{equation}\label{eq:prior-mass}
+X ( \lambda)  = \int_{L(\theta) > \lambda} \pi (\theta) d \theta,
+\end{equation}
+which is the cumulant prior mass covering all likelihood values
+greater than \( \lambda \). Note that increasing \( \lambda \) decreases the value
+for \( X( \lambda) \) from \(1\) to \(0\).
+
+By exploiting the existence of the inverse function
+\( L ( X ( \lambda) ) \equiv \lambda \), we can simplify the evidence to
+\begin{equation}
+Z = \int _0 ^1 L(X) dX.
+\end{equation}
+Thus by sampling randomly, given \(N\) points, we expect that the
+approximate value of the integral~\eqref{eq:prior-mass} is given by a
+Riemann sum:
+
+\begin{equation}
+  Z = \sum_i^{N^{2}} \frac{L_i}{N}.
+\end{equation}\cite[See][]{skilling2006}~for a more detailed explanation and example.
+
+Next we might be interested in the order of convergence of such a
+method, so we are interested in the order of the error terms.
+
+By using a more clever approximation for the
+integral\autocite{skilling2006} (e.g.~using a trapezoidal rule) we can
+show that the error falls as \( O ( N^2 ) \).
+
+
+\subsection{Basic algorithm}\label{sec-4-1}
+
+We start by taking \( m \) random samples from the distribution
+(i.e.~evaluating the likelihood for a single set of random physical
+parameter values). We shall refer to them as \emph{live points}.
+
+On each iteration, we take the point with the lowest likelihood and
+record it. Then we pick new values for each of the parameters
+according to some criteria, that have a higher likelihood than the
+old point. The old point now becomes a \emph{dead point} while the new
+value is added to the \emph{live points}.
+
+As a result, a human observing the set of live points would notice
+that the latter preferentially occupy areas of high
+likelihood. Moreover there will be a contour of constant likelihood
+passing through each of the points (dead and live) and the live points
+will necessarily occupy the contours of highest likelihood.
+
+Moreover, since we've picked points at random inside a \(D\)
+dimensional hyper-cube, the volumes delineated by the contours will
+correspond roughly to \( \frac{1}{m} \)-th of the total volume of the
+hyper-cube. This allows us to estimate the probabilities delineated by
+the contours and effectively evaluate the likelihood integral.
+
+Moreover this being an approximate method, we can also estimate the
+error within each probability and incorporate that uncertainty into
+the analysis.
+
+So bringing it all together we have the algorithm 1.
+\begin{algorithm}
+  \SetAlgoLined%
+\textbf{Start} with  $\lbrace\theta_1, \ldots , \theta_N\rbrace \in \text{prior}$;
+
+\textbf{initialise} $Z = 0, X_0 = 1$;
+
+\For{$i = 1, 2, \ldots ,$ \KwTo $j$}{%
+%
+\textbf{set} $L_i = $ lowest of current likelihood values,
+
+\textbf{set} $X_i = \exp(-i/N)$ (\emph{crude}) \tcc{or sample it to get uncertainty,}
+
+
+\textbf{set} $w_i = X_{i-1} - X_i$ (\emph{simple}) \tcc{\textbf{or} $(X_{i-1} - X_{i+1} )/2$ (\emph{trapezoidal}),}
+
+
+\textbf{increment} $Z$ \textbf{by} $L_i w_i$
+
+\textbf{replace} point of lowest likelihood \textbf{with} new one drawn from within $L(\theta) > L_i$, \tcc{in proportion to the prior $\pi(\theta)$.}}
+
+\textbf{increment} $Z$ \textbf{by} $N^{-1}$ ($L(\theta_1 ) + . . . + L(\theta_N )) X_j$.
+\caption{Nested Sampling. Credit\cite{skilling2006}}
+\end{algorithm}
+\goodbreak%
+
+\subsection{Improvements: Posterior re-partitioning}\label{sec-4-2}
+
+Looking at the algorithm\autocite{chen-ferroz-hobson} leads us to a
+few important conclusions. The shape of the prior matters, and as such
+if the prior and the posterior are the same, the algorithm should
+converge more rapidly, than with a flat prior.Moreover the prior is a
+function of what our parameters' definition. In other words a
+co-ordinate transformation can change the shape of the prior. Thus a
+clever choice of such a transformation of physical parameters
+\( \theta \) can result in a significant speedup.
+
+As to why it's called re-partitioning, because the true physical
+quantities of interest are really only dependent on the product
+\( L (\theta) \pi (\theta) \) and which is which (i.e.~where do we partition the
+likelihood from the prior) is only a matter of choice, thus we can
+easily come up with a more tractable form by moving the boundary ---
+\( \tilde{\pi} (\theta) \) as long as the product
+\( L (\theta ) \pi (\theta) = \tilde{L} (\theta) \tilde{\pi} (\theta) \) is the same.
+
+For example\autocite{chen-ferroz-hobson}, consider the following re-partitioning:
+
+\begin{eqnarray} 
+\tilde{\pi} (\theta) &=& \frac{\pi {(\theta)}^\beta }{Z_\pi (\beta)},\\
+\tilde{L} (\theta) &=&L(\theta) \pi {(\theta)}^{(1-\beta)} Z_\pi(\beta) ,
+\end{eqnarray}
+where $Z_{\pi}(\beta) = \int \pi {(\theta)}^{\beta} d\theta$. 
+
+In this particular case we expect a speedup due to the re-scaled prior
+that is allowed to change according to the distribution, but with a
+trade-off of adding another parameter to the fit. Of course, the
+larger the number of already considered parameters, the more
+favourable the trade-off.
+
+Additionally this particular re-partitioning scheme doesn't produce
+the expected result in the case where the prior has hard cutoffs.
+\goodbreak%
+\section{Goal of the project}\label{sec-5}
+
+Thus the project shall need to be preoccupied with the following three
+main avenues. First we shall aim to test Nested Sampling in
+application to parameters which were generated using a toy
+distribution and evaluating the effects of different choices of priors
+and parameter values.
+
+We shall then focus on attempting to improve the performance of said
+nested sampling, by considering other methods of re-partitioning:
+i.e.~attempting a similar trick on the posterior half of the Bayes'
+theorem.
+
+Accordingly we shall also investigate other re-partitioning
+schemes. In particular we shall consider cases where there are more
+parameters, and hard cutoffs, to cope with the limitations of the
+partitioning presented in~\autocite{chen-ferroz-hobson}.
+\goodbreak%
+More concretely I shall: 
+\begin{itemize}
+\item Run Polychord on data generated with an N-dimensional Correlated
+  Gaussian and uniform prior.
+\item Implement the same with a multivariate Gaussian prior, and check
+  that it is indeed faster than with a uniform prior.
+\item Investigate \emph{mixture-model} prior re-partitioning, i.e.~a
+  re-partitioning scheme where
+  \( \tilde{\pi} = \beta \pi + (1 - \beta ) \pi_\text{Gaussian}\)
+  
+\item Attempt to apply to real data from Planck\autocite{planck}.
+\end{itemize}
+
+Achieving all of the above will make the project at least a partial
+success. However, given enough time, and sufficient resources, there
+could be extra work that would be useful for this project to be a
+complete success.
+
+\goodbreak%
+\begin{itemize}
+\item Investigate applicability of other mixture models,\autocite{Higson2018DynamicNS}
+\item Investigate applicability of re-partitioning schemes with a higher
+  number of tuning parameters.
+\item Investigate the potential improvements arising from performing
+  said operations algorithmic at compile-time.
+\end{itemize}
+%\end{multicols}
+\printbibliography%
+\end{document}
+%  LocalWords:  dX eq
