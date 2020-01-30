@@ -1,7 +1,7 @@
 % Created 2019-12-03 Tue 20:08
-\documentclass[12pt]{article}
-\usepackage[autocite=superscript,style=numeric]{biblatex}
-\addbibresource{bibliography.bib}
+\documentclass[11pt, reprint]{revtex4-2}
+%\usepackage[autocite=superscript,style=numeric]{biblatex}
+%\addbibresource{bibliography.bib}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{fixltx2e}
@@ -14,7 +14,7 @@
 \usepackage{amsmath}
 \usepackage{textcomp}
 \usepackage{marvosym}
-\usepackage{multicol}
+%\usepackage{multicol}
 \usepackage{wasysym}
 \usepackage{amssymb}
 \usepackage{hyperref}
@@ -22,18 +22,22 @@
 \usepackage[ruled,vlined]{algorithm2e}
 \usepackage[a4paper, total={7.5in, 10in}]{geometry}
 \tolerance=1000
-\author{Aleksandr Petrosyan}
-\date{\today}
-\title{Cosmological parameter estimation using Bayesian accelerated machine learning.}
+
+
 \hypersetup{
   pdfkeywords={},
   pdfsubject={},
   pdfcreator={Emacs 25.2.2 (Org mode 8.2.10)}}
 \begin{document}
+
+\title{Cosmological parameter estimation using Bayesian accelerated machine learning.}
+\author{Aleksandr Petrosyan}
+\noaffiliation
+\date{\today}
 \renewcommand*{\bibfont}{\small}
 
-\maketitle
-\abstract{In the era of precision cosmology, physicists use
+
+\begin{abstract}In the era of precision cosmology, physicists use
   astronomical data to extract precise measurements of our universe's
   global properties. In order to do this, we develop of advanced
   inference and machine learning algorithms.  Cosmological parameter
@@ -45,20 +49,21 @@
   other algorithms into account, for accelerating inference. Such an
   extension for nested sampling would be highly desirable, and is the
   basis for the following research project.
+\end{abstract}
 
-}
+\maketitle
 
 \vspace{0.9in}
 %\begin{multicols}{2}
 \section{Introduction}\label{sec:introduction}
 
 The standard cosmological model for the expansion and origin of the
-universe is the accepted $\Lambda$CDM\autocite{Condon2018} (Cold Dark
+universe is the accepted $\Lambda$CDM\cite{Condon2018} (Cold Dark
 Matter). It has six major parameters: \emph{physical baryon density
   parameter; physical dark matter density parameter; the age of the
   universe; scalar spectral index; curvature fluctuation amplitude;
   and reionization optical depth}, which we will try to estimate. The
-data from which we estimate the parameters \autocite[See. ]{planck},
+data from which we estimate the parameters \cite[See. ]{planck},
 often contain a plethora of other less-important data e.g.~the
 calibration of the equipment known, as nuisance parameters, in which
 case the parameter space can have more than 40 dimensions. The main
@@ -74,8 +79,8 @@ its formalism, including them in the analysis, but excluding them from
 the end results.Bayesian inference in such a high dimensional
 parameter space is carried out using a form of Markov-Chain
 Monte-Carlo integration, the most common example being the
-Metropolis-Hastings algorithm\autocite{Metropolis}, or more recently
-Nested Sampling\autocite{polychord,skilling2006}.
+Metropolis-Hastings algorithm\cite{Metropolis}, or more recently
+Nested Sampling\cite{polychord,skilling2006}.
 
 In the following sections we shall outline the basics of Bayesian
 parameter fitting (Section.~\ref{sec-2}), the basics of Nested
@@ -95,10 +100,10 @@ straightforwardly give us two things: the prior
 \( L(\theta) = P ( D | \theta, M) \). These quantities are linked via Bayes'
 theorem: \[ Z {\cal P}(\theta) = L (\theta) \pi(\theta), \] which is a straightforward
 result, with profound implications
-\autocite[p.~31]{jeffreys2010scientific}.
+\cite[p.~31]{jeffreys2010scientific}.
 
 It is important to note the significance of \( Z
-\). Some\autocite[p.~32]{jeffreys2010scientific} regard it as a simple
+\). Some\cite[p.~32]{jeffreys2010scientific} regard it as a simple
 normalisation factor, and deem it completely irrelevant to our
 analysis, indeed even the name ``Evidence'' is, while agreed-upon, not
 standardised like the terms ``prior'' and ``posterior''. Of course
@@ -116,7 +121,7 @@ Z  = \int L (\theta) \pi (\theta) d \theta.
 For a completely new theory, determining the probability of each
 parameter given the model is difficult, so the prior is usually
 uniform within some
-constraints\autocite{skilling2006, polychord}. The probability of
+constraints\cite{skilling2006, polychord}. The probability of
 data, conditional on the data and the model is usually a Gaussian
 distribution, due to the central limit theorem.  Thus we can both
 estimate how well our model fits the data, i.e.~how certain are we
@@ -129,7 +134,7 @@ computationally inexpensive parameter fitting algorithms. For example,
 most experimental results are quoted with a single symmetric
 uncertainty value (e.g.~\(a = 1.0 \pm 0.2 \)), and model suitability,
 if investigated at all, is done via the \( \chi^2 \)
-test\autocite{Pearson1900}, which makes further assumptions about the
+test\cite{Pearson1900}, which makes further assumptions about the
 nature of experimental data distribution.
 
 In Section~\ref{sec-3}, we shall explore various approaches to
@@ -149,24 +154,24 @@ points.
 
 Needless to say that if we choose to rasterise with \( n \) points,
 the number of samples for \(D \) dimensional parameter space is
-\( n^{D} \). Thus these techniques are inefficient compared to Nested Sampling\autocite{polychord}.
+\( n^{D} \). Thus these techniques are inefficient compared to Nested Sampling\cite{polychord}.
 
 \subsection{Metropolis-Hastings and other forms of Markov-chain Monte-Carlo}\label{sec-3-2}
 
 These approaches are a form of rejection sampling, thus only a subset
 of points is used in the evaluation of the integral. Markov Chain
 Monte-Carlo algorithms also suffer from arbitrary halting
-criteria\autocite{Metropolis,Metropolis-hastings-gibbs}. For
+criteria\cite{Metropolis,Metropolis-hastings-gibbs}. For
 example, when simulating an Ising Spin array, the time taken to fully
 equilibrate the system near critical temperature is not easily
 predictable, and determining whether a system has equilibrated at
-later stages is simply not practical.\autocite{me-ising}
+later stages is simply not practical.\cite{me-ising}
 
 Another drawback to MC-MC methods is that they're not easily made
-concurrent.\autocite{Metropolis-hastings-gibbs} In my previous work, I have
+concurrent.\cite{Metropolis-hastings-gibbs} In my previous work, I have
 shown that the multi-process scaling of such parallel implementations is
 sub-optimal, and a more significant speedup can be obtained simply by
-running several simulations as full POSIX processes in parallel.\autocite{me-ising}
+running several simulations as full POSIX processes in parallel.\cite{me-ising}
 
 \subsection{The need for nested sampling}\label{sec-3-3}
 
@@ -176,13 +181,13 @@ representative points, and avoiding other non-representative samples
 as much as possible.
 
 This was the basis for the paper due to John
-Skilling\autocite{skilling2006}, on a new machine learning technique, that
+Skilling\cite{skilling2006}, on a new machine learning technique, that
 allowed to minimise the number of so-called live points.
 
 \section{Nested sampling}\label{sec-4}
 
 There were multiple
-improvements\autocite{polychord,Feroz2009MultiNestAE,Higson2018DynamicNS}
+improvements\cite{polychord,Feroz2009MultiNestAE,Higson2018DynamicNS}
 on the original algorithm, so we shall only present the ideas and
 avoid the unnecessary and obsolete details as much as possible.
 
@@ -213,7 +218,7 @@ Next we might be interested in the order of convergence of such a
 method, so we are interested in the order of the error terms.
 
 By using a more clever approximation for the
-integral\autocite{skilling2006} (e.g.~using a trapezoidal rule) we can
+integral\cite{skilling2006} (e.g.~using a trapezoidal rule) we can
 show that the error falls as \( O ( N^2 ) \).
 
 
@@ -273,7 +278,7 @@ So bringing it all together we have the algorithm 1.
 
 \subsection{Improvements: Posterior re-partitioning}\label{sec-4-2}
 
-Looking at the algorithm\autocite{chen-ferroz-hobson} leads us to a
+Looking at the algorithm\cite{chen-ferroz-hobson} leads us to a
 few important conclusions. The shape of the prior matters, and as such
 if the prior and the posterior are the same, the algorithm should
 converge more rapidly, than with a flat prior.Moreover the prior is a
@@ -290,7 +295,7 @@ easily come up with a more tractable form by moving the boundary ---
 \( \tilde{\pi} (\theta) \) as long as the product
 \( L (\theta ) \pi (\theta) = \tilde{L} (\theta) \tilde{\pi} (\theta) \) is the same.
 
-For example\autocite{chen-ferroz-hobson}, consider the following re-partitioning:
+For example\cite{chen-ferroz-hobson}, consider the following re-partitioning:
 
 \begin{eqnarray} 
 \tilde{\pi} (\theta) &=& \frac{\pi {(\theta)}^\beta }{Z_\pi (\beta)},\\
@@ -323,7 +328,7 @@ theorem.
 Accordingly we shall also investigate other re-partitioning
 schemes. In particular we shall consider cases where there are more
 parameters, and hard cutoffs, to cope with the limitations of the
-partitioning presented in~\autocite{chen-ferroz-hobson}.
+partitioning presented in~\cite{chen-ferroz-hobson}.
 \goodbreak%
 More concretely I shall: 
 \begin{itemize}
@@ -335,7 +340,7 @@ More concretely I shall:
   re-partitioning scheme where
   \( \tilde{\pi} = \beta \pi + (1 - \beta ) \pi_\text{Gaussian}\)
   
-\item Attempt to apply to real data from Planck\autocite{planck}.
+\item Attempt to apply to real data from Planck\cite{planck}.
 \end{itemize}
 
 Achieving all of the above will make the project at least a partial
@@ -345,13 +350,14 @@ complete success.
 
 \goodbreak%
 \begin{itemize}
-\item Investigate applicability of other mixture models,\autocite{Higson2018DynamicNS}
+\item Investigate applicability of other mixture models,\cite{Higson2018DynamicNS}
 \item Investigate applicability of re-partitioning schemes with a higher
   number of tuning parameters.
 \item Investigate the potential improvements arising from performing
   said operations algorithmic at compile-time.
 \end{itemize}
-%\end{multicols}
-\printbibliography%
+% \end{multicols}
+\bibliography{bibliography}
+%\printbibliography%
 \end{document}
 %  LocalWords:  dX eq
