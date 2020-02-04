@@ -6,15 +6,13 @@ import anesthetic
 import matplotlib.pyplot as plt
 
 
-
 def gaussian_likelihood(theta, mu, sig):
-    # _, norm = numpy.linalg.slogdet(2 * numpy.pi * sigma)/2
     """ Simple Gaussian Likelihood. """
     invSig = numpy.linalg.inv(sig)
     norm = numpy.linalg.slogdet(2*numpy.pi*sig)[1]/2
     logL = - norm - (theta - mu) @ invSig @ (theta - mu) / 2
 
-    #logL -= stuff that is related to the beta parameter
+    # logL -= stuff that is related to the beta parameter
     return logL, []
 
 
@@ -38,16 +36,8 @@ def uniform_prior_with_ranges(cube: numpy.ndarray, scale: numpy.ndarray):
     out : scaled parameter values; theta
 
     """
-    if not isinstance(cube, numpy.ndarray):
-        cube = numpy.array(cube)
-    if not isinstance(scale, numpy.ndarray):
-        scale = numpy.array(scale)
     out = scale[:, 0] + cube[:]*(scale[:, 1] - scale[:, 0])
     return out
-
-
-
-
 
 
 def exec_polychord(root_name: str, m, s, likelihood,
@@ -96,7 +86,6 @@ def find_samples(root_name: str, m, s, likelihood,
                                         settings.file_root)
 
 
-
 # Simple run
 # ----------------------------------------------------------------------
 # params = numpy.array([0, 0])
@@ -125,34 +114,35 @@ def find_samples(root_name: str, m, s, likelihood,
 
 # Way more params
 # ----------------------------------------------------------------------
+
 planck_ranges = numpy.array(
-            [[0.019, 0.025],
-             [0.095, 0.145],
-             [1.03, 1.05],
-             [0.01, 0.4],
-             [2.5, 3.7],
-             [0.885, 1.04],
-             [0.9, 1.1],
-             [0, 200],
-             [0, 1],
-             [0, 10],
-             [0, 400],
-             [0, 400],
-             [0, 400],
-             [0, 400],
-             [0, 10],
-             [0, 50],
-             [0, 50],
-             [0, 100],
-             [0, 400],
-             [0, 10],
-             [0, 10],
-             [0, 10],
-             [0, 10],
-             [0, 10],
-             [0, 10],
-             [0, 3],
-             [0, 3]])
+    [[0.019, 0.025],
+     [0.095, 0.145],
+     [1.03, 1.05],
+     [0.01, 0.4],
+     [2.5, 3.7],
+     [0.885, 1.04],
+     [0.9, 1.1],
+     [0, 200],
+     [0, 1],
+     [0, 10],
+     [0, 400],
+     [0, 400],
+     [0, 400],
+     [0, 400],
+     [0, 10],
+     [0, 50],
+     [0, 50],
+     [0, 100],
+     [0, 400],
+     [0, 10],
+     [0, 10],
+     [0, 10],
+     [0, 10],
+     [0, 10],
+     [0, 10],
+     [0, 3],
+     [0, 3]])
 
 
 samples = anesthetic.NestedSamples(root='./data.1908.09139/lcdm/chains/planck')
@@ -160,7 +150,7 @@ fig, ax = samples.plot_2d(['logA', 'ns'])
 # plt.show()
 
 
-
+# params = samples.columns[:27]
 params = samples.columns[:27]
 Sig = samples[params].cov().values
 mu = samples[params].mean().values
@@ -175,15 +165,16 @@ args = {
     'likelihood': lambda x: gaussian_likelihood(x, mu, Sig),
     # 'renew_plots': True,
     'renew_plots': False,
-    'nLive': 20,
+    'nLive': 2,
     'prior': lambda x: uniform_prior_with_ranges(x, planck_ranges),
     'ax': ax
 }
 exec_polychord(**args)
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
-plt.title(r'Comparison of different runs of PolyChord on $\Lambda$CDM data from Planck.')
-# newSamples = anesthetic.NestedSamples(root='./chains/planck') 
+plt.title(
+    r'Comparison of different runs of PolyChord on $\Lambda$CDM data from Planck.')
+# newSamples = anesthetic.NestedSamples(root='./chains/planck')
 # newSamples.plot_2d(ax)
 
 # plt.show()
