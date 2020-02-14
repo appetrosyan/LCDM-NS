@@ -1,5 +1,6 @@
 #+TITLE: Project Diary for "Cosmological parameter estimation using Bayesian accelerated Machine learning"
 #+AUTHOR: Aleksandr Petrosyan
+#+BIBLIOGRAPHY: bibliography
 * Michaelmas Term
 
   Doing some research about the subject. 
@@ -23,5 +24,20 @@
 ** How does nested sampling work
 
 *** Skilling's paper
+
+	\cite{skilling2006}
 	
-	Nested Sampling takes the form of a 
+	Nested Sampling is a machine learning technique that allows to do Bayesian parameter estimation. 
+
+	Fitting a line to data is an example of a parameter fitting model. 
+
+	Set \( 
+	\chi^{2} \triangleq \sum_{i} \left(\frac{y_{i} - f(x_{i}, \theta)}{\sigma_{i}} \right)
+	\). We need to ask a question, how likely is the data observed, given that the model is true, and the Model parameters have the given values. The probability is usually given by a Gaussian (or normal distribution). 
+	
+	\[ 
+	L = \frac{1}{N} \exp{\left[ - \chi^{2}\right]}
+	\]
+	
+	
+	
