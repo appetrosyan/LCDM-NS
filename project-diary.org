@@ -1,0 +1,27 @@
+#+TITLE: Project Diary for "Cosmological parameter estimation using Bayesian accelerated Machine learning"
+#+AUTHOR: Aleksandr Petrosyan
+* Michaelmas Term
+
+  Doing some research about the subject. 
+
+  
+** Terminology
+
+   Prior - \(P(\theta | M)\)
+   Likelihood - \(P(M, \theta | Data)\)
+   
+   Posterior - \(P(\theta | Data)\)
+   Evidence - \(P(Model | Data)\)
+
+   Bayes' theorem says that 
+
+   \[Likelihood \times Prior = Posterior \times Evidence\]
+
+   So can use this to find the parameter values of a model, + the likelihood that the model fits the data at all. 
+
+   
+** How does nested sampling work
+
+*** Skilling's paper
+	
+	Nested Sampling takes the form of a 
