@@ -114,11 +114,3 @@ bench_results_lasenby = bench(pypolychord.run_polychord,
 
 # [27.785404920578003, 33.215359926223755, 30.353167057037354,
 # 30.423803091049194, 32.46933579444885, 30.452725172042847]
-
-
-def temperature_repart_likelihood(theta):
-    """\tilde{\pi} = \frac{\pi^\beta}{Z_\pi}"""
-    beta = theta[-1:].item()
-    tau = theta[:-1]
-    x =
-    return numpy.append(x, beta)
