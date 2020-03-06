@@ -1,8 +1,10 @@
 import matplotlib.pyplot as plt
 from polychord_model import Model
+from power_posterior import PowerPosteriorPrior
 from uniform import BoxUniformModel
+from resizeableUniform import ResizeableUniformPrior
 from pypolychord.settings import PolyChordSettings
-from numpy import array
+from numpy import array, concatenate, lcm
 import fractions
 
 
@@ -24,9 +26,7 @@ class MixtureModel(Model):
         else:
             self.nDerived = models[0].nDerived
 
-        self._eff_nDims = self.nDims + \
-            sum(map(lambda x: x.eff_nDims() - x.nDims, models)) + \
-            len(self.models)
+        self._eff_nDims = self.nDims + len(self.models)
 
         if settings is None:
             self.settings = PolyChordSettings(self.eff_nDims(), self.nDerived)
@@ -37,33 +37,81 @@ class MixtureModel(Model):
     def eff_nDims(self):
         return self._eff_nDims
 
+    def _unpack(self, theta):
+        physical_params = theta[:self.nDims]
+        choice_probabilities = theta[self.nDims:-1]
+        index = theta[-1:].item()
+        return physical_params, choice_probabilities, index
+
     def loglikelihood(self, theta):
-        t = theta[:self.nDims]  # All physical-like parameters,
-        #  they can have repartitioning parameters in them
-        b = theta[self.nDims:-1]  # Partition choice probabilities
-        m = theta[-1:].item()     # Partition choice
-        print(theta, t, b, m)
-        rationals = list(map(lambda x: fractions.Fraction(x), b))
-        print(rationals)
-        fiduciary = hash(tuple(theta))
-        return 0, []
+        t, _, m = self._unpack(theta)
+        _current_model = self.models[int(m)]
+        _nDims = _current_model.eff_nDims()
+        logl, phi = _current_model.loglikelihood(t[:_nDims])
+        return logl, phi
 
     def prior_inversion_function(self, hypercube):
-        pass
+        t, b, _ = self._unpack(hypercube)
+        norm = b.sum() if b.sum() != 0 else 1
+        ps = b/norm
+        index = 0
+        h = hash(tuple(t)) / (2**63-1)
+        for p in ps:
+            if h > p:
+                break
+            index += 1
+        _nDims = self.models[index].eff_nDims()
+        cube, cube_ = t[:_nDims], t[_nDims:]
+        theta = self.models[index].prior_inversion_function(cube)
+        return concatenate([theta, cube_, b, [index]])
+
+    def _test_prior(self):
+        for m in self.models:
+            m._test_prior()
+        super()._test_prior()
+
+    def _test_loglike(self):
+        for m in self.models:
+            m._test_loglike()
+        super()._test_loglike()
 
 
 def allElementsIdentical(lst):
     return not lst or lst.count(lst[0]) == len(lst)
 
 
-mdl1 = BoxUniformModel(
-    (-2000, 2000), array([1, 2, 3]), array([[1, 0, 0], [0, 1, 0], [0, 0, 1]]))
-mdl2 = BoxUniformModel(
-    (-2000, 2000), array([1, 2]), array([[1, 0], [0, 1]]))
+bounds = (-4*10**7, 4*10**7)
+mu = array([1, 2, 3])
+cov = array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
+
+mdl1 = BoxUniformModel(bounds, mu, cov)
+
+mdl4 = ResizeableUniformPrior(bounds, mu, cov)
+
+mdl5 = PowerPosteriorPrior(bounds, mu, cov)
 
 # try:
 #     mix = MixtureModel([mdl1, mdl2])
 # except ValueError as e:
 #     print(e)
 
-mix = MixtureModel([mdl1, mdl1, mdl1])
+# mix = MixtureModel([mdl1, mdl1, mdl1])
+mix = MixtureModel([mdl1, mdl4, mdl5])
+kwargs = {
+    'noResume': True,
+    'nLive': 80
+}
+qm, samples = mix.exec_polychord(**kwargs)
+qr, repart = mdl4.exec_polychord(**kwargs)
+qp, power = mdl5.exec_polychord(**kwargs)
+q0, reference = mdl1.exec_polychord(**kwargs)
+plt.hist(samples.logZ(1000), label='mixture', alpha=0.7)
+plt.hist(repart.logZ(1000), label='repart', alpha=0.7)
+plt.hist(power.logZ(1000), label='power', alpha=0.7)
+plt.hist(reference.logZ(1000), label='reference', alpha=0.7)
+plt.legend()
+plt.show(block=False)
+anss = [qm, qr, qp, q0]
+
+for x in anss:
+    print('{:.2e}'.format(x.nlike))

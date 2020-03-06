@@ -34,7 +34,7 @@ onto the real parameter space."""
             raise ValueError(
                 "Prior has wrong dimensions: {} vs {} ".format(_nDims, self.eff_nDims()))
 
-    def exec_polychord(self, verbosity=0, file_root=None, noResume=False):
+    def exec_polychord(self, verbosity=0, file_root=None, noResume=False, nLive=175):
         self._test_loglike()
         self._test_prior()
         _settings = copy.deepcopy(self.settings)
@@ -43,6 +43,7 @@ onto the real parameter space."""
             _settings.file_root = file_root
         if noResume:
             _settings.read_resume = False
+        _settings.nlive = nLive
         output = run_polychord(self.loglikelihood, self.eff_nDims(), self.nDerived,
                                _settings, self.prior_inversion_function)
         samples = NestedSamples(

@@ -42,12 +42,3 @@ class PowerPosteriorPrior(ParameterCovarianceModel):
 
     def eff_nDims(self):
         return self.nDims + 1
-
-
-_bounds = (-20, 20)
-_mu = array([1, 2, 3])
-_cov = array([[1, 0, 0],
-              [0, 1, 0],
-              [0, 0, 1]])
-_mdl = PowerPosteriorPrior(_bounds, _mu, _cov)
-_mdl.exec_polychord(noResume=True)
