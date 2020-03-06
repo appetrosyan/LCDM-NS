@@ -1,6 +1,7 @@
 #+TITLE: Project Diary for "Cosmological parameter estimation using Bayesian accelerated Machine learning"
 #+AUTHOR: Aleksandr Petrosyan
 #+BIBLIOGRAPHY: bibliography
+#+STARTUP: inlineimages
 * Michaelmas Term
 
   Doing some research about the subject. 
@@ -169,7 +170,11 @@ much more straightforward, and captures the essence of the method.
 
    Polychord is a nested sampling program that uses directional slicing, which is not (citation needed) a form of rejection sampling. 
 
-   To run polychord one needs to do three things: define a `settings' variable, which needs the number of dimesnions with which we're working, (very procedural, probably a consequence of fortran-centric implementation). 
+   To run polychord one needs to do three things: 
+
+** =settings= 
+
+   which needs the number of dimesnions with which we're working, (very procedural, probably a consequence of fortran-centric implementation).
 
    The Settings have information about the verbosity of the system.
 
@@ -178,10 +183,234 @@ much more straightforward, and captures the essence of the method.
    #+end_src
    seems to be a good default. 
 
-   Polychord can resume the older run, if instructed (rather by  default), 
+   Polychord can resume the older run, if instructed (rather by  default), so in order to have clean bench-marking do 
+
+   #+begin_src python
+	 settings.read_resume=False
+   #+end_src
+
+   To control running-time vs precision trade-off, use 
+
+   #+begin_src python
+	 settings.nlive=175
+   #+end_src
+   
+   Changing it to a lower value makes the program run faster. 
+
+   Another way to control termination is the 
+
+   #+begin_src python
+	 settings.precision_target=0.1
+   #+end_src
+
+   But we should normally not tinker with it. 
+
+** logLikelihood
+
+   This is essentially a \( \chi^2\), which represents the probability of our data, given the model and the parameter values. 
+
+   We need to define it for each model. Ideally what it needs to return is the normalised probability, but not giving it the proper normalisation doesn't seem to affect the run-time, only the result. 
+
+** Prior
+
+   This is a weird function. What this is called, probably has nothing to do with what it actually is: it's taking a point in a unit hypercube and maps it onto the real \( \theta\) values. 
+
+   This function is where we can get most of our performance uplift. 
+
+   Ideally assuming that the /real/ prior is the posterior the algorithm should converge the fastest. This should however affect the loglikelihood calls, because we're re-scaling the space. 
+
+   I **think** that this simply means that the absolute value of the **loglikelihood** is **not a meaningful** number. 
+
    
 ** Approaches to modelling systems. 
 <2020-01-17 Fri>
    One way to model all of our systems is by looking at the \( \chi^2\) and dealing with generated data. While this is close to what the system might actually do, this is not itself a good solution, it's slow and it requires extra computations in generating the data with the properties that we need. 
 
-   Instead we might simply treat the system as if it was already diagonalised in the model parameter space. So if our model 
+   Instead we might simply treat the system as if it was already diagonalised in the model parameter space. So if our model has 
+
+\begin{equation}
+  \mu =
+  \begin{pmatrix}
+    \mu_{0}\\
+    \mu_{1}\\
+    \vdots\\
+    \mu_{n}
+  \end{pmatrix}
+\end{equation}
+ 
+and 
+
+\begin{equation}
+  G =
+  \begin{pmatrix}
+    \sigma_{1}^2 & \sigma_{12}^2 & \cdots & \sigma_{1n}^2\\
+    \vdots & \ddots &  \vdots & \vdots \\
+     \sigma_{n1}^2 & \sigma_{n2}^2 & \cdots & \sigma_{n}^2
+  \end{pmatrix}
+\end{equation}
+
+which is itself a gaussian assumption, we get the following: as our loglikelihood
+
+\begin{equation}
+  \ln {\cal {L}}  = - N - (\theta - \mu)^{T}G^{-1}(\theta-\mu)
+\end{equation}
+
+where \( N \) can be found by integrating a multivariate Gaussian. See handout for Phase Transitions: 
+
+\begin{equation}
+  N = \ln \det |2\pi G |
+\end{equation}
+
+this can be evaluated in one fell swoop using 
+
+#+begin_src python
+numpy.linalg.slogdet(2*pi*G)
+#+end_src
+
+This allows us to do calculations in a fraction of the time. 
+
+
+** Comparison of runs. <2020-01-24 Fri>
+
+   Planck data can be downloaded from (see references), and using the following constraints, we can compute the misfit between data. 
+
+
+   [[../LCDM-NS/toy-models/1/Comparison of run with uniform prior and paper.pdf]]
+
+   
+   This shows profound agreement, usingThe following constraints on the parameters. 
+
+   #+begin_src python
+	 planck_ranges = numpy.array(
+		 [[0.019, 0.025],
+		  [0.095, 0.145],
+		  [1.03, 1.05],
+		  [0.01, 0.4],
+		  [2.5, 3.7],
+		  [0.885, 1.04],
+		  [0.9, 1.1],
+		  [0, 200],
+		  [0, 1],
+		  [0, 10],
+		  [0, 400],
+		  [0, 400],
+		  [0, 400],
+		  [0, 400],
+		  [0, 10],
+		  [0, 50],
+		  [0, 50],
+		  [0, 100],
+		  [0, 400],
+		  [0, 10],
+		  [0, 10],
+		  [0, 10],
+		  [0, 10],
+		  [0, 10],
+		  [0, 10],
+		  [0, 3],
+		  [0, 3]])
+
+
+	 samples = anesthetic.NestedSamples(root='./data.1908.09139/lcdm/chains/planck')
+	 fig, ax = samples.plot_2d(['logA', 'ns'])
+	 # plt.show()
+
+
+	 # params = samples.columns[:27]
+	 params = samples.columns[:27]
+	 Sig = samples[params].cov().values
+	 mu = samples[params].mean().values
+	 nDims = len(mu)
+
+	 # Run of the original
+
+	 args = {
+		 'root_name': 'planck',
+		 'm': mu,
+		 's': Sig,
+		 'likelihood': lambda x: gaussian_likelihood(x, mu, Sig),
+		 # 'renew_plots': True,
+		 'renew_plots': False,
+		 'nLive': 2,
+		 'prior': lambda x: uniform_prior_with_ranges(x, planck_ranges),
+		 'ax': ax
+	 }
+	 exec_polychord(**args)
+
+     ... 
+	 newSamples = anesthetic.NestedSamples(root='./chains/planck')
+	 newSamples.plot_2d(ax)
+
+	 plt.show()
+	 fig = plt.figure()
+   #+end_src
+
+* Automated Power Posterior Repartitioning. <2020-01-24 Fri>
+
+  Looking at [[https://arxiv.org/pdf/1908.04655.pdf]] we can see that one can get better convergence if we use something called the Automated posterior repartitioning. 
+
+  We start with a Gaussian prior. 
+
+  \begin{equation}
+	\pi(\theta) = G(\mu, \sigma) (\theta)
+  \end{equation}
+
+  We then introduce an extra parameter into our system: 
+
+  \begin{equation}
+	\tilde{\theta} = \begin{pmatrix}
+	  \theta_{1}\\
+	  \downarrow\\
+	  \theta_{n}\\
+	  \beta
+	\end{pmatrix}
+  \end{equation}
+
+  We then use this parameter to rescale the prior that we originally had: 
+
+  \begin{equation}
+	\tilde{\pi}(\tilde{\theta}}) = \frac{{G(\mu, \sigma)(\theta)}^\beta}{Z_\pi(\beta)}
+  \end{equation}
+
+  And normalise it to one Having done that we need to keep the posterior the same, so we need to rescale (citation needed) the loglikelihood to account for this change. 
+
+** When, how and why do repartitioning. <2020-02-19 Wed>
+
+   After multiple experiments I arrived at the following. 
+
+   Running PolyChord with a Gaussian is **not the same** as what we want to accomplish. 
+
+   When we consider two different priors, a Uniform from \((a,b)^\otimes n\) and a Gaussian given by an \(n\times n\) matrix \( \sigma \).  
+
+   The histogram of the loglikelihood calls and their results will be different, it will differ due to the /effective volume/ which each of those will occupy. 
+
+   Naturally a Gaussian, even if it has the same effective volume cannot simultaneously give the same evidence and the same Posterior. 
+
+   So we can ask two kinds of questions:
+
+   a) What is the Posterior given the prior that has a different volume. 
+
+   In this case the loglikelihood calls will cluster around different values. This is a legitimate question to ask, but it requires more information. 
+
+   If we take a system where we don't have the extra information about the location of the posterior peaks and their shape, and plug in a prior that does, we're biasing the system, and effectively /fudging/ the answer. This can in some cases be useful, but it's not quite what the project aims to do. 
+
+   So instead of asking what would our answer be with a different prior, we ask a different question. What would our answer be if our system was biased to picke the values that /suspect/ are the correct posterior values, without that affecting the posterior distribution and injecting extra information that we don't have/ can't quantify. 
+
+   This is a philosophical issue. Intuitively, if we have the extra information it /must/ be reflected in the prior. It can't otherwise. In fact by biasing the system, even if we repartition the combination \( {\cal L } \pi \) we can still end up with a biased and therefore useless result. 
+
+   In fact, my experiments clearly show this; if the Prior corresponding to /a/ Gaussian which is not the same as the posterior (has a different value of the mean), it can result in the algorithm terminating and generating a completely false posterior. 
+
+   Buy doing repartitioning we allow our guess to be wrong, without that affecting the outcomes: posterior and evidence. 
+
+   
+** Correlated and Uncorrelated Gaussian:<2020-02-03 Mon>
+
+
+   Knowing that the parameter covariance matrix, is usually positive defininte, one can argue that the question of whether or not the parameters in the model are correlated, or completely uncorrelated (i.e. each has a single standard deviation value) is moot. 
+
+   We can always perform a linear operation that diagonalises the parameter covariance matrix, and what the algorithm needs to do is only to work with the uncorrelated Gaussians. 
+
+   That of course is true, but some repartitioning schemes are more sensitive to this fact, and can only work after the coordinate transformation has been performed, which itself adds to the complexity. 
+
+
+   Other algorithms are more capable of doing this properly. 
