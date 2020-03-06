@@ -55,7 +55,7 @@ class MixtureModel(Model):
         norm = b.sum() if b.sum() != 0 else 1
         ps = b/norm
         index = 0
-        h = hash(tuple(t)) / (2**63-1)
+        h = abs(hash(tuple(t))) / (2**63-1)
         for p in ps:
             if h > p:
                 break
