@@ -46,9 +46,6 @@ def log_zed(beta):
             return numpy.log(erf(arg2) - erf(arg1)) - numpy.log(2)
 
 
-1
-
-
 def prior(cube):
     x = cube[:-1]
     beta = cube[-1:].item()

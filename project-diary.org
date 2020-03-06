@@ -163,3 +163,25 @@ much more straightforward, and captures the essence of the method.
 	 
 	 
 	 
+* Lent Term
+
+** Polychord <2020-01-10 Fri>
+
+   Polychord is a nested sampling program that uses directional slicing, which is not (citation needed) a form of rejection sampling. 
+
+   To run polychord one needs to do three things: define a `settings' variable, which needs the number of dimesnions with which we're working, (very procedural, probably a consequence of fortran-centric implementation). 
+
+   The Settings have information about the verbosity of the system.
+
+   #+begin_src ipython 
+	 settings.feedback = 0
+   #+end_src
+   seems to be a good default. 
+
+   Polychord can resume the older run, if instructed (rather by  default), 
+   
+** Approaches to modelling systems. 
+<2020-01-17 Fri>
+   One way to model all of our systems is by looking at the \( \chi^2\) and dealing with generated data. While this is close to what the system might actually do, this is not itself a good solution, it's slow and it requires extra computations in generating the data with the properties that we need. 
+
+   Instead we might simply treat the system as if it was already diagonalised in the model parameter space. So if our model 
