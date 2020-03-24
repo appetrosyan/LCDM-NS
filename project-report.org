@@ -1,0 +1,103 @@
+#+TITLE: Cosmological parameter estimation using Bayesian accelerated machine learning
+
+#+AUTHOR: William J. Handley, Aleksandr Petrosyan
+#+LaTeX_CLASS: mnras
+#+LATEX_HEADER: \usepackage{natbib}
+#+OPTIONS: toc:nil 
+#+BIBLIOGRAPHY: bibliography
+
+
+
+
+\begin{abstract}
+TODO
+\end{abstract}
+
+* Introduction
+
+  The standard model of the universe and its evolution in modern
+  cosmology is the accepted \(\Lambda\)CDM model \citep{condon2018},
+  so named after the main components of the universe according to
+  it. It has six major parameters: physical baryon density parameter;
+  physical dark matter density parameter; the age of the universe;
+  scalar spectral index; curvature fluctuation amplitude; and
+  reionization optical depth. It is the task of the present study to
+  evaluate how well does \(\Lambda\)CDM agree with observations from
+  the Planck mission \citep{planck}, as well as provide estimates for
+  the main parameters. It is also our goal to find methods for
+  accelerating said process. In this section we shall describe the
+  main approaches one may take to answering these questions, as well
+  as refinements made to them.
+
+  The problem of reconciling theoretical predictions with experimental
+  observations is the fundamental underpinning of any modern science,
+  be it Physics, or Biology. The methods and the general statistical
+  frameworks used for such reconciliation have changed almost as much
+  as the sciences themselves. Indeed, while a simple qualitative ``all
+  objects in vacuo accelerate at a rate independent of their mass'',
+  may have been sufficient for Galileo, modern problems necessitate
+  modern solutions. Although the slightly more informative ``the
+  acceleration of free fall was measured \( g = 9.81 \pm 0.01\) is an
+  improvement, it leaves much to be desired. For example, we assume
+  that the distribution of measured values is symmetrical. This may
+  very well be the case for a pendulum, with a crude stopwatch and a
+  student with bad reaction times, but it is not generally true.
+
+  Enter Bayesian inference. It is based on the mathematical result
+  obtained by \cite{1763}, and was refined over the
+  following two centuries. This approach has proven quite fruitful in
+  computational problems \citep{Wolpert2004}, particularly in Machine
+  learning, and is slowly making its way into physics, a field
+  traditionally dominated by frequentist statistics. Without going
+  into too much detail for the reasons behind Bayesian probability's
+  success, we should point out that it is able to reproduce the
+  results of traditional inference techniques, while putting them into
+  a more general framework, making the delineations of objectivity and
+  subjectivity explicit. 
+
+  To describe the key advantages of the Bayesian inference method, it
+  is useful to define some terminology used presently in the field.
+  By performing a full Bayesian analysis we can find quantitative
+  answers to questions that normally could only be answered
+  qualitatively. For example: how well does a model fit the data
+  (so-called /evidence/), or how are the model parameters distributed
+  (so-called /posterior/ distribution)? Moreover, we have a neat way
+  of incorporating our knowledge from other sources into the analysis,
+  the so-called /prior/. Lastly, of major importance for cosmology is
+  the ability to separate parameters into groups: slowly vs. quickly
+  varying parameters, and important vs. /nuisance parameters/. The
+  latter kind are parameters that are part of the physical model of
+  the experiment, but not necessarily of the underlying physical
+  theory, e.g. calibration of mirrors or the Frequency response
+  characteristics of the microwave detectors. 
+
+  A full Bayesian inference is a computationally expensive endeavour,
+  particularly with a large number of parameters\footnote{at present, the total number of parameters ranges from 27 to 42, including nusiance parameters} 
+  and very little prior knowledge. Hence a large number of algorithms were developed to speed the computation up: Metropolis-Hastings \citep{Metropolis} used in conjunction with Gibbs sampler \citep{Metropolis-hastings-gibbs} and more recently Nested Sampling \citep{skilling2006}, which will be our focus. 
+
+  Nested Sampling, as described by \citeauthor{skilling2006} is rather abstract, and multiple algorithmically distinct implementations of the idea exist \citep{Feroz2009MultiNestAE, polychord}. However, \cite{chen-ferroz-hobson} noted that the algorithm is sensitive to how two quantities lieklihood and prior are defined, with respect to what the posterior distribution, and hence called the technique /automatic power posterior repartitioning/ (PPR). While \citeauthor{chen-ferroz-hobson} used PPR to improve the stability of convergence for prior distributions that may have been at variance with the true posterior, the idea of repartitioning can be used also to speed up the convergence (as if our prior knowledge had been more precise), without biasing the sampler and altering the results: posterior distribution and evidence. 
+
+  In the following sections we shall mostly focus on the theoretical background, and an extension (more precisely generalisation) of the idea of posterior repartitioning, its advantages, applicability and how it can be used to improve run-time characteristics of samplers such as Polychord. Lastly we shall present the results of using such methods when applied to a modern Cosmological parameter estimator such as Cobaya \citep{cobaya}.
+
+* Background theory
+
+** Brief primer on Bayesian inference. 
+
+   This topic has been discussed at length \citep[p.~32]{jeffreys2010scientific}, so we shall restrict ourselves to the bare necessary definitions and concepts. 
+
+   Let our scientific theory that we're interested in testing have a model \(M\), that predicts what data \( \lbrace M(\vec{\theta})\rbrace\) we should observe, depending on parameters \( \vec{\theta} = \lbrace  \theta_1, \theta_2, \ldots, \theta_n \rbrace\)\footnote{including nuisance parameters}. Let the actual observed data be \(D\). 
+
+   Hence we can define the following conditional probabilities .
+
+   #+CAPTION: Definitions of main quantities in Bayesian analysis.
+   #+LABEL: tab:defs
+   | **Term**   | **Symbol**           | **Definition**                 |
+   |------------+----------------------+--------------------------------|
+   | Prior      | \(\pi(\theta)\)      | \(P ( \theta  \vert D)\)       |
+   | Likelihood | \(L(\theta)\)        | \(P ( D \vert \theta \cup M)\) |
+   | Posterior  | \({\cal P}(\theta)\) | \(P ( \theta \vert D \cup M)\) |
+   | Evidence   | \(Z\)                | \(P ( D \vert M)\)             |
+
+
+   \bibliography{bibliography}
+   \bibliographystyle{mnras}
