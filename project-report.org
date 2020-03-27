@@ -1,10 +1,11 @@
 #+TITLE: Cosmological parameter estimation using Bayesian accelerated machine learning
 
-#+AUTHOR: William J. Handley, Aleksandr Petrosyan
+#+AUTHOR: Aleksandr Petrosyan, William J. Handley 
 #+LaTeX_CLASS: mnras
 #+LATEX_HEADER: \usepackage{natbib}
 #+OPTIONS: toc:nil 
 #+BIBLIOGRAPHY: bibliography
+#+LATEX_COMPILER: tectonic
 
 
 
@@ -16,14 +17,14 @@ TODO
 * Introduction
 
   The standard model of the universe and its evolution in modern
-  cosmology is the accepted \(\Lambda\)CDM model \citep{condon2018},
+  cosmology is the accepted \(\Lambda\)CDM model citep:Condon2018,
   so named after the main components of the universe according to
   it. It has six major parameters: physical baryon density parameter;
   physical dark matter density parameter; the age of the universe;
   scalar spectral index; curvature fluctuation amplitude; and
   reionization optical depth. It is the task of the present study to
   evaluate how well does \(\Lambda\)CDM agree with observations from
-  the Planck mission \citep{planck}, as well as provide estimates for
+  the Planck mission citep:planck, as well as provide estimates for
   the main parameters. It is also our goal to find methods for
   accelerating said process. In this section we shall describe the
   main approaches one may take to answering these questions, as well
@@ -44,9 +45,9 @@ TODO
   student with bad reaction times, but it is not generally true.
 
   Enter Bayesian inference. It is based on the mathematical result
-  obtained by \cite{1763}, and was refined over the
+  obtained by cite:1763, and was refined over the
   following two centuries. This approach has proven quite fruitful in
-  computational problems \citep{Wolpert2004}, particularly in Machine
+  computational problems citep:Wolpert2004, particularly in Machine
   learning, and is slowly making its way into physics, a field
   traditionally dominated by frequentist statistics. Without going
   into too much detail for the reasons behind Bayesian probability's
@@ -73,31 +74,334 @@ TODO
 
   A full Bayesian inference is a computationally expensive endeavour,
   particularly with a large number of parameters\footnote{at present, the total number of parameters ranges from 27 to 42, including nusiance parameters} 
-  and very little prior knowledge. Hence a large number of algorithms were developed to speed the computation up: Metropolis-Hastings \citep{Metropolis} used in conjunction with Gibbs sampler \citep{Metropolis-hastings-gibbs} and more recently Nested Sampling \citep{skilling2006}, which will be our focus. 
+  and very little prior knowledge. Hence a large number of algorithms were developed to speed the computation up: Metropolis-Hastings citep:Metropolis used in conjunction with Gibbs sampler citep:Metropolis-hastings-gibbs and more recently Nested Sampling citep:skilling2006, which will be our focus. 
 
-  Nested Sampling, as described by \citeauthor{skilling2006} is rather abstract, and multiple algorithmically distinct implementations of the idea exist \citep{Feroz2009MultiNestAE, polychord}. However, \cite{chen-ferroz-hobson} noted that the algorithm is sensitive to how two quantities lieklihood and prior are defined, with respect to what the posterior distribution, and hence called the technique /automatic power posterior repartitioning/ (PPR). While \citeauthor{chen-ferroz-hobson} used PPR to improve the stability of convergence for prior distributions that may have been at variance with the true posterior, the idea of repartitioning can be used also to speed up the convergence (as if our prior knowledge had been more precise), without biasing the sampler and altering the results: posterior distribution and evidence. 
+  Nested Sampling, as described by citeauthor:skilling2006 is rather abstract, and multiple algorithmically distinct implementations of the idea exist citep:Feroz2009MultiNestAE, polychord. However, cite:chen-ferroz-hobson noted that the algorithm is sensitive to how two quantities lieklihood and prior are defined, with respect to what the posterior distribution, and hence called the technique /automatic power posterior repartitioning/ (PPR). While citeauthor:chen-ferroz-hobson used PPR to improve the stability of convergence for prior distributions that may have been at variance with the true posterior, the idea of repartitioning can be used also to speed up the convergence (as if our prior knowledge had been more precise), without biasing the sampler and altering the results: posterior distribution and evidence. 
 
-  In the following sections we shall mostly focus on the theoretical background, and an extension (more precisely generalisation) of the idea of posterior repartitioning, its advantages, applicability and how it can be used to improve run-time characteristics of samplers such as Polychord. Lastly we shall present the results of using such methods when applied to a modern Cosmological parameter estimator such as Cobaya \citep{cobaya}.
+  In the following sections we shall mostly focus on the theoretical background, and an extension (more precisely generalisation) of the idea of posterior repartitioning, its advantages, applicability and how it can be used to improve run-time characteristics of samplers such as Polychord. Lastly we shall present the results of using such methods when applied to a modern Cosmological parameter estimator such as Cobaya citep:cobaya.
 
 * Background theory
 
 ** Brief primer on Bayesian inference. 
 
-   This topic has been discussed at length \citep[p.~32]{jeffreys2010scientific}, so we shall restrict ourselves to the bare necessary definitions and concepts. 
+   This topic has been discussed at length in literature citep:jeffreys2010scientific, so we shall restrict ourselves to the bare necessary definitions and concepts. 
 
-   Let our scientific theory that we're interested in testing have a model \(M\), that predicts what data \( \lbrace M(\vec{\theta})\rbrace\) we should observe, depending on parameters \( \vec{\theta} = \lbrace  \theta_1, \theta_2, \ldots, \theta_n \rbrace\)\footnote{including nuisance parameters}. Let the actual observed data be \(D\). 
+   Let our scientific theory that we're interested in testing have a model \({\cal M}\), that predicts what data \( \lbrace {\cal M}(\vec{\theta})\rbrace\) we should observe, depending on parameters \( \vec{\theta} = \lbrace  \theta_1, \theta_2, \ldots, \theta_n \rbrace\)\footnote{including nuisance parameters}. Let the actual observed data be \({\cal D}\). 
 
-   Hence we can define the following conditional probabilities .
+   Hence we can define the following conditional probabilities given
+in autoref:table-defs. Using these definition citeauthor:1763 theorem
+becomes 
+\begin{equation}
+{\cal L} \pi (\theta) = Z {\cal P} (\theta).
+\label{eq:bayes} 
+\end{equation}
+Notice that the /evidence/ \(Z\) is
+implicitly defined as 
+\begin{equation} 
+Z = \int_{\Psi} {\cal L}(\theta) \pi(\theta) d\theta, \label{eq:def-z}
+\end{equation}
+where \(\Psi\) is the so-called prior space, simply the domain of the
+prior function. Although some authors
+(e.g. citeauthor:jeffreys2010scientific) believe \(Z\) to be no more
+than a normalisation factor, it happens to quantify the fitness of our
+model to the data: the higher the value of \(Z\), the more likely is
+that the model accurately describes the physical process in question.
 
-   #+CAPTION: Definitions of main quantities in Bayesian analysis.
-   #+LABEL: tab:defs
+   #+CAPTION: Definitions of main quantities in Bayesian analysis. label:table-defs
    | **Term**   | **Symbol**           | **Definition**                 |
    |------------+----------------------+--------------------------------|
    | Prior      | \(\pi(\theta)\)      | \(P ( \theta  \vert D)\)       |
-   | Likelihood | \(L(\theta)\)        | \(P ( D \vert \theta \cup M)\) |
+   | Likelihood | \({\cal L}(\theta)\) | \(P ( D \vert \theta \cup M)\) |
    | Posterior  | \({\cal P}(\theta)\) | \(P ( \theta \vert D \cup M)\) |
    | Evidence   | \(Z\)                | \(P ( D \vert M)\)             |
 
+   The two independent quantities defined in autoref:table-defs are the
+   inputs to the Bayesian Sampler. How they are specified depends on the algorithm, however, most nested samplers (e.g. Polychord) find a convenient representation of log-likelihood: 
+   \begin{equation}
+	 L = \ln \cal L
+   \end{equation}
+   and cumulative prior inversion function 
+   \begin{equation}
+    \pi : HC \rightarrow \Psi,
+   \end{equation}
+   i.e. a mapping from a unit hypercube where the distribution of
+   parameter images is uniform, onto the non-uniform prior space that
+   is the domain of integration of \(Z\). The former is chosen in such
+   a way, because most likelihoods are Gaussian, hence taking the
+   logarithm early allows us to avoid costly numerical multiplications
+   and divisions and directly replace them with additions and
+   subtractions. The reason for choosing the cumulative prior inversion function
+   we shall touch upon when discussing nested sampling.
 
-   \bibliography{bibliography}
+   An important point is that within specification of likelihood and
+   prior there is some redundancy. One can easily see that by
+   considering another pair of input functions such that 
+   \begin{equation}
+	 \tilde{\cal L} \tilde{\pi} = \cal L \pi. 
+   \end{equation}
+   Obviously the value of \(Z\) will remain unchanged and by
+   autoref:eq:bayes, the value of \(\cal P\) will also remain the
+   same. Thus, most MCMC Bayesian samplers are indifferent to precise
+   definitions of \(\cal L\) and \(\pi\), so long as their product
+   remains physically sensible. A notable exception is nested
+   sampling, which we shall discuss in-depth in the next subsection.
+
+** Nested Sampling.
+
+   This algorithm is discussed in depth, so as previously we shall
+   restrict ourselves to descriptions that are directly necessary for
+   understanding how and why posterior repartitioning works.
+   
+   Bayes' theorem reduces the problem of parameter estimation to that
+   of integration, so in theory the simplest approach would be to
+   rasterise the prior space and simply numerically evaluate the
+   integral. However, in space with a large number of dimensions, said
+   problem is intractable for uniform rasterisation (i.e. taking a
+   grid and enumerating all the points), so a Monte-Carlo technique
+   would be more appropriate.
+
+   For simplicity and without loss of generality let's assume that the
+   prior space is a unit hypercube.  We shall then draw
+   \(n_\text{live}\) points from the hypercube at random. We expect
+   that the probability that the points have the same likelihood is
+   vanishingly small, so we can expect that each of them lies on a
+   distinct iso-likelihood hyper-surface\footnote{think isotherms  where likelihood correponds to temperature.}. Each hyper surface
+   will contain roughly \(frac{1}{n_\text{live}}\)-th of the total
+   volume of the hypercube.
+   
+   Subsequently, we may wish to pick another point at random, but
+   requiring that the likelihood of that point is higher than the
+   lowest likelihood of the initial choice, we can ``move'' the
+   outermost point inside. In citeauthor:skilling2006 's notation, the
+   aforementioned point with the lowest likelihood becomes ``dead''
+   and the new point becomes ``alive''. Moreover, our argument for
+   hypersurfaces encasing a roughly equal volume still holds, so we
+   can expect that upon next iteration the prior volume encased in the
+   outermost hypersurface is going to be reduced by \(\frac{1}{n_\text{live}}\)-th. 
+
+   More formally we get a sequence of approximations of the prior
+   volume encased in the outer hypersurface as follows:
+   \begin{eqnarray}
+	 Z_{0} = 1,\\
+	 Z_{1} = Z_{0} - \frac{Z_{0}}{n_\text{live}},\\
+	 \vdots\\
+     Z_{m} = Z_{m-1} - \frac{Z_{m-1}}{m_\text{live}},\\
+	 \vdots\\
+   \end{eqnarray}
+   which allows us to successively move the ``live'' points closer to
+   regions where the likelihood is high. Of course a suitable
+   termination criterion is required, and one may simply stop, when
+   the prior volume encased in the shell is lower than a predetermined
+   fraction of the hypercube volume. Naturally, this extends to cases
+   with non-uniform priors and even correlated priors by virtue of a
+   coordinate transform via the cumulative prior inversion function.
+   
+   Obviously the algorithm's run-time is highly dependent on the
+   number of points drawn at random. As it turns out, the more
+   important number is the number of likelihood evaluations, as that
+   function is the dominant cost. In Cobaya running the CLASS provided
+   likelihood function one evaluation can take upwards of a
+   second. Naturally algorithms that minimise the number of likelihood
+   evalutaions will offer the most improvement. Hence we can see that
+   the na\"ive approach of simply rejecting values and re-drawing in
+   ignorance of the values of other live points, is the least
+   efficient\footnote{Thankfully, Polychord uses a technique called slice   sampling that tries to interpolate the likelihood re-using as much  information obtained from the current iteration as possible.}.
+
+   So how can we improve the run-time? An obvious and somewhat
+   dangerous approach is to pick a different prior. If the co-ordinate
+   transformation compresses the areas where the likelihood is
+   vanishingly small, a clever algorithm can simply pick out the
+   points that do have a large likelihood early on. And indeed, if our
+   prior is the posterior distribution for the parameters, we would
+   expect for the algorithm to converge the fastest. 
+
+   However that is only partially true. First and foremost, according
+   to Bayesian statistics the prior knowledge, or the constraints set
+   on the model parameters of the model, are themselves part of the
+   model, so by picking a different cumulative prior inversion function the
+   likelihoods obtained will not correpond to the same problem. In
+   fact, if the prior is chosen to be a relatively small region far
+   away from any curvature in the posterior distribution (e.g. a
+   narrow Gaussian peak offset from the true Gaussian posterior
+   sufficiently far away), the likelihoods of points withing the prior
+   volume will be (falsely) enhanced, while no statstically
+   significant region will be touched. The Sampler may even produce a
+   neat plot with a peak that would be centered around the wrong
+   value.
+
+   This is the problem of unrepresentative priors and
+   citeauthor*:chen-ferroz-hobson have developed the technique of
+   posterior reparitioning to counter this exact problem.
+
+   
+** Power posterior repartitioning
+   
+   The basic idea is as follows. If we had two priors, one much
+   narrower than the other, we expect that the convergence in the
+   narrower one will be faster. After all, we're ignoring the bulk of
+   prior space where nothing happens. We also expect that the
+   lieklihood of the values inside the smaller effective volume will
+   be enhanced\footnote{to see why this happens, consider that the to   have a larger value of the prior, (or rather a more condensed one),   to keep the product \(\cal L \pi\) constant, one must have reduced   the value of \(\cal L\). That said, the answer: the posterior and   the evidence are still valid, they simply correspond to a different  model.}. 
+
+   As such citeauthor:chen-ferroz-hobson have proposed introducing an
+   extra parameter \(\beta\) that re-scales the prior like so:
+   \begin{equation}
+	 \tilde{\pi}(\theta) = \frac{\pi(\theta)^{\beta}}{Z_{\pi}(\beta)},
+   \end{equation}
+   where \(Z_\pi(\beta)\) is a normalisation factor, i.e. 
+   \begin{equation}
+	 Z_{\pi}(\beta) = \int \pi(\theta)^{\beta}d\theta.
+   \end{equation}
+   Now we must\footnote{A thorough discussion of why this is necessary is given in the Appendix autoref:sec:repart-necessity} change the likelihood function to 
+   \begin{equation}
+	 \tilde{\cal L}(\theta) = {\cal L}(\theta) Z_{\pi}(\beta).
+   \end{equation}
+   Of course, one needs to take great care for the domain of the value
+   \(\beta\). In general, one can expect the value to never reach
+   zero, and in cases where the original prior was non-uniform, there
+   is an obvious, unambiguous choice \(\beta \in (0, 1]\). 
+
+   This of course works well for the case that
+   citeauthor:chen-ferroz-hobson have originally considered, and this
+   resolves the issue of a non-representative prior. Indeed, for
+   small-enough values of \(\beta\), however large the distance
+   between the true gaussian peak and the faux prior, the volume
+   associated with the smaller region will be insufficient to cause
+   termination of the nested sampling algorithm. Moreover, when with
+   non-zero probabilty the sampler draws a point at the true posterior
+   peak, it will have much larger likelihood and hence bias the values
+   of \(\theta\) and \(\beta\), towards the true peak. Of course, the
+   performance of program may be negatively impacted, in that it will
+   converge slower than if the final value of \(\tilde{\pi}\) were
+   used directly. However, it is unlikely that we had such information
+   to begin with, and more importantly we are safe in assuming that
+   the value obtained is accurate.
+
+   Surprisingly, this can be used to speed up execution as well. Let's
+   consider a case, where we have very little prior knowledge,
+   manifested as a uniform prior. But we have a ``hunch'', i.e. we
+   suspect without much basis due to our personal biases or intuition,
+   that the model parameters are in fact a Gaussian peak
+   \begin{equation}
+	\pi (\theta) \propto \exp{\left(\frac{\theta - \mu}{2\sigma}\right)^{2}},
+   \end{equation}
+   albeit without knowing precisely the values of \(\mu\) and
+   \(\sigma\). Without the option of posterior repartitioning this is
+   simply that: a bias. 
+
+   Using PPR, however, this information is used as follows. A point
+   with fully random coordinates is drawn from an \(n+1\) dimensional
+   space where the effective new parameter vector contains \(\beta\)
+   as the last parameter, and it too is random. This random choice
+   randomises the prior, live points that are closer to the true
+   posterior distribution are favoured, and if a value of \(\beta\)
+   favours picking points close to the posterior distribution such
+   values of \(\beta\) will also be favoured. This feedback loop
+   ensures that if the true posterior happened to be within \(\sigma /
+   \beta\) of the chosen value of \(\mu\), that the new points are
+   chosen preferrentially from that region. The re-normalisation of
+   the likelihood, on the other hand, ensures that the posterior
+   distribution is not biased towards the value of \(\mu\), but rather
+   the true posterior that we would have found had we not done the
+   repartitioning. Of course, if our hypothesis was wrong, then the
+   values of \(\beta \rightarrow 0\) would be favoured and the
+   iteration will continue as if we had used the uniform prior and had
+   an extra dimension.
+
+   
+** Additive and superpositional mixtures. 
+
+   Let's recap the key components of posterior repartitioning. We have
+      a baseline prior, with its likelihood $(\pi(\theta), \cal L
+      (\theta))$, and a parameterised pair of biased prior and
+      likelihood $(\pi'(\theta; \beta), \cal L' (\theta;
+      \beta))$. These need to satisfy the following requirements.
+
+   1) For some $\beta_{0}$, $\pi'(\theta; \beta) \equiv \pi(\theta)$
+      similarly for ${\cal L}$. This is the **specialisation property**.
+   2) The product of the parameterised pair is constant for all values
+      of $\beta$ and by soecialisation property : $\pi'(\theta; \beta)
+      \cal L' (\theta; \beta) = \pi(\theta), \cal L (\theta)$. This is
+      the **normalisation property**.
+   3) We need there to be a guiding dynamical principle that favours
+      the representative prior, i.e. one that's closest to the
+      posterior distribution, which we call the **convergence
+      property**. \footnote{Normally, for PPR-type repartitioning schemes, this is satisfied by requiring \(\lim_{\beta\rightarrow\beta_{r}} \pi'(\theta;\beta) = \cal P (\theta)\), but as we shall see later, this not necessary. } 
+
+   Our hope is that the extra complexity is offset by the speedup
+   offered by the correct bias. This depends on both how accurate our
+   bias is, but also on the dimensionality of the problem, and in most
+   cases the complexity of the likelihood calculation. 
+
+   What kinds of repartitiong schemes one can come up with? Any
+   functions that satisfy the above requirements should hypothetically
+   produce the same result. Of course, we want to have better
+   performance as well, so some functions are preferable to others. 
+
+   For example consider a weighted sum of a uniform distribution with
+   a Gaussian, e.g. in one dimension
+   \begin{equation}
+	 \pi(\theta) = \frac{1}{Z} \left\lbrace \beta (b - a) + (1-\beta) \exp \left[ \left(\frac{\theta - \mu}{\sigma} \right)^{2}\right]\right\rbrace.
+   \end{equation}
+   The integration to obtain the normalisation can be done, and used
+   to re-scale ${\cal L}$, however an issue of description
+   arises. Recall that we use the inverse of the prior cumulative
+   distribution, and while the inverses of both priors are manifest,
+   the inverse of the sum is not analytic, even in this simplified
+   case. In some circumstances, the cumulative prior inverse may not
+   exist. 
+
+   While we could sidestep the issue by approximating the inverse,
+   this will affect the results.
+
+   Hence we come to the concept of /stochastic superpositional
+   posterior repartitiong/ (SSPR). Consider $\tilde{\pi}(\theta)$ and
+   ${\cal \tilde{L}}$ which satisfy the normalisation
+   condition. Construct the parameterised prior like so
+   \begin{equation}
+	 \pi(\theta; \beta)  = \begin{cases}
+	   \pi(\theta) & \text{with probability } \beta\\
+	   \tilde{\pi}(\theta) & \text{with probability} (1- \beta).
+	   \end{cases}
+   \end{equation}
+   and similarly the likelihood.  The specialisation and normalisation
+   conditions are trivially satisfied, the convergence condition, however is not. 
+   
+
+   
+   
+* Appendices
+
+** Why do we need to alter the likelihood. label:sec:repart-necessity
+   One may ask why such a change of the likelihood is at all
+   necessary. Indeed, the likelihood may be chosen based on a precise
+   theory of error, e.g. a least-squares fit argument based on
+   Gaussian assumptions. Why does changing the prior knowledge
+   necessitate the change of likelihood?
+   
+   In addition to what was mentioned in answer to a similar question
+   at the end of the previous subsection, there's an intuitive way of
+   answering this question. Consider a posterior distribution that at
+   no point takes the value nil (e.g. a Gaussian). If we constrain one
+   prior \( \pi\) to lie within one standard deviation of the peak,
+   (e.g. a sphere of radius \(\sigma\)), and another that spans twenty
+   standard deviations. If we picked 20 points at random from one and
+   the other, we shall expect that the iso-likelihood hyper-surfaces
+   would encase drastically different volumes. Moreover, finding a
+   point that's within one standard deviation from the perspective of
+   the broader prior is a much more significant result than finding
+   one from the narrower one. Indeed, we will not expect the posterior
+   distributions to be the same, but nested sampling would produce a
+   narrower peak based on the ``same'' model\footnote{From a   frequentist standpoint, our prior knowledge is irrelevant. But even   a frequentist would agree that the value obtained by changing the   prior would not be the same. }. 
+
+   Of course, a Bayesian would say that if our true prior knowledge
+   was represented by the narrower prior, we would indeed need to
+   consider the posterior distribution to be the true one, as it
+   combines information that we've obtained earlier with information
+   that can be extracted from the data. In other words, it would be
+   the correct value for the person who indeed constrained the values
+   of model parameters to the one standard deviation, based on /other
+   data/. Simply picking a prior out of thin air would bias the result, hence the necessity to 
+
+   \bibliography{bibliography} 
    \bibliographystyle{mnras}
