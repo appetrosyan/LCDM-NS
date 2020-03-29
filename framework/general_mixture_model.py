@@ -4,8 +4,16 @@ from power_posterior import PowerPosteriorPrior
 from uniform import BoxUniformModel
 from resizeableUniform import ResizeableUniformPrior
 from pypolychord.settings import PolyChordSettings
-from numpy import array, concatenate, lcm
+from numpy import array, concatenate, lcm, log
+from random import random, seed
 import fractions
+import tikzplotlib
+
+from matplotlib import rc
+
+rc('font', **{'family': 'serif', 'serif': ['Times']})
+rc('text', usetex=True)
+plt.rcParams["font.size"] = 14
 
 
 class MixtureModel(Model):
@@ -55,9 +63,13 @@ class MixtureModel(Model):
         norm = b.sum() if b.sum() != 0 else 1
         ps = b/norm
         index = 0
-        h = abs(hash(tuple(t))) / (2**63-1)
+        # h = abs(hash(tuple(t)))/(2**63-1)
+        h = hash(tuple(t))
+        seed(h)
+        r = random()
         for p in ps:
-            if h > p:
+            if r > p:
+                # if h > p:
                 break
             index += 1
         _nDims = self.models[index].eff_nDims()
@@ -80,7 +92,7 @@ def allElementsIdentical(lst):
     return not lst or lst.count(lst[0]) == len(lst)
 
 
-bounds = (-4*10**7, 4*10**7)
+bounds = (-6*10**8, 6*10**8)
 mu = array([1, 2, 3])
 cov = array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
 
@@ -96,20 +108,26 @@ mdl5 = PowerPosteriorPrior(bounds, mu, cov)
 #     print(e)
 
 # mix = MixtureModel([mdl1, mdl1, mdl1])
-mix = MixtureModel([mdl1, mdl4, mdl5])
+mix = MixtureModel([mdl1, mdl5])
 kwargs = {
     'noResume': True,
-    'nLive': 80
+    'nLive': 20
 }
 qm, samples = mix.exec_polychord(**kwargs)
 qr, repart = mdl4.exec_polychord(**kwargs)
 qp, power = mdl5.exec_polychord(**kwargs)
 q0, reference = mdl1.exec_polychord(**kwargs)
-plt.hist(samples.logZ(1000), label='mixture', alpha=0.7)
-plt.hist(repart.logZ(1000), label='repart', alpha=0.7)
-plt.hist(power.logZ(1000), label='power', alpha=0.7)
-plt.hist(reference.logZ(1000), label='reference', alpha=0.7)
+
+plt.hist(samples.logZ(1000), label=r'mix$(U, PPR)$', alpha=1)
+plt.hist(repart.logZ(1000),
+         label=r'Wrong \( \ln\  {\cal L} \)', hatch='\\', fill=True, alpha=0.3)
+plt.hist(power.logZ(1000), label='PPR', alpha=0.3)
+plt.hist(reference.logZ(1000), label='$U$ - reference',
+         alpha=0.3, fill=True)
+plt.xlabel(r'\(\ln Z\) /arb. units')
+plt.ylabel(r'number of occurrences / arb. units')
 plt.legend()
+tikzplotlib.save('../illustrations/histograms.tex')
 plt.show(block=False)
 anss = [qm, qr, qp, q0]
 

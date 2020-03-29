@@ -3,6 +3,10 @@
 #+AUTHOR: Aleksandr Petrosyan, William J. Handley 
 #+LaTeX_CLASS: mnras
 #+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage{pgfplots}
+#+LATEX_HEADER: \usepgfplotslibrary{groupplots,dateplot}
+#+LATEX_HEADER: \usetikzlibrary{patterns,shapes.arrows}
+#+LATEX_HEADER: \pgfplotsset{compat=newest}
 #+OPTIONS: toc:nil 
 #+BIBLIOGRAPHY: bibliography
 #+LATEX_COMPILER: tectonic
@@ -250,7 +254,7 @@ that the model accurately describes the physical process in question.
    \end{equation}
    where \(Z_\pi(\beta)\) is a normalisation factor, i.e. 
    \begin{equation}
-	 Z_{\pi}(\beta) = \int \pi(\theta)^{\beta}d\theta.
+	 Z_{\pi}(\beta) = \int_{\theta \in \Psi} \pi(\theta)^{\beta}d\theta.
    \end{equation}
    Now we must\footnote{A thorough discussion of why this is necessary is given in the Appendix autoref:sec:repart-necessity} change the likelihood function to 
    \begin{equation}
@@ -260,6 +264,19 @@ that the model accurately describes the physical process in question.
    \(\beta\). In general, one can expect the value to never reach
    zero, and in cases where the original prior was non-uniform, there
    is an obvious, unambiguous choice \(\beta \in (0, 1]\). 
+
+   As $\beta$ is an ordinary nuiscance parameter one can extend its
+   domain to both negative values (favour the boundaries over the
+   centre), and positive values larger than 1.
+
+   It is important to note that the domains of all functions need to
+   be the same. Let $D(f)$ denote the domain of the function
+   $f$. Hence 
+   \begin{equation}
+     D(\pi) = D({\cal L}) = \Psi = D({\cal P}),
+   \end{equation} 
+   which means that need to make sure that the posterior is within the
+   domain of our prior. This fact will be important later.label:domain-discussion
 
    This of course works well for the case that
    citeauthor:chen-ferroz-hobson have originally considered, and this
@@ -283,7 +300,7 @@ that the model accurately describes the physical process in question.
    suspect without much basis due to our personal biases or intuition,
    that the model parameters are in fact a Gaussian peak
    \begin{equation}
-	\pi (\theta) \propto \exp{\left(\frac{\theta - \mu}{2\sigma}\right)^{2}},
+	\pi (\theta) \propto \exp{ -\left(\frac{\theta - \mu}{2\sigma}\right)^{2}},
    \end{equation}
    albeit without knowing precisely the values of \(\mu\) and
    \(\sigma\). Without the option of posterior repartitioning this is
@@ -308,6 +325,11 @@ that the model accurately describes the physical process in question.
    iteration will continue as if we had used the uniform prior and had
    an extra dimension.
 
+   #+CAPTION: The function $\tilde{\pi}(\theta; \beta)$ for different values of $\beta$. Note that we've started under the assumption that the distribution is a truncated gaussian, i.e. that it is zero outside the range $(-1, 1)$. This manifests as sharp changes in curvature at the boundaries. Note that $\forall \beta$, $\int_{-1}^{1}\tilde{\pi}(\theta; \beta) = 1$.
+   #+NAME: fig:ppr
+	\begin{figure}
+	 \input{./illustrations/ppr.tex}
+	\end{figure}
    
 ** Additive and superpositional mixtures. 
 
@@ -318,15 +340,22 @@ that the model accurately describes the physical process in question.
       \beta))$. These need to satisfy the following requirements.
 
    1) For some $\beta_{0}$, $\pi'(\theta; \beta) \equiv \pi(\theta)$
-      similarly for ${\cal L}$. This is the **specialisation property**.
+      similarly ${\cal L'(\theta, \beta) \equiv {\cal L}}$. This is
+      the **specialisation property**.label:spec-prop
    2) The product of the parameterised pair is constant for all values
       of $\beta$ and by soecialisation property : $\pi'(\theta; \beta)
       \cal L' (\theta; \beta) = \pi(\theta), \cal L (\theta)$. This is
-      the **normalisation property**.
+      the **normalisation property**.label:norm-prop
    3) We need there to be a guiding dynamical principle that favours
       the representative prior, i.e. one that's closest to the
       posterior distribution, which we call the **convergence
-      property**. \footnote{Normally, for PPR-type repartitioning schemes, this is satisfied by requiring \(\lim_{\beta\rightarrow\beta_{r}} \pi'(\theta;\beta) = \cal P (\theta)\), but as we shall see later, this not necessary. } 
+      property**.label:conv-prop
+
+   PPR satisfies all three properties as follows: autoref:spec-prop is
+   fulfilled with defining $\pi'(\theta; 0) =
+   \pi(\theta)$. autoref:norm-prop is fulfilled by construction and
+   autoref:conv-prop is obvious, when noting that $\lim_{\beta
+   \rightarrow 0} \pi'(\theta; \beta) = \pi(\theta)$.\footnote{Recall that }
 
    Our hope is that the extra complexity is offset by the speedup
    offered by the correct bias. This depends on both how accurate our
@@ -338,37 +367,338 @@ that the model accurately describes the physical process in question.
    produce the same result. Of course, we want to have better
    performance as well, so some functions are preferable to others. 
 
-   For example consider a weighted sum of a uniform distribution with
-   a Gaussian, e.g. in one dimension
-   \begin{equation}
-	 \pi(\theta) = \frac{1}{Z} \left\lbrace \beta (b - a) + (1-\beta) \exp \left[ \left(\frac{\theta - \mu}{\sigma} \right)^{2}\right]\right\rbrace.
-   \end{equation}
-   The integration to obtain the normalisation can be done, and used
-   to re-scale ${\cal L}$, however an issue of description
-   arises. Recall that we use the inverse of the prior cumulative
-   distribution, and while the inverses of both priors are manifest,
-   the inverse of the sum is not analytic, even in this simplified
-   case. In some circumstances, the cumulative prior inverse may not
-   exist. 
+*** Additive mixtures.
+	For example consider a weighted sum of a uniform distribution with
+	a Gaussian, e.g. in one dimension
+	\begin{equation}
+	  \pi(\theta) = \frac{1}{Z} \left\lbrace \beta (b - a) + (1-\beta) \exp \left[ -\left(\frac{\theta - \mu}{\sigma} \right)^{2}\right]\right\rbrace.
+	\end{equation}
+	The integration to obtain the normalisation can be done, and used
+	to re-scale ${\cal L}$, however an issue of description
+	arises. Recall that we use the inverse of the prior cumulative
+	distribution, and while the inverses of both priors are manifest,
+	the inverse of the sum is not analytic, even in this simplified
+	case. In some circumstances, the cumulative prior inverse may not
+	exist. 
 
-   While we could sidestep the issue by approximating the inverse,
-   this will affect the results.
+	While we could sidestep the issue by approximating the inverse,
+	this will adversely affect the results.
 
-   Hence we come to the concept of /stochastic superpositional
-   posterior repartitiong/ (SSPR). Consider $\tilde{\pi}(\theta)$ and
-   ${\cal \tilde{L}}$ which satisfy the normalisation
-   condition. Construct the parameterised prior like so
-   \begin{equation}
-	 \pi(\theta; \beta)  = \begin{cases}
-	   \pi(\theta) & \text{with probability } \beta\\
-	   \tilde{\pi}(\theta) & \text{with probability} (1- \beta).
-	   \end{cases}
-   \end{equation}
-   and similarly the likelihood.  The specialisation and normalisation
-   conditions are trivially satisfied, the convergence condition, however is not. 
+	Another flaw, which additive mixtures share with PPR, is that the
+	probability of having no bias is near negligible. There's always a
+	preferred direction: if our original prior was uniform, the
+	probability of having no bias, is the probability of drawing the
+	number $\beta=0$. It is not nil, because the parameters can only
+	be machine-representable 64-bit floating point numbers, however
+	the probability is still incredibly small, and the sampler will
+	always be biased towards an unrepresentative prior, should such a
+	case occur.
+
+	Of course in practice, one has to come up with contrived examples
+	where some bias is worse than no bias at all, since by the central
+	limit theorem *most* posterior distributions are Gaussian. So a
+	Guassian variable-width prior will have a significant overlap, and
+	would mitigate the issue.
+
+*** Resizeable-bounds uniform prior. 
+	
+	However, the three requirements outlined at the beginning of this
+	section are not sufficient. As we have noted in
+	autoref:domain-discussion, the domains of all functions need to be
+	consistent. Without this, Bayes' theorem no longer holds, and our
+	analysis is completely invalid. The mathematical implications of
+	neglecting function domains have been discussed by
+	cite:Gieres_2000, albeit in the context of Quantum mechanics.  
+
+	To illustrate, consider a box uniform prior
+	with the following parameterisation.
+	\begin{equation}
+	  \tilde{\pi}(\theta; \beta) =
+	  \begin{cases}
+		\frac{1}{\beta(b-a)} & \text{if}\ x \in [\beta a, \beta b] \\
+		0 & \text{otherwise}.
+	  \end{cases}
+	\end{equation}
+	Although there are no issues when $\beta>1$ (we simply set ${\cal
+	\tilde{L}}=0$, one can immediately spot the issues with $\beta \in (0,1)$;
+	and $\beta=0$ is altogether nonsensical.
+
+	This issue shows that the prescription of keeping $\pi {\cal L} =
+	\text{Const.}$ is not complete. Nevertheless, such a scheme may be
+	salvaged, however, counter to our intuition in such a case for a
+	point $\theta_{0} \notin \Psi$, we don't expect ${\cal L}(\theta_{0})
+	\rightarrow \infty$, but as we shall see in the next section, the preferred value
+	is ${\cal L}(\theta_{0}) \rightarrow 0$.
+
+	The first crucial step is to recognise that the algorithm draws
+	from a unit hypercube with uniform probability, and that the prior
+	is simply an artifact of a coordinate transformation. 
+
+	Let $u$ be a point in unit hypercube $\Psi_{C}$. Let the cumulative
+	prior inversion function define a map \(C(\beta)\lbrace \tilde{\pi}\rbrace:u
+	\mapsto \theta\)\footnote{Here the curly braces indicate that we have a functional dependence on $\tilde{\pi}$}, such that the uniform distribution of $u$ leads
+	through $C_{\beta}\{\tilde{\pi}\}(u)$ to a $\tilde{\pi}(\theta;\beta)$ distribution of $\theta
+	\in\Psi(\beta)$\footnote{Recall that $\tilde{\pi}(\theta, \beta_{0}) = \pi(\theta)$}. Note that wee
+	replaced the parameteresiation of the function $\tilde{\pi}$ with an
+	explicit parameterisation of the coordinate transformation, specifically
+	\begin{equation}
+	  \pi(C(\beta)\{\tilde{\pi}\}(u)) \equiv \tilde{\pi}(\theta; \beta),
+	\end{equation}
+	where 
+	\begin{equation}
+	  \tilde{\pi} =  \pi \circ C(\beta) \{ \pi \} 
+	\end{equation}
+	is a parameterised distribution resulting from a parameterised
+	coordinate transformation and an unparameterised prior.
+
+	We shall make Bayes' therem be defined only on the hypercube
+	\begin{equation}
+	{\cal \hat{P}}(u) = {\cal P}(C(\beta_{0}){\tilde{\pi}}^{-1}(\theta)) = \frac{\hat{\pi} (u) {\cal \hat{L}}(u)}{\int_{\Psi}{\cal \hat{L}}(u) \hat{\pi}(u) du},
+	\end{equation}
+	which is always true, regardless of the repartitioning
+	scheme. Trivially, the functional form of $P(\theta)$ is not the same
+	as $P(u)$; it's related via a co-ordinate transform, which in our
+	case contributes a Jacobian factor $J(\beta)\{\tilde{\pi}\}$ to the
+	evidence. But since we're interested in the posterior in the
+	coordinates $\theta$, given by the transofmration $C(\beta_{0})\{\tilde{\pi}\}$,
+	while the prior and the likelihood are in the from corresponding
+	to $\beta$.
+
+	Putting it all together we get 
+	\begin{equation}
+	 {\cal P}(\theta) = \frac{J(\beta_{0})}{J(\beta)} \frac{\pi(\theta; \beta) {\cal l}(\theta; \beta)}{\int \pi(\theta; \beta) {\cal L}(\theta; \beta) d \theta}.
+	\end{equation}
+	So we expect that for the simple case of scaling the uniform box
+	prior with $\beta$, that we need to re-scale the likelihood by
+	$\beta^{2n}$. The second Jacobian factor enters the likelihood because
+	we have normalised $\pi(\theta)$, but not $\pi(\theta; \beta)$. This is hinted at in
+	the notation, (no tilde), and when accounted for, gives  the correct
+	posterior and evidence as seen in the experiments. 
+	
+	
+*** Stochastic superpositional repartitioning.
+
+	Hence we come to the concept of /stochastic superpositional
+	posterior repartitiong/ (SSPR). Consider $\tilde{\pi}(\theta)$ and
+	${\cal \tilde{L}}$ which satisfy the normalisation
+	condition. We construct the parameterised prior like so
+	\begin{equation}
+	  \pi(\theta; \beta)  = \begin{cases}
+		\pi(\theta) & \text{with probability } \beta\\
+		\tilde{\pi}(\theta) & \text{with probability} (1- \beta)
+		\end{cases}
+	\end{equation}
+	and similarly the likelihood.  The specialisation and
+	normalisation conditions are trivially satisfied, and the
+	convergence condition shall be argued later, so this
+	repartitioning is valid.
+
+	There are difficulties with implementing this scheme,
+	however. Both the likelihood and the prior are well-defined
+	single-valued functions, so simply drawing a random number at each
+	evaluation is not acceptable. Moreover, one needs to make sure
+	that the branches are simultaneously chosen in both functions, so
+	as to ensure that the normalisation condition is satisfied. One
+	way to ensure these are met, is by choosing the branch
+	deterministic-ally, based on the vector $(\theta; \beta)$. 
+
+	To avoid biasing the nested sampler, we must preserve the
+	uniformity of the distribution. In other words, we must make sure
+	that the patches belonging to the same branch are interspersed and
+	are on average the size of regions mapping to the same branch are
+	the same and of the order of the resolution of the grid. In other
+	words, for the case \(\beta=1/2\), we wish to have a chequerboard
+	pattern of branching. 
+
+	Note, however, that the prior is no longer normalised. Indeed, for
+	different values of $\beta$, integrating over the entire phase
+	space $\Psi(\beta)$, one would expect not to obtain unity. And
+	although intuition might suggest that the normalisation factor
+	would depend on $\beta$, as our experiments show this is not the
+	case. In this particular implementation, the total accessible
+	prior space volume is restricted by mutual exclusivity. On the
+	other hand, the posterior and evidence are both fixed by the
+	normalisation requirement of repartitioning, so one does not
+	expect any scaling on ${\cal L}$. 
+
+	One of the greatest advantages offered by mixture repartitioning
+	is that it can be combined with other schemes, and work as
+	``safety net'', without imposing as many restrictions and
+	introducting as many problems as power repartitioning would. For
+	example one would not be able to attain the same efficiency as
+	mixture repartitioning if the integral $Z_{\pi}(\beta)$, could not
+	be taken analytically. Mixture repartitioning on the other hand,
+	only requires the choice to be sensible.
+
+	Hence if one has $m$ models in a mixture, the likelihood becomes 
+
+	\begin{equation}
+	  {\cal L}(\theta; \beta)  = \begin{cases}
+		{\cal L}_{1}(\theta) & \text{with probability } \beta_{1}\\
+        \vdots\\
+		{\cal L}_{m}(\theta) & \text{with probability} (1- \sum_{i}\beta_{i})
+		\end{cases}
+	\end{equation}
+
+
+	A more important question is of bounded-ness. As we've discussed in
+	autoref:domain-discussion, when dealing with repartitioning
+	schemes such as resizeable uniform priors, extra care must be
+	taken to account for the Jacboian factors arising from a change of
+	coordinates. Mixture repartitioning, however, embeds the solution
+	into its formalism. For example, if a point in the posterior
+	distribution $\theta_{e}$, is not represented in the prior, i.e.
+	$\pi(\theta_{e}) = 0$, while ${\cal P}(\theta_{e}) \ne 0$, then
+	one intuitively expects ${\cal L}(\theta_{e}) \rightarrow
+	\infty$. In mixture repartitioning, however, if that same point is
+	represented in one prior and not the other, the others simply
+	become unrepresentative, and are selected against by the algorithm
+	if and only if ${\cal L}(\theta_{e}) = 0$, in the unrepresentative
+	branch. Thus the value is truly represented, just in a different
+	prior branch.
+
+	#+CAPTION: An example of a mixture repartitioning. Notice that the mixture is not normalised to emphasise the coincidence of values with both the uniform distribution and a Gaussian.
+	#+NAME: fig:mixture
+	\begin{figure}
+	 \input{./illustrations/mixture.tex}
+	\end{figure}
+	
+	
+	
+* Key indicators
+  In this section we shall describe in detail the types of simulations
+  and benchmarking that was done. As this project is highly
+  computational, Cosmological issues are discussed only incidentally,
+  and only with regard to their computational complexity, not the
+  Physics.
+
+  We have chosen to use Cobaya citep:cobaya, with CLASS to provide the
+  theoretical framework for analysing the Planck citep:planck
+  data. Our primary goal is to improve the performance of the
+  analysis.
+
+  We shall first describe how one would measure the performance of
+  such a run, then show the small-scale simulation results. Finally,
+  we shall discuss the results obtained by running Cobaya with the
+  suggested optimisations on the CSD3 cluster (University of Cambridge).
+
+  
+** Performance and benchmarking
+   One cannot use CPU time as a reliable indicator of
+   performance. There are multiple factors leading to unpredictable
+   overheads, and these can be practically averaged out on a small
+   scale model, in case of large distributed systems such as a CPU
+   cluster, with multiple processes, and with each run taking upwards
+   of an hour, this metric is beyond the realm usefulness.
    
+   Due to the sheer complexity of the Cosmological data and functions
+   involved in the computation, the usual asymptotic description
+   common in computer science is insufficient. 
+
+   First, note that in Cobaya  the run-time is dominated
+   by log-likelihood evaluations. A typical run in 3 dimensions
+   requires $O(10^{3})$, likelihood calls, and if each of them takes a
+   second to evaluate, a simple run becomes impractical. 
+
+   So a natural choice for a performance metric is using the number of
+   log-likelihood evaluations\footnote{one could also consider using the number of dead points in the posterior distribution, but it is neither accurate, nor transferrable across different samplers, e.g. MultiNest}. 
+
+   Note, however that this does not account for potential extra
+   complexity introduced by the repartitioning. For example for PPR,
+   the effect of adding the extra parameter can be reduced to
+   1) one multiplication in the argument of the prior\footnote{That is actually not true in Python, as it is unable to rewrite and optimise functions in general. The reason being that dynamic typing allows people to override the operator =__pow__=, and hence the identity \( (\exp [a])^{b} = \exp [ab] \) may no longer hold for custom types. However, Cythonized versions of the program, may take advantage of the opitimisation.}
+   2) Evaluation of the normalisation factor, which involves standard
+      numerical functions
+   3) addition of the normalisation factor to each loglikelihood call.
+
+   The corresponding correction for mixture modellling is
+   1) Hashing the vector $\theta$.
+   2) Generating a pseudo-random number using the hash as seed. 
+   3) performing $m-1$ conditional checks
+   4) addition of $\ln m$, to the likelihood. 
+
+   In both cases there's also a minuscule overhead associated with
+   lengthening the state vector $\theta$\footnote{In mixture modelling one could either introduce $m+1$ parameters, and perform the hashing once, at the cost of adding an extra branch index, or add $m$, parameters but perform the hashing twice. To choose, mind that the extra branch index parameter, may adversely impact the convergence of the algorithm if there's more than one dominating representative prior. }.
+   Although these may become important in low dimensional problems,
+   they are overshadowed in all practical applications of nested
+   sampling, and thus we shall ignore them.
+
+** Correctness
+   One simple and unreliable way of determining the correctness of a
+   run is to compare the posteriors of two runs: if the means of two
+   runs are within one standard deviation of each other, then the
+   posteriors can be assumed to coincide.
+
+   Consider, however, what would happen, if one were to use a Gaussian
+   prior without posterior repartitioning on a data set, which was
+   previously analysed using a uniform prior. One would expect the
+   posterior to have tighter constraints, smaller variances and for
+   the evidence to be much higher. Of course, it's normal if said
+   Gaussian truly represents prior knowledge, but as was mentioned in
+   previous sections, this is an error for any form of posterior
+   repartitioning: it usually means that the re-scaling of the
+   likleihood is incorrect. Hence we must include (or rather base our
+   comparison on) the estimated evidences into consideration.
+
+   #+CAPTION: This figure illustrates characteristics of different repartitioning schemes. The X axis shows the evidence estimates for the last 1000 iterations of the algorithm. The correct value for evidence is obtained from the Uniform prior, and is labelled reference. PPR converged faster, hence most late likelihood calls were from the typical set, and it's a much narrower peak at the correct value. mixture repartiotioning converged even faster than that, having drawn more points form the typical set. The deliberately incorrect repartitioning scheme with the resizeable box model is also given. 
+   #+NAME: fig:hist
+   \begin{figure}
+   \input{./illustrations/histograms.tex}
+   \end{figure}
+   
+   
+** Qualitative behavioural observations. 
+   Last but not least, an interactive cartoon of the convergence
+   process for as many parameters as one likes can be obtained from
+   
+   #+begin_src python
+     NestedSamples().gui()
+   #+end_src
+   This allows us to see how the points move during the execution of
+   nested sampling. A more crude picture can be obtained from the plot
+   of $\ln Z$ vs $\ln X$, (which is also present, and used as a
+   timeline).
+
+   Based on the typical shape of the curve, we shall distinguish the
+   following stages of the algorithm's convergence. 
+   
+   While $\ln Z \approx 0$, nested sampling is in its /prior
+   compression/ stage.  Afterwards the algorithm undergoes /discovery/
+   where most live points enter the typical set and their number is
+   permanently reduced. The last stage is the /extinction stage/,
+   colloquially referred to as the /tail/.
 
    
+* Simulations
+** Toy models
+
+   We shall begin our analysis with help of a simplified model that is
+   general-enough to share features with the Cosmological scale
+   problem, but also practical to investigate in depth, with multiple
+   variations.
+
+   Our original model is a Gaussian peak. By choosing the uniform prior as a baseline, and setting the log-likelihood as:
+   \begin{equation}
+	 \ln {\cal L}(\theta) = - \frac{1}{2} \left\{(\theta - \mu)^{T}G^{-1}(\theta-\mu)  + \ln \det \left| 2\pi G\right| \right\}
+   \end{equation}
+   where the covariance matrix $G$, specifies the extent of the peak,
+   and the vector $\mu$, its location. We thus expect the posterior to
+   be a truncated and re-scaled Gaussian. However its typical set is
+   still approximately at a distance of the square root of the diagonal elements of the
+   covariance matrix form the peak, which we shall refer to as /one
+   standard deviation/.
+
+   The covariance matrix is positive semi-definite and symmetric,
+   hence it can be diagonalised citep:taboga2017lectures. If the covariance matrix is diagonal,
+   the Gaussian distribution is called uncorrelated. If all diagonal
+   elements are equal, then the Gaussian is spherical with
+   characteristic diameter given by $2 \sigma = 2\sqrt{G}$, where $G = G
+   \mathbb{1}$.
+
+   Notice that in this description we have completely neglected any
+   notion of ``data''. We don't need to worry about generating data,
+   and the extra overheads associated with $\chi^2$ fitting.
+
    
 * Appendices
 
@@ -382,7 +712,7 @@ that the model accurately describes the physical process in question.
    In addition to what was mentioned in answer to a similar question
    at the end of the previous subsection, there's an intuitive way of
    answering this question. Consider a posterior distribution that at
-   no point takes the value nil (e.g. a Gaussian). If we constrain one
+   no point takes the value nil (e.g. a Gaussian).]. If we constrain one
    prior \( \pi\) to lie within one standard deviation of the peak,
    (e.g. a sphere of radius \(\sigma\)), and another that spans twenty
    standard deviations. If we picked 20 points at random from one and
