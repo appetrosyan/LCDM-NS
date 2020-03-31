@@ -32,7 +32,7 @@ onto the real parameter space."""
         _nDims = len(self.prior_inversion_function(zeros(self.eff_nDims())))
         if _nDims != self.eff_nDims():
             raise ValueError(
-                "Prior has wrong dimensions: {} vs {} ".format(_nDims, self.eff_nDims()))
+                "Prior has the wrong dimensions: {} vs {} ".format(_nDims, self.eff_nDims()))
 
     def exec_polychord(self, verbosity=0, file_root=None, noResume=False, nLive=175):
         self._test_loglike()

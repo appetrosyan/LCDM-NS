@@ -21,10 +21,12 @@ def stoch(x, beta):
     return dist.stochastic(x, 0, 0.5, -1, 1, beta)
 
 
-plt.plot(x, N(x), 'k', label=r'$G(\theta; \mu=0, \sigma=0.5)$')
+plt.plot(x, N(x), 'k:', label=r'$G(\theta; \mu=0, \sigma=0.5)$')
 plt.plot(x, U(x), 'k--', label=r'$U(\theta, -1, 1)$')
 plt.plot(x, stoch(x, 0.5), 'k+', label=r'mix$(G, U; \beta=0.5)$')
 
-dist.legends()
+dist.legends(fontsize=12)
+plt.ylim(0, 1.2)
+plt.xlim(-1.4, 1.6)
 tikzplotlib.save('mixture.tex')
 plt.show()
