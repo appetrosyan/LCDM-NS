@@ -1,4 +1,4 @@
-% Created 2020-03-29 Sun 19:15
+% Created 2020-03-29 Sun 20:24
 \documentclass[usenatbib]{mnras}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -36,7 +36,7 @@ TODO
 \end{abstract}
 
 \section{Introduction}
-\label{sec:orgbe3f6d1}
+\label{sec:org840f481}
 
 The standard model of the universe and its evolution in modern
 cosmology is the accepted \(\Lambda\)CDM model \citep{Condon2018},
@@ -103,10 +103,10 @@ Nested Sampling, as described by \citeauthor{skilling2006} is rather abstract, a
 In the following sections we shall mostly focus on the theoretical background, and an extension (more precisely generalisation) of the idea of posterior repartitioning, its advantages, applicability and how it can be used to improve run-time characteristics of samplers such as Polychord. Lastly we shall present the results of using such methods when applied to a modern Cosmological parameter estimator such as Cobaya \citep{cobaya}.
 
 \section{Background theory}
-\label{sec:orgb097a75}
+\label{sec:org343d50c}
 
 \subsection{Brief primer on Bayesian inference.}
-\label{sec:org4cb60a0}
+\label{sec:orgee5a507}
 
 This topic has been discussed at length in literature \citep{jeffreys2010scientific}, so we shall restrict ourselves to the bare necessary definitions and concepts. 
 
@@ -144,7 +144,7 @@ Evidence & \(Z\) & \(P ( D \vert M)\)\\
 \end{tabular}
 \end{table}
 
-The two independent quantities defined in \autoref{table-defs} are the
+The two independent quantities, \({\cal L}\) and \(\pi\) defined in \autoref{table-defs} are the
 inputs to the Bayesian Sampler. How they are specified depends on the algorithm, however, most nested samplers (e.g. Polychord) find a convenient representation of log-likelihood: 
 \begin{equation}
   L = \ln \cal L
@@ -176,7 +176,7 @@ remains physically sensible. A notable exception is nested
 sampling, which we shall discuss in-depth in the next subsection.
 
 \subsection{Nested Sampling.}
-\label{sec:org9ef103f}
+\label{sec:org842f468}
 
 This algorithm is discussed in depth, so as previously we shall
 restrict ourselves to descriptions that are directly necessary for
@@ -235,7 +235,7 @@ second. Naturally algorithms that minimise the number of likelihood
 evalutaions will offer the most improvement. Hence we can see that
 the na$\backslash$"ive approach of simply rejecting values and re-drawing in
 ignorance of the values of other live points, is the least
-efficient\footnote{Thankfully, Polychord uses a technique called slice   sampling that tries to interpolate the likelihood re-using as much  information obtained from the current iteration as possible.}.
+efficient\footnote{thankfully, Polychord uses a technique called slice   sampling that tries to interpolate the likelihood re-using as much  information obtained from the current iteration as possible.}.
 
 So how can we improve the run-time? An obvious and somewhat
 dangerous approach is to pick a different prior. If the co-ordinate
@@ -265,7 +265,7 @@ posterior reparitioning to counter this exact problem.
 
 
 \subsection{Power posterior repartitioning}
-\label{sec:org067415a}
+\label{sec:org15d7ceb}
 
 The basic idea is as follows. If we had two priors, one much
 narrower than the other, we expect that the convergence in the
@@ -283,7 +283,7 @@ where \(Z_\pi(\beta)\) is a normalisation factor, i.e.
 \begin{equation}
   Z_{\pi}(\beta) = \int_{\theta \in \Psi} \pi(\theta)^{\beta}d\theta.
 \end{equation}
-Now we must\footnote{A thorough discussion of why this is necessary is given in the Appendix autoref:sec:repart-necessity} change the likelihood function to 
+Now we must\footnote{A thorough discussion of why this is necessary is given in the Appendix \autoref{sec:repart-necessity}} change the likelihood function to 
 \begin{equation}
   \tilde{\cal L}(\theta) = {\cal L}(\theta) Z_{\pi}(\beta).
 \end{equation}
@@ -354,12 +354,12 @@ an extra dimension.
 
 \begin{figure}
  \input{./illustrations/ppr.tex}
-\caption{\label{org72d5365}
+\caption{\label{org8a74bfc}
 The function \(\tilde{\pi}(\theta; \beta)\) for different values of \(\beta\). Note that we've started under the assumption that the distribution is a truncated gaussian, i.e. that it is zero outside the range \((-1, 1)\). This manifests as sharp changes in curvature at the boundaries. Note that \(\forall \beta\), \(\int_{-1}^{1}\tilde{\pi}(\theta; \beta) = 1\).}
 \end{figure}
 
 \subsection{Additive and superpositional mixtures.}
-\label{sec:orgc51b3cc}
+\label{sec:org08af3c6}
 
 Let's recap the key components of posterior repartitioning. We have
    a baseline prior, with its likelihood \((\pi(\theta), \cal L
@@ -381,11 +381,11 @@ posterior distribution, which we call the \textbf{\textbf{convergence
 property}}.\label{conv-prop}
 \end{enumerate}
 
-PPR satisfies all three properties as follows: \autoref{spec-prop} is
+PPR satisfies all three properties as follows: \ref{spec-prop} is
 fulfilled with defining \(\pi'(\theta; 0) =
-   \pi(\theta)\). \autoref{norm-prop} is fulfilled by construction and
-\autoref{conv-prop} is obvious, when noting that \(\lim_{\beta
-   \rightarrow 0} \pi'(\theta; \beta) = \pi(\theta)\).\footnote{Recall that }
+   \pi(\theta)\). \ref{norm-prop} is fulfilled by construction and
+\ref{conv-prop} is obvious, when noting that \(\lim_{\beta
+   \rightarrow 0} \pi'(\theta; \beta) = \pi(\theta)\).
 
 Our hope is that the extra complexity is offset by the speedup
 offered by the correct bias. This depends on both how accurate our
@@ -398,7 +398,7 @@ produce the same result. Of course, we want to have better
 performance as well, so some functions are preferable to others. 
 
 \subsubsection{Additive mixtures.}
-\label{sec:org752b57b}
+\label{sec:org3d52ccf}
 For example consider a weighted sum of a uniform distribution with
 a Gaussian, e.g. in one dimension
 \begin{equation}
@@ -432,11 +432,11 @@ Guassian variable-width prior will have a significant overlap, and
 would mitigate the issue.
 
 \subsubsection{Resizeable-bounds uniform prior.}
-\label{sec:org4f1c33b}
+\label{sec:org0e04538}
 
 However, the three requirements outlined at the beginning of this
-section are not sufficient. As we have noted in
-\autoref{domain-discussion}, the domains of all functions need to be
+section are not sufficient. As we have noted on 
+page \pageref{domain-discussion}, the domains of all functions need to be
 consistent. Without this, Bayes' theorem no longer holds, and our
 analysis is completely invalid. The mathematical implications of
 neglecting function domains have been discussed by
@@ -468,9 +468,9 @@ is simply an artifact of a coordinate transformation.
 
 Let \(u\) be a point in unit hypercube \(\Psi_{C}\). Let the cumulative
 prior inversion function define a map \(C(\beta)\lbrace \tilde{\pi}\rbrace:u
-	\mapsto \theta\)\footnote\{Here the curly braces indicate that we have a functional dependence on \(\tilde{\pi}\)\}, such that the uniform distribution of \(u\) leads
-through \(C_{\beta}\{\tilde{\pi}\}(u)\) to a \(\tilde{\pi}(\theta;\beta)\) distribution of \$\(\theta\)
-\(\in \Psi\)(\(\beta\))\$\footnote\{Recall that \(\tilde{\pi}(\theta, \beta_{0}) = \pi(\theta)\)\}. Note that wee
+	\mapsto \theta\),\footnote{Here the curly braces indicate functional dependence.} such that the uniform distribution of \(u\) leads
+through \(C_{\beta}\{\tilde{\pi}\}(u)\) to a \(\tilde{\pi}(\theta;\beta)\) distribution of \(\theta
+	\in\Psi(\beta)\).\footnote{Recall that \(\tilde{\pi}(\theta, \beta_{0}) = \pi(\theta)\)} Note that wee
 replaced the parameteresiation of the function \(\tilde{\pi}\) with an
 explicit parameterisation of the coordinate transformation, specifically
 \begin{equation}
@@ -509,7 +509,7 @@ posterior and evidence as seen in the experiments.
 
 
 \subsubsection{Stochastic superpositional repartitioning.}
-\label{sec:org0cdf2e5}
+\label{sec:org1dcbac6}
 
 Hence we come to the concept of \emph{stochastic superpositional
 posterior repartitiong} (SSPR). Consider \(\tilde{\pi}(\theta)\) and
@@ -574,8 +574,8 @@ Hence if one has \(m\) models in a mixture, the likelihood becomes
 \end{equation}
 
 
-A more important question is of bounded-ness. As we've discussed in
-\autoref{domain-discussion}, when dealing with repartitioning
+A more important question is of bounded-ness. As we've discussed
+(page \pageref{domain-discussion}), when dealing with repartitioning
 schemes such as resizeable uniform priors, extra care must be
 taken to account for the Jacboian factors arising from a change of
 coordinates. Mixture repartitioning, however, embeds the solution
@@ -592,14 +592,14 @@ prior branch.
 
 \begin{figure}
  \input{./illustrations/mixture.tex}
-\caption{\label{orge90218c}
+\caption{\label{orga504aba}
 An example of a mixture repartitioning. Notice that the mixture is not normalised to emphasise the coincidence of values with both the uniform distribution and a Gaussian.}
 \end{figure}
 
 
 
 \section{Key indicators}
-\label{sec:org7c8edc2}
+\label{sec:org100d73d}
 In this section we shall describe in detail the types of simulations
 and benchmarking that was done. As this project is highly
 computational, Cosmological issues are discussed only incidentally,
@@ -618,7 +618,7 @@ suggested optimisations on the CSD3 cluster (University of Cambridge).
 
 
 \subsection{Performance and benchmarking}
-\label{sec:org1adc67a}
+\label{sec:orgd9f0053}
 One cannot use CPU time as a reliable indicator of
 performance. There are multiple factors leading to unpredictable
 overheads, and these can be practically averaged out on a small
@@ -636,34 +636,34 @@ requires \(O(10^{3})\), likelihood calls, and if each of them takes a
 second to evaluate, a simple run becomes impractical. 
 
 So a natural choice for a performance metric is using the number of
-log-likelihood evaluations\footnote{one could also consider using the number of dead points in the posterior distribution, but it is neither accurate, nor transferrable across different samplers, e.g. MultiNest}. 
+log-likelihood evaluations. 
 
 Note, however that this does not account for potential extra
 complexity introduced by the repartitioning. For example for PPR,
 the effect of adding the extra parameter can be reduced to
 \begin{enumerate}
-\item one multiplication in the argument of the prior\footnote\{That is actually not true in Python, as it is unable to rewrite and optimise functions in general. The reason being that dynamic typing allows people to override the operator \texttt{\_\_pow\_\_}, and hence the identity \((\exp [a])^{b} = \exp [ab]\) may no longer hold for custom types. However, Cythonized versions of the program, may take advantage of the opitimisation.\}
-\item Evaluation of the normalisation factor, which involves standard
-numerical functions
+\item one multiplication in the argument of the prior.
+\item evaluation of the normalisation factor, which involves standard
+numerical functions,
 \item addition of the normalisation factor to each loglikelihood call.
 \end{enumerate}
 
-The corresponding correction for mixture modellling is
+The corresponding overhead for mixture modellling is
 \begin{enumerate}
-\item Hashing the vector \(\theta\).
-\item Generating a pseudo-random number using the hash as seed.
-\item performing \(m-1\) conditional checks
+\item hashing the vector \(\theta\).
+\item generating a pseudo-random number using the hash as seed.
+\item performing \(m-1\) conditional checks,
 \item addition of \(\ln m\), to the likelihood.
 \end{enumerate}
 
 In both cases there's also a minuscule overhead associated with
-lengthening the state vector \$\(\theta\)\$\footnote{In mixture modelling one could either introduce $m+1$ parameters, and perform the hashing once, at the cost of adding an extra branch index, or add $m$, parameters but perform the hashing twice. To choose, mind that the extra branch index parameter, may adversely impact the convergence of the algorithm if there's more than one dominating representative prior. }.
+lengthening the state vector \(\theta\)\footnote{In mixture modelling one could either introduce \(m+1\) parameters, and perform the hashing once, at the cost of adding an extra branch index, or add \(m\), parameters but perform the hashing twice. To choose, mind that the extra branch index parameter, may adversely impact the convergence of the algorithm if there's more than one dominating representative prior.}.
 Although these may become important in low dimensional problems,
 they are overshadowed in all practical applications of nested
 sampling, and thus we shall ignore them.
 
 \subsection{Correctness}
-\label{sec:orgd8d8ea5}
+\label{sec:orge2fac0a}
 One simple and unreliable way of determining the correctness of a
 run is to compare the posteriors of two runs: if the means of two
 runs are within one standard deviation of each other, then the
@@ -682,13 +682,13 @@ comparison on) the estimated evidences into consideration.
 
 \begin{figure}
 \input{./illustrations/histograms.tex}
-\caption{\label{org80abd74}
+\caption{\label{org5302e5a}
 This figure illustrates characteristics of different repartitioning schemes. The X axis shows the evidence estimates for the last 1000 iterations of the algorithm. The correct value for evidence is obtained from the Uniform prior, and is labelled reference. PPR converged faster, hence most late likelihood calls were from the typical set, and it's a much narrower peak at the correct value. mixture repartiotioning converged even faster than that, having drawn more points form the typical set. The deliberately incorrect repartitioning scheme with the resizeable box model is also given.}
 \end{figure}
 
 
 \subsection{Qualitative behavioural observations.}
-\label{sec:orgc130c1c}
+\label{sec:org41ffa53}
 Last but not least, an interactive cartoon of the convergence
 process for as many parameters as one likes can be obtained from
 
@@ -711,9 +711,9 @@ colloquially referred to as the \emph{tail}.
 
 
 \section{Simulations}
-\label{sec:org6c490eb}
+\label{sec:org7eeaaa2}
 \subsection{Toy models}
-\label{sec:orgc63439c}
+\label{sec:org1d8dd99}
 
 We shall begin our analysis with help of a simplified model that is
 general-enough to share features with the Cosmological scale
@@ -744,10 +744,10 @@ and the extra overheads associated with \(\chi^2\) fitting.
 
 
 \section{Appendices}
-\label{sec:org846c240}
+\label{sec:org6c430b6}
 
 \subsection{Why do we need to alter the likelihood. \label{sec:repart-necessity}}
-\label{sec:org0ee1059}
+\label{sec:org1ee1d39}
 One may ask why such a change of the likelihood is at all
 necessary. Indeed, the likelihood may be chosen based on a precise
 theory of error, e.g. a least-squares fit argument based on
@@ -767,7 +767,7 @@ point that's within one standard deviation from the perspective of
 the broader prior is a much more significant result than finding
 one from the narrower one. Indeed, we will not expect the posterior
 distributions to be the same, but nested sampling would produce a
-narrower peak based on the ``same'' model\footnote{From a   frequentist standpoint, our prior knowledge is irrelevant. But even   a frequentist would agree that the value obtained by changing the   prior would not be the same. }. 
+narrower peak based on the ``same'' model\footnote{From a   frequentist standpoint, our prior knowledge is irrelevant. But even   a frequentist would agree that the value obtained by changing the   prior would not be the same.}. 
 
 Of course, a Bayesian would say that if our true prior knowledge
 was represented by the narrower prior, we would indeed need to

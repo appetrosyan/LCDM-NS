@@ -77,7 +77,7 @@ TODO
   characteristics of the microwave detectors. 
 
   A full Bayesian inference is a computationally expensive endeavour,
-  particularly with a large number of parameters\footnote{at present, the total number of parameters ranges from 27 to 42, including nusiance parameters} 
+  particularly with a large number of parameters[fn:2] 
   and very little prior knowledge. Hence a large number of algorithms were developed to speed the computation up: Metropolis-Hastings citep:Metropolis used in conjunction with Gibbs sampler citep:Metropolis-hastings-gibbs and more recently Nested Sampling citep:skilling2006, which will be our focus. 
 
   Nested Sampling, as described by citeauthor:skilling2006 is rather abstract, and multiple algorithmically distinct implementations of the idea exist citep:Feroz2009MultiNestAE, polychord. However, cite:chen-ferroz-hobson noted that the algorithm is sensitive to how two quantities lieklihood and prior are defined, with respect to what the posterior distribution, and hence called the technique /automatic power posterior repartitioning/ (PPR). While citeauthor:chen-ferroz-hobson used PPR to improve the stability of convergence for prior distributions that may have been at variance with the true posterior, the idea of repartitioning can be used also to speed up the convergence (as if our prior knowledge had been more precise), without biasing the sampler and altering the results: posterior distribution and evidence. 
@@ -90,7 +90,7 @@ TODO
 
    This topic has been discussed at length in literature citep:jeffreys2010scientific, so we shall restrict ourselves to the bare necessary definitions and concepts. 
 
-   Let our scientific theory that we're interested in testing have a model \({\cal M}\), that predicts what data \( \lbrace {\cal M}(\vec{\theta})\rbrace\) we should observe, depending on parameters \( \vec{\theta} = \lbrace  \theta_1, \theta_2, \ldots, \theta_n \rbrace\)\footnote{including nuisance parameters}. Let the actual observed data be \({\cal D}\). 
+   Let our scientific theory that we're interested in testing have a model \({\cal M}\), that predicts what data \( \lbrace {\cal M}(\vec{\theta})\rbrace\) we should observe, depending on parameters \( \vec{\theta} = \lbrace  \theta_1, \theta_2, \ldots, \theta_n \rbrace\)[fn:3]. Let the actual observed data be \({\cal D}\). 
 
    Hence we can define the following conditional probabilities given
 in autoref:table-defs. Using these definition citeauthor:1763 theorem
@@ -119,7 +119,7 @@ that the model accurately describes the physical process in question.
    | Posterior  | \({\cal P}(\theta)\) | \(P ( \theta \vert D \cup M)\) |
    | Evidence   | \(Z\)                | \(P ( D \vert M)\)             |
 
-   The two independent quantities defined in autoref:table-defs are the
+   The two independent quantities, ${\cal L}$ and $\pi$ defined in autoref:table-defs are the
    inputs to the Bayesian Sampler. How they are specified depends on the algorithm, however, most nested samplers (e.g. Polychord) find a convenient representation of log-likelihood: 
    \begin{equation}
 	 L = \ln \cal L
@@ -169,7 +169,7 @@ that the model accurately describes the physical process in question.
    \(n_\text{live}\) points from the hypercube at random. We expect
    that the probability that the points have the same likelihood is
    vanishingly small, so we can expect that each of them lies on a
-   distinct iso-likelihood hyper-surface\footnote{think isotherms  where likelihood correponds to temperature.}. Each hyper surface
+   distinct iso-likelihood hyper-surface[fn:5]. Each hyper surface
    will contain roughly \(frac{1}{n_\text{live}}\)-th of the total
    volume of the hypercube.
    
@@ -209,7 +209,7 @@ that the model accurately describes the physical process in question.
    evalutaions will offer the most improvement. Hence we can see that
    the na\"ive approach of simply rejecting values and re-drawing in
    ignorance of the values of other live points, is the least
-   efficient\footnote{Thankfully, Polychord uses a technique called slice   sampling that tries to interpolate the likelihood re-using as much  information obtained from the current iteration as possible.}.
+   efficient[fn:6].
 
    So how can we improve the run-time? An obvious and somewhat
    dangerous approach is to pick a different prior. If the co-ordinate
@@ -245,7 +245,7 @@ that the model accurately describes the physical process in question.
    narrower one will be faster. After all, we're ignoring the bulk of
    prior space where nothing happens. We also expect that the
    lieklihood of the values inside the smaller effective volume will
-   be enhanced\footnote{to see why this happens, consider that the to   have a larger value of the prior, (or rather a more condensed one),   to keep the product \(\cal L \pi\) constant, one must have reduced   the value of \(\cal L\). That said, the answer: the posterior and   the evidence are still valid, they simply correspond to a different  model.}. 
+   be enhanced[fn:7]. 
 
    As such citeauthor:chen-ferroz-hobson have proposed introducing an
    extra parameter \(\beta\) that re-scales the prior like so:
@@ -256,7 +256,7 @@ that the model accurately describes the physical process in question.
    \begin{equation}
 	 Z_{\pi}(\beta) = \int_{\theta \in \Psi} \pi(\theta)^{\beta}d\theta.
    \end{equation}
-   Now we must\footnote{A thorough discussion of why this is necessary is given in the Appendix autoref:sec:repart-necessity} change the likelihood function to 
+   Now we must[fn:9] change the likelihood function to 
    \begin{equation}
 	 \tilde{\cal L}(\theta) = {\cal L}(\theta) Z_{\pi}(\beta).
    \end{equation}
@@ -351,11 +351,11 @@ that the model accurately describes the physical process in question.
       posterior distribution, which we call the **convergence
       property**.label:conv-prop
 
-   PPR satisfies all three properties as follows: autoref:spec-prop is
+   PPR satisfies all three properties as follows: ref:spec-prop is
    fulfilled with defining $\pi'(\theta; 0) =
-   \pi(\theta)$. autoref:norm-prop is fulfilled by construction and
-   autoref:conv-prop is obvious, when noting that $\lim_{\beta
-   \rightarrow 0} \pi'(\theta; \beta) = \pi(\theta)$.\footnote{Recall that }
+   \pi(\theta)$. ref:norm-prop is fulfilled by construction and
+   ref:conv-prop is obvious, when noting that $\lim_{\beta
+   \rightarrow 0} \pi'(\theta; \beta) = \pi(\theta)$.
 
    Our hope is that the extra complexity is offset by the speedup
    offered by the correct bias. This depends on both how accurate our
@@ -403,8 +403,8 @@ that the model accurately describes the physical process in question.
 *** Resizeable-bounds uniform prior. 
 	
 	However, the three requirements outlined at the beginning of this
-	section are not sufficient. As we have noted in
-	autoref:domain-discussion, the domains of all functions need to be
+	section are not sufficient. As we have noted on 
+	page pageref:domain-discussion, the domains of all functions need to be
 	consistent. Without this, Bayes' theorem no longer holds, and our
 	analysis is completely invalid. The mathematical implications of
 	neglecting function domains have been discussed by
@@ -436,9 +436,9 @@ that the model accurately describes the physical process in question.
 
 	Let $u$ be a point in unit hypercube $\Psi_{C}$. Let the cumulative
 	prior inversion function define a map \(C(\beta)\lbrace \tilde{\pi}\rbrace:u
-	\mapsto \theta\)\footnote{Here the curly braces indicate that we have a functional dependence on $\tilde{\pi}$}, such that the uniform distribution of $u$ leads
+	\mapsto \theta\),[fn:1] such that the uniform distribution of $u$ leads
 	through $C_{\beta}\{\tilde{\pi}\}(u)$ to a $\tilde{\pi}(\theta;\beta)$ distribution of $\theta
-	\in\Psi(\beta)$\footnote{Recall that $\tilde{\pi}(\theta, \beta_{0}) = \pi(\theta)$}. Note that wee
+	\in\Psi(\beta)$.[fn:8] Note that wee
 	replaced the parameteresiation of the function $\tilde{\pi}$ with an
 	explicit parameterisation of the coordinate transformation, specifically
 	\begin{equation}
@@ -541,8 +541,8 @@ that the model accurately describes the physical process in question.
 	\end{equation}
 
 
-	A more important question is of bounded-ness. As we've discussed in
-	autoref:domain-discussion, when dealing with repartitioning
+	A more important question is of bounded-ness. As we've discussed
+	(page pageref:domain-discussion), when dealing with repartitioning
 	schemes such as resizeable uniform priors, extra care must be
 	taken to account for the Jacboian factors arising from a change of
 	coordinates. Mixture repartitioning, however, embeds the solution
@@ -601,24 +601,24 @@ that the model accurately describes the physical process in question.
    second to evaluate, a simple run becomes impractical. 
 
    So a natural choice for a performance metric is using the number of
-   log-likelihood evaluations\footnote{one could also consider using the number of dead points in the posterior distribution, but it is neither accurate, nor transferrable across different samplers, e.g. MultiNest}. 
+   log-likelihood evaluations. 
 
    Note, however that this does not account for potential extra
    complexity introduced by the repartitioning. For example for PPR,
    the effect of adding the extra parameter can be reduced to
-   1) one multiplication in the argument of the prior\footnote{That is actually not true in Python, as it is unable to rewrite and optimise functions in general. The reason being that dynamic typing allows people to override the operator =__pow__=, and hence the identity \( (\exp [a])^{b} = \exp [ab] \) may no longer hold for custom types. However, Cythonized versions of the program, may take advantage of the opitimisation.}
-   2) Evaluation of the normalisation factor, which involves standard
-      numerical functions
+   1) one multiplication in the argument of the prior.
+   2) evaluation of the normalisation factor, which involves standard
+      numerical functions,
    3) addition of the normalisation factor to each loglikelihood call.
 
-   The corresponding correction for mixture modellling is
-   1) Hashing the vector $\theta$.
-   2) Generating a pseudo-random number using the hash as seed. 
-   3) performing $m-1$ conditional checks
+   The corresponding overhead for mixture modellling is
+   1) hashing the vector $\theta$.
+   2) generating a pseudo-random number using the hash as seed. 
+   3) performing $m-1$ conditional checks,
    4) addition of $\ln m$, to the likelihood. 
 
    In both cases there's also a minuscule overhead associated with
-   lengthening the state vector $\theta$\footnote{In mixture modelling one could either introduce $m+1$ parameters, and perform the hashing once, at the cost of adding an extra branch index, or add $m$, parameters but perform the hashing twice. To choose, mind that the extra branch index parameter, may adversely impact the convergence of the algorithm if there's more than one dominating representative prior. }.
+   lengthening the state vector \(\theta\)[fn:4].
    Although these may become important in low dimensional problems,
    they are overshadowed in all practical applications of nested
    sampling, and thus we shall ignore them.
@@ -700,6 +700,8 @@ that the model accurately describes the physical process in question.
    and the extra overheads associated with $\chi^2$ fitting.
 
    
+
+   
 * Appendices
 
 ** Why do we need to alter the likelihood. label:sec:repart-necessity
@@ -722,7 +724,7 @@ that the model accurately describes the physical process in question.
    the broader prior is a much more significant result than finding
    one from the narrower one. Indeed, we will not expect the posterior
    distributions to be the same, but nested sampling would produce a
-   narrower peak based on the ``same'' model\footnote{From a   frequentist standpoint, our prior knowledge is irrelevant. But even   a frequentist would agree that the value obtained by changing the   prior would not be the same. }. 
+   narrower peak based on the ``same'' model[fn:10]. 
 
    Of course, a Bayesian would say that if our true prior knowledge
    was represented by the narrower prior, we would indeed need to
@@ -735,3 +737,25 @@ that the model accurately describes the physical process in question.
 
    \bibliography{bibliography} 
    \bibliographystyle{mnras}
+
+* Footnotes
+
+[fn:10] From a   frequentist standpoint, our prior knowledge is irrelevant. But even   a frequentist would agree that the value obtained by changing the   prior would not be the same. 
+
+[fn:9] A thorough discussion of why this is necessary is given in the Appendix autoref:sec:repart-necessity
+
+[fn:8] Recall that $\tilde{\pi}(\theta, \beta_{0}) = \pi(\theta)$
+
+[fn:7] to see why this happens, consider that the to   have a larger value of the prior, (or rather a more condensed one),   to keep the product \(\cal L \pi\) constant, one must have reduced   the value of \(\cal L\). That said, the answer: the posterior and   the evidence are still valid, they simply correspond to a different  model.
+
+[fn:6] thankfully, Polychord uses a technique called slice   sampling that tries to interpolate the likelihood re-using as much  information obtained from the current iteration as possible.
+
+[fn:5] think isotherms  where likelihood correponds to temperature.
+
+[fn:4] In mixture modelling one could either introduce $m+1$ parameters, and perform the hashing once, at the cost of adding an extra branch index, or add $m$, parameters but perform the hashing twice. To choose, mind that the extra branch index parameter, may adversely impact the convergence of the algorithm if there's more than one dominating representative prior. 
+
+[fn:3] including nuisance parameters
+
+[fn:2] at present, the total number of parameters ranges from 27 to 42, including nusiance parameters
+
+[fn:1] Here the curly braces indicate functional dependence. 

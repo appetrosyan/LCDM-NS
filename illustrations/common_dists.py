@@ -40,7 +40,7 @@ def stochastic(xs, mu, sigma, a, b, beta):
     return np.array(rval)
 
 
-def legends():
-    plt.legend()
+def legends(**kwargs):
+    plt.legend(**kwargs)
     plt.xlabel(r'$\theta$')
     plt.ylabel(r'$\pi(\theta)$')
