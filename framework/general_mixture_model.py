@@ -102,11 +102,6 @@ mdl4 = ResizeableUniformPrior(bounds, mu, cov)
 
 mdl5 = PowerPosteriorPrior(bounds, mu, cov)
 
-# try:
-#     mix = MixtureModel([mdl1, mdl2])
-# except ValueError as e:
-#     print(e)
-
 # mix = MixtureModel([mdl1, mdl1, mdl1])
 mix = MixtureModel([mdl1, mdl5])
 kwargs = {
@@ -118,11 +113,11 @@ qr, repart = mdl4.exec_polychord(**kwargs)
 qp, power = mdl5.exec_polychord(**kwargs)
 q0, reference = mdl1.exec_polychord(**kwargs)
 
-plt.hist(samples.logZ(1000), label=r'mix$(U, PPR)$', alpha=1)
+plt.hist(samples.logZ(1000), label=r'mix\((U, PPR)\)', alpha=1)
 plt.hist(repart.logZ(1000),
          label=r'Wrong \( \ln\  {\cal L} \)', hatch='\\', fill=True, alpha=0.3)
 plt.hist(power.logZ(1000), label='PPR', alpha=0.3)
-plt.hist(reference.logZ(1000), label='$U$ - reference',
+plt.hist(reference.logZ(1000), label='\(U\) - reference',
          alpha=0.3, fill=True)
 plt.xlabel(r'\(\ln Z\) /arb. units')
 plt.ylabel(r'number of occurrences / arb. units')

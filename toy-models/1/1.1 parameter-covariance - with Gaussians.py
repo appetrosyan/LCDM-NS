@@ -4,6 +4,7 @@ import pypolychord.settings
 import pypolychord.priors
 import anesthetic
 import matplotlib.pyplot as plt
+import tikzplotlib
 
 
 def gaussian_likelihood(theta, mu, sig):
@@ -145,9 +146,9 @@ planck_ranges = numpy.array(
      [0, 3]])
 
 
-samples = anesthetic.NestedSamples(root='./data.1908.09139/lcdm/chains/planck')
+samples = anesthetic.NestedSamples(
+    root='../data.1908.09139/lcdm/chains/planck')
 fig, ax = samples.plot_2d(['logA', 'ns'])
-# plt.show()
 
 
 # params = samples.columns[:27]
@@ -172,11 +173,9 @@ args = {
 exec_polychord(**args)
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
-plt.title(
-    r'Comparison of different runs of PolyChord on $\Lambda$CDM data from Planck.')
-# newSamples = anesthetic.NestedSamples(root='./chains/planck')
-# newSamples.plot_2d(ax)
+newSamples = anesthetic.NestedSamples(root='./chains/planck')
+newSamples.plot_2d(ax)
 
-# plt.show()
+plt.show()
 # fig = plt.figure()
 fig.savefig('./comparison.pdf')
