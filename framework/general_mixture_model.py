@@ -7,16 +7,9 @@ from pypolychord.settings import PolyChordSettings
 from numpy import array, concatenate, lcm, log
 from random import random, seed
 import fractions
-import tikzplotlib
-
-from matplotlib import rc
-
-rc('font', **{'family': 'serif', 'serif': ['Times']})
-rc('text', usetex=True)
-plt.rcParams["font.size"] = 14
 
 
-class MixtureModel(Model):
+class StochasticMixtureModel(Model):
     default_file_root = 'mixture'
 
     def __init__(self, models, settings=None, file_root=default_file_root):
@@ -90,41 +83,3 @@ class MixtureModel(Model):
 
 def allElementsIdentical(lst):
     return not lst or lst.count(lst[0]) == len(lst)
-
-
-bounds = (-6*10**8, 6*10**8)
-mu = array([1, 2, 3])
-cov = array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-
-mdl1 = BoxUniformModel(bounds, mu, cov)
-
-mdl4 = ResizeableUniformPrior(bounds, mu, cov)
-
-mdl5 = PowerPosteriorPrior(bounds, mu, cov)
-
-# mix = MixtureModel([mdl1, mdl1, mdl1])
-mix = MixtureModel([mdl1, mdl5])
-kwargs = {
-    'noResume': True,
-    'nLive': 20
-}
-qm, samples = mix.exec_polychord(**kwargs)
-qr, repart = mdl4.exec_polychord(**kwargs)
-qp, power = mdl5.exec_polychord(**kwargs)
-q0, reference = mdl1.exec_polychord(**kwargs)
-
-plt.hist(samples.logZ(1000), label=r'mix\((U, PPR)\)', alpha=1)
-plt.hist(repart.logZ(1000),
-         label=r'Wrong \( \ln\  {\cal L} \)', hatch='\\', fill=True, alpha=0.3)
-plt.hist(power.logZ(1000), label='PPR', alpha=0.3)
-plt.hist(reference.logZ(1000), label='\(U\) - reference',
-         alpha=0.3, fill=True)
-plt.xlabel(r'\(\ln Z\) /arb. units')
-plt.ylabel(r'number of occurrences / arb. units')
-plt.legend()
-tikzplotlib.save('../illustrations/histograms.tex')
-plt.show(block=False)
-anss = [qm, qr, qp, q0]
-
-for x in anss:
-    print('{:.2e}'.format(x.nlike))

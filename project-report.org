@@ -7,6 +7,7 @@ sema#+TITLE: Cosmological parameter estimation using Bayesian accelerated machin
 #+LATEX_HEADER: \usepgfplotslibrary{groupplots,dateplot}
 #+LATEX_HEADER: \usetikzlibrary{patterns,shapes.arrows}
 #+LATEX_HEADER: \pgfplotsset{compat=newest}
+#+LATEX_HEADER: \usepackage{dsfont}
 #+OPTIONS: toc:nil 
 #+BIBLIOGRAPHY: bibliography
 #+LATEX_COMPILER: tectonic
@@ -168,8 +169,9 @@ TODO
    \label{eq:bayes} 
    \end{equation}
    Notice that the /evidence/ \({\cal Z}\) is implicitly defined as
-   \begin{equation} 
-    {\cal Z} = \int_{\Psi} {\cal L}(\theta) \pi(\theta) d\theta, \label{eq:def-z}
+   
+   \begin{equation}\label{eq:def-z}
+    {\cal Z} = \int_{\Psi} {\cal L}(\theta) \pi(\theta) d\theta, 
    \end{equation}
    where \(\Psi\) is the so-called prior space -- the domain of the
    prior function. Although some authors
@@ -265,12 +267,12 @@ TODO
    prior volume encased in the outer hyper-surface:
    
    \begin{equation}
-	 \begin{array}
-	 X_{0} = &1,\\
-	 X_{1} = &X_{0} - \frac{X_{0}}{n_\text{live}},\\
-	 \vdots\\
-	 X_{m} = &X_{m-1} - \frac{X_{m-1}}{m_\text{live}},\\
-	 \vdots\\
+	 \begin{array}{rcl}
+	 X_{0} &=  &1 \\
+     X_{1} &= &X_{0} \left(1- \frac{1}{n_\text{live}}\right)\\
+     & \vdots & \\
+     X_{i} &= &X_{i-1}\left(1- \frac{1}{n_\text{live}}\right)\\
+     & \vdots &
    \end{array}
    \label{eq:recurrence-relation}
    \end{equation}
@@ -282,7 +284,7 @@ TODO
    volume -- $1$.
 
    As was mentioned previously, the recurrence relation
-   autoref:eq:recurrence-relation is not exact. However, $P(\Delta)$
+   eqref:eq:recurrence-relation is not exact. However, $P(\Delta)$
    is a known distribution, dependent on the dimensionality of the
    hypercube and the likelihood. Thus, one can for each value of
    $\epsilon>0$, deduce a value $\delta(\epsilon) >0$, such that
@@ -313,15 +315,11 @@ TODO
    the posterior distribution, all the algorithm needs to do is check
    the obtained values. So an ideal sampler would converge optimally
    when the prior and the posterior coincide: 
-   \begin{equation}
-    \begin{align}
-     {\cal P}(\theta) = \pi(\theta) & \forall \theta.
-    \end{align}
-   \end{equation}
+   \[\begin{array}{rl} {\cal P}(\theta) = \pi(\theta) & \forall \theta \end{array} \]
    So if one has gathered data from free fall experiments, on earth
    one would expect the posterior to be a normal distribution peaked
-   at $g=9.81$, with standard deviation $\sigma_{g} = 0.01$. 
-   \[{\cal P}(\theta) = N(9.81, 0.01)\]. 
+   at $g=9.81$, with standard deviation $\sigma_{g} = 0.01$, which we
+   shall compactly refer to as \[{\cal P}(\theta) = G(9.81, 0.01)\].
 
    However that is only partially true. According to Bayesian
    statistics the prior knowledge: the constraints set on the model
@@ -425,7 +423,7 @@ TODO
    shall ignore for now). Central limit theorem suggests, that the
    model parameters' posterior is within a Gaussian:
    \begin{equation}
-	\pi (\theta) \propto \exp{ \left[-\left(\frac{\theta - \mu}{2\sigma}\right)^{2}} \right],
+	\pi (\theta) \propto \exp \left[-\left(\frac{\theta - \mu}{2\sigma}\right)^{2} \right],
    \end{equation}
    albeit not the values of \(\mu\) and \(\sigma\). We shall refer to
    this function as the /intuition/, or the /biased prior/. Ordinarily
@@ -535,16 +533,22 @@ TODO
 *** Additive mixtures.
 	Consider a weighted sum of a uniform distribution with
 	a Gaussian, e.g. in one dimension
-	\begin{equation}label:eq:additive-mix
-	  \pi(\theta) = \frac{1}{Z} \left\lbrace \beta (b - a)^{-1} + (1-\beta) \exp \left[ -\left(\frac{\theta - \mu}{\sigma} \right)^{2}\right]\right\rbrace \cdot \left[ \mathbf{1}(\theta-a) - \mathbf{1}(\theta-b)\right].
+	\begin{equation}\label{eq:additive-mix}
+	  \pi(\theta) = \dfrac{ \left\lbrace \frac{1- \beta} {b - a} + \beta \exp \left[ -\left(\frac{\theta - \mu}{\sigma} \right)^{2}\right]\right\rbrace \cdot TH(\theta; a, b)}{Z}.
 	\end{equation}
-	where $\mathbf{1}$ is the Heaviside step function. Integrate to
+	where $TH(\theta;a,b)$ is the top-hat function. Integrate to
 	obtain the normalisation factor $Z(\beta)\{\pi\}$, used to
 	re-scale ${\cal L}$. Recall, however, that we use the inverse of
 	the prior cumulative distribution, and while the inverses of both
 	priors are manifest, we cannot easily compute the inverse of the
 	sum. In general one can't even prove that for two arbitrary
 	distributions the inverse of the sum exists.
+
+	#+CAPTION: An illustration of the additive mixture repartitioning. PPR for the same value of $\beta=0.3$, added for comparison. 
+	#+NAME: fig:additive
+	\begin{figure}
+      \input{illustrations/additive_mixtures.tex}
+	\end{figure}
 
 	This, while inconvenient, can be mitigated. Indeed, since the
 	probability density functions (PDF) $\pi_{i}(\theta; \beta) >0$,
@@ -638,7 +642,8 @@ TODO
 	is a parameterised distribution resulting from a parameterised
 	coordinate transformation of an un-parameterised prior PDF.
 
-	We shall make Bayes' theorem be defined only on the hypercube
+	We shall make citeauthor:1763's theorem be defined only in the
+	hypercube
 	\begin{equation}
 	{\cal \hat{P}}(u) = {\cal P}(C(\beta_{0}){\tilde{\pi}}^{-1}(\theta)) = \frac{\hat{\pi} (u) {\cal \hat{L}}(u)}{\int_{\Psi}{\cal \hat{L}}(u) \hat{\pi}(u) du},
 	\end{equation}
@@ -827,7 +832,7 @@ TODO
    likelihood is incorrect. Hence we must include (or rather base our
    comparison on) the estimated evidences into consideration.
 
-   #+CAPTION: This figure illustrates characteristics of different re-partitioning schemes. The X axis shows the evidence estimates for the last 1000 iterations of the algorithm. The correct value for evidence is obtained from the Uniform prior, and is labelled reference. PPR converged faster, hence most late likelihood calls were from the typical set, and it's a much narrower peak at the correct value. mixture reapportioning converged even faster than that, having drawn more points form the typical set. The deliberately incorrect re-partitioning scheme with the re-sizeable box model is also given. 
+   #+CAPTION: An illustration of the evidence distributions of different types of repartitioning schemes. The Uniform reference obtained a distribution centered around \( \log {\cal Z} = -62 = - \log V(\Psi) \) (see autoref:eq:evidence, where $(a,b)=(-6, 6)\cdot 10^{8}$ and $G=\mathds{1}_{3}$). Note that both mixture modelling and PPR have found the same value, and the distributions are more sharply peaked. Also notice that if the repartitioning is done incorrectly, the evidnece will also be estimated incorrectly, however the algorithm will converge and produce a distribution that outwardly is no different to the uniform distribution one started with. 
    #+NAME: fig:hist
    \begin{figure}
    \input{./illustrations/histograms.tex}
@@ -835,7 +840,7 @@ TODO
    
    Unfortunately, while a full analysis of the posterior distributions
    would be much more in the spirit of Bayesian analysis, the data-sets
-   being compared are huge, so one cannot practically include all of
+   being are huge, so one cannot practically include all of
    the ``triangle plots'' to prove the correctness of a run. We shall
    provide one example, and drop the discussion: one should assume
    that the posteriors coincide unless otherwise specified[fn:11]. 
@@ -879,29 +884,39 @@ TODO
 	problem, but also practical to investigate in depth, with multiple
 	variations.
 
-	Our original model is a Gaussian peak. By choosing the uniform prior as a baseline, and setting the log-likelihood as:
+	Our original model is a Gaussian peak. By choosing the uniform
+	prior as a baseline, and setting the log-likelihood as:
 	\begin{equation}
 	  \ln {\cal L}(\theta) = - \frac{1}{2} \left\{(\theta - \mu)^{T}G^{-1}(\theta-\mu)  + \ln \det \left| 2\pi G\right| \right\}
 	\end{equation}
 	where the covariance matrix $G$, specifies the extent of the peak,
-	and the vector $\mu$, its location. We thus expect the posterior to
-	be a truncated and re-scaled Gaussian. However its typical set is
-	still approximately at a distance of the square root of the diagonal elements of the
-	covariance matrix form the peak, which we shall refer to as /one
-	standard deviation/.
+	and the vector $\mu$, its location. We thus expect the posterior
+	to be a truncated and re-scaled Gaussian. However its typical set
+	is still approximately at a distance of the square root of the
+	diagonal elements of the covariance matrix form the peak, which we
+	shall refer to as /one standard deviation/.
 
 	The covariance matrix is positive semi-definite and symmetric,
-	hence it can be diagonalised citep:taboga2017lectures. If the covariance matrix is diagonal,
-	the Gaussian distribution is called uncorrelated. If all diagonal
-	elements are equal, then the Gaussian is spherical with
-	characteristic diameter given by $2 \sigma = 2\sqrt{G}$, where $G = G
-	\mathbb{1}$.
+	hence it can be diagonalised citep:taboga2017lectures. If the
+	covariance matrix is diagonal, the Gaussian distribution is called
+	uncorrelated. If all diagonal elements are equal, then the
+	Gaussian is spherical with characteristic diameter given by $2
+	\sigma = 2\sqrt{G}$, where $G = G \mathds{1}$.
 
 	Notice that in this description we have completely neglected any
 	notion of ``data'', consequently, we don't need to worry about
 	generating said data, and the extra overheads associated with
 	$\chi^2$ fitting.
-**** TODO Discuss tails. 
+
+	Under such circumstances it's a matter of integrating ref:eq:def-z
+	to obtain the evidence. Most generally for a correlated Gaussian
+	likelihood the volume associated is 
+	
+	\begin{equation}\label{eq:evidence}
+	   {\cal Z} = \frac{\left( \sqrt{ \det \left| 2\pi G \right|} \right)^{n}}{\mathbf{b}-\mathbf{a}}  
+	\end{equation}
+	where \(n\) is the number of parameters in the model.
+*** TODO Discuss tails. 
 *** TODO Cosmological simulations
 	For the Cosmological parameter estimation Cobaya citep:cobaya with
 	CLASS citep:Blas_2011, and PolyChord citep:polychord as a sampler
