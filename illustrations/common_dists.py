@@ -40,6 +40,16 @@ def stochastic(xs, mu, sigma, a, b, beta):
     return np.array(rval)
 
 
+def additive(xs, mu, sigma, a, b, beta):
+    def f(x):
+        return (beta)/(b-a) + (1-beta)*N(x, mu, sigma)
+    Z, _ = integrate.quad(f, a, b)
+    rval = []
+    for x in xs:
+        rval.append(f(x) if x > a and x < b else 0)
+    return np.array(rval)
+
+
 def legends(**kwargs):
     plt.legend(**kwargs)
     plt.xlabel(r'$\theta$')
