@@ -1,7 +1,7 @@
 from gaussian_models.parameter_covariance import ParameterCovarianceModel
 from pypolychord.priors import UniformPrior
 from numpy.linalg import slogdet, multi_dot, inv
-from numpy import pi, log, zeros, array, nextafter
+from numpy import pi, log, zeros, array, nextafter, concatenate
 
 
 class BoxUniformModel(ParameterCovarianceModel):
