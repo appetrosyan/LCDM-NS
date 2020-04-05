@@ -2,13 +2,13 @@ from parameter_covariance import ParameterCovarianceModel
 from pypolychord.settings import PolyChordSettings
 from pypolychord.priors import UniformPrior
 from numpy.linalg import slogdet, multi_dot, inv
-from numpy import pi, log, zeros, array, concatenate, diag, sqrt
+from numpy import pi, log, zeros, array, concatenate, diag, sqrt, nextafter
 from scipy.special import erf, erfinv
 
 
 class PowerPosteriorPrior(ParameterCovarianceModel):
     default_file_root = 'PowerPosteriorModel'
-    betamin = 0
+    betamin = nextafter(0, 1)   # Smallest representable +ve float64
     betamax = 1
 
     def _ln_z(self, theta, beta):

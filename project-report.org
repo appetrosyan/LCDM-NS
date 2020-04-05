@@ -560,18 +560,30 @@ TODO
 	$\beta$, is effectively the same as re-scaling its argument by
 	$\sqrt{\beta}$, which transfers to the CDF.
 
-	However, one significant improvement over the PPR case is in
-	likelihoods. For two priors $\pi_{1}$ and $\pi_{2}$ Normalising
-	the likelihoods is trivial:
+	However, one significant improvement over PPR is in
+	likelihoods. For two priors $\pi_{1}$ and $\pi_{2}$
+	Normalising the likelihoods is trivial:
 	\begin{equation}
 	{\cal L}(\theta; \beta) = \frac{{\cal L}_{1}(\theta) \pi_{1}(\theta)}{\tilde{\pi}(\theta; \beta)}.
 	\end{equation}
-	where we've assumed that ${\cal L}_{1}(\theta)\pi_{1}(\theta) =
-	{\cal L}_{2}(\theta) \pi_{2}(\theta)$. This generalises
-	straightforwardly to the case where we have more than one prior,
-	due to the linearity of integration and multiplication. The
-	likelihood is a well-behaved function in the prior space, (because
-	we've required the priors be non-zero in their domain).
+	where we've assumed that ${\cal L}_{1}(\theta)\pi_{1}(\theta)
+	= {\cal L}_{2}(\theta) \pi_{2}(\theta)$. This generalises
+	straightforwardly to the case where we have more than one
+	prior. The likelihood is also a well-behaved function
+	in the prior space, (because we've required the priors be
+	non-zero in their domain), which is not always true for every
+	value of $\beta$ and every prior in PPR.
+
+	Another advantage is that by construction the normalisation
+	factor $Z \{ \pi\}(\beta) = 1$ for arbitraty $\beta$. This
+	saves considerable effort: one does not care if correlatedness
+	of the Gaussian, alongside orientation issues can be corrected
+	for analytically, as one would with PPR[fn::one couldargue
+	that correlatedness is irrelevant, as one can always
+	diagonalise the covariance matrix. The problem, however, is
+	thus transferred onto the boundary, where for a narrow prior
+	the orientation of the rectangle's edges in the covariance
+	eigenbasis can cause issues. ].
 
 	A flaw, which additive mixtures share with PPR, is that the
 	probability of having no bias is negligible. There's always a
@@ -642,7 +654,7 @@ TODO
 	is a parameterised distribution resulting from a parameterised
 	coordinate transformation of an un-parameterised prior PDF.
 
-	We shall make citeauthor:1763's theorem be defined only in the
+	We shall make citeauthor:1763 's theorem be defined only in the
 	hypercube
 	\begin{equation}
 	{\cal \hat{P}}(u) = {\cal P}(C(\beta_{0}){\tilde{\pi}}^{-1}(\theta)) = \frac{\hat{\pi} (u) {\cal \hat{L}}(u)}{\int_{\Psi}{\cal \hat{L}}(u) \hat{\pi}(u) du},
@@ -668,7 +680,7 @@ TODO
 	posterior and evidence as seen in the experiments. 
 	
 	
-*** Stochastic superposition-al re-partitioning.
+*** Stochastic superpositional re-partitioning.
 
 	Hence we come to the concept of /stochastic superposition-al
 	posterior repetition/ (SSPR). Consider $\tilde{\pi}(\theta)$ and
@@ -713,21 +725,18 @@ TODO
 	normalisation requirement of re-partitioning, so one does not
 	expect any scaling on ${\cal L}$. 
 
-	One of the greatest advantages offered by mixture re-partitioning
-	is that it can be combined with other schemes, and work as
-	``safety net'', without imposing as many restrictions and
-	introducing as many problems as power re-partitioning would. For
-	example one would not be able to attain the same efficiency as
-	mixture re-partitioning if the integral $Z_{\pi}(\beta)$, could not
-	be taken analytically. Mixture re-partitioning on the other hand,
-	only requires the choice to be sensible.
+	The greatest advantage that mixture repartitioning nets is
+	that it is model agnostic: one could, for example, use PPR as
+	part of a mixture of priors, or even a mixture of
+	mixtures. One, should judge which mixing method suits their
+	needs, is it better to have a large bias some of the time, or
+	a little bias all of the time?
 
-	Hence if one has $m$ models in a mixture, the likelihood becomes 
-
+	In general,  if one has $m$ models in a mixture, the likelihood becomes 
 	\begin{equation}
 	  {\cal L}(\theta; \beta)  = \begin{cases}
-		{\cal L}_{1}(\theta) & \text{with probability } \beta_{1}\\
-        \vdots\\
+		{\cal L}_{1}(\theta) &  \text{with probability } \beta_{1}\\
+		        &\vdots\\
 		{\cal L}_{m}(\theta) & \text{with probability} (1- \sum_{i}\beta_{i})
 		\end{cases}
 	\end{equation}
@@ -916,6 +925,32 @@ TODO
 	   {\cal Z} = \frac{\left( \sqrt{ \det \left| 2\pi G \right|} \right)^{n}}{\mathbf{b}-\mathbf{a}}  
 	\end{equation}
 	where \(n\) is the number of parameters in the model.
+
+	The internal implementations of all our repartitioning schemes
+	contain two gaussians: one for the likelihood, and one
+	entering the repartitioning scheme to improve run-time. These
+	would be different in general and our simulations will reflect
+	that in the following ways.
+
+	The easiest to account for are translational offsets. One only needs to
+	modify the values of $\theta' = \theta - \Delta$ entering $\ln
+	\mathcal{L}(\theta')$. 
+
+	One can, without loss of generality assume that one of the
+	Gaussians is uncorrelated (also WLOG, it's spherical);
+	effectively we need to apply a coordinate transformation
+	defined by the eigenvectors of the covariance matrix. We
+	cannot however assume that both are uncorrelated, nor that the
+	orthonormal vectors defining the Gaussian are aligned with the
+	boundaries of the uniform prior. Fortunately, these
+	complications contribute little. As we shall see, any
+	repartitioning scheme is easily able to cope with crude
+	approximations of the orientation and shape of the peak, and
+	run-time is affected negligibly. Consequently, outside of one
+	experiment, we shall ignore any deviations from a spherical
+	Gaussian.
+	
+	
 *** TODO Discuss tails. 
 *** TODO Cosmological simulations
 	For the Cosmological parameter estimation Cobaya citep:cobaya with
@@ -924,6 +959,53 @@ TODO
 	which allows a neater implementation of the re-partitioning
 	machinery.
 * Results
+  The first test case is an uncorrelated spherical Gaussian posterior
+  in three dimensions $\mathcal{P}(\theta) = G(\theta; \mu = (1,2,3),
+  \sigma = 1)$. The corresponding evidence (autoref:eq:evidence) is
+  $\mathcal{Z}\approx-62.3$. First we shall assume that the mean and
+  standard deviation of all the repartitioning schemes is exactly the
+  same as that of the posterior. 
+
+** TODO Debug
+   All but one re-partitioning scheme yielded the correct
+   evidence. The resizeable uniform prior model was systematically
+   overestimating the evidence (autoref:fig:hist), which is a sign
+   that the normalisation factor for $\mathcal{L}$ was underestimated.
+** TODO additive mixtures
+
+   Having proven the correctness of the runs, let's turn to
+   performance and benchmarks. The central metric is the number of
+   evaluations of $\ln \mathcal{L}$. As we can see in
+   autoref:fig:benchmark, the fastest by far is the true posterior
+   distribution. Although it is difficult to see on the figure, the
+   number of evaluations is $O(n_\text{live}$. 
+
+   On the same figure, we can also see confirmation of that the number
+   of $\ln \mathcal{L}$ evaluations, is proportional to
+   $n_\text{live}$. Crucially, one can see that the faster
+   repartitioning schemes also scale better. 
+
+   Of the repartitioning schemes, using the posterior directly, as our
+   intuition suggests, produces the best time, closely followed by the
+   stochastic mixture of it and the uniform reference. PPR, in the
+   case of exact coincidence of the mean and the standard deviation
+   produces a respectable speed-up. 
+
+   The next trial involves a variable offset, where convergence to the
+   correct posterior and evidence is not guaranteed even with the
+   correct normalisation. 
+
+   
+
+  
+
+   #+CAPTION: comparison of likelihood calls necessary for obtaining the correct evidence for the case of a spherical uncorrelated Gaussian posterior. Note that almost all series scale linearly with the number of live points. 
+   #+NAME: fig:benchmark
+   \begin{figure}
+     \input{illustrations/benchmark.tex}
+   \end{figure}
+  
+  
 * Discussion
 * Conclusions
   
@@ -1050,7 +1132,7 @@ TODO
 
 * Appendices
 
-** Why do we need to alter the likelihood. label:sec:repart-necessity
+** Why do we need to alter the likelihood. 
    One may ask why such a change of the likelihood is at all
    necessary. Indeed, the likelihood may be chosen based on a precise
    theory of error, e.g. a least-squares fit argument based on
@@ -1079,8 +1161,9 @@ TODO
    that can be extracted from the data. In other words, it would be
    the correct value for the person who indeed constrained the values
    of model parameters to the one standard deviation, based on /other
-   data/. Simply picking a prior out of thin air would bias the result, hence the necessity to 
-
+   data/. Simply picking a prior out of thin air would bias the
+   result, hence the necessity to repartition. 
+   
    
 
 ** Obtaining a prior inversion function from the closed form of 

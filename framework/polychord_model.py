@@ -7,6 +7,7 @@ from anesthetic import NestedSamples
 
 
 class Model:
+    default_file_root='blankModel'
     def __init__(self, *args, **kwargs):
         raise NotImplementedError()
 
@@ -39,6 +40,8 @@ onto the real parameter space."""
         self._test_prior()
         _settings = copy.deepcopy(self.settings)
         _settings.feedback = verbosity
+        if not verbosity==0:
+            print('output set to verbose')
         if file_root is not None:
             _settings.file_root = file_root
         if noResume:
@@ -46,6 +49,9 @@ onto the real parameter space."""
         _settings.nlive = nLive
         output = run_polychord(self.loglikelihood, self.eff_nDims(), self.nDerived,
                                _settings, self.prior_inversion_function)
-        samples = NestedSamples(
-            root='./chains/{}'.format(self.settings.file_root))
+        try:
+            samples = NestedSamples(
+                root='./chains/{}'.format(_settings.file_root))
+        except ValueError:
+            samples = None
         return output, samples
