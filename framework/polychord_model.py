@@ -7,40 +7,54 @@ from anesthetic import NestedSamples
 
 
 class Model:
-    default_file_root='blankModel'
+    default_file_root = 'blankModel'
+
     def __init__(self, *args, **kwargs):
         raise NotImplementedError()
 
     def loglikelihood(self, theta):
-        """A Loglikelihood respective of the model in question. This is the
-unmodified version, i.e. without any kind of repartitioning.
+        """A Ln(likelihood) of the data given the model. With a uniform
+        prior, this defines the posterior distribution up to a
+        multiplicative factor.
 
         """
         raise NotImplementedError()
 
     def prior_inversion_function(self, hypercube):
-        """Prior inversion function which maps the values in a unit hypercube
-onto the real parameter space."""
+        """Inverse Cumulative distribution function of the prior. Aka the
+        quantile. If the prior has PDF \pi, then this is (CDF (pi))^-1. 
+
+        """
         raise NotImplementedError()
 
     def eff_nDims(self):
+        """
+        This is how many elements in the \theta vector need to be
+        present. Usually the same as the nDims of the nested self.settings
+        object.
+        """
         return self.nDims
 
     def _test_loglike(self):
-        q, r = self.loglikelihood(zeros(self.eff_nDims()))
+        p = self.loglikelihood(zeros(self.eff_nDims()))
+        try:
+            q, r = p
+        except ValueError as e:
+            raise ValueError(
+                e.msg + "Did you forget to return the derived parameters?")
 
     def _test_prior(self):
         _nDims = len(self.prior_inversion_function(zeros(self.eff_nDims())))
         if _nDims != self.eff_nDims():
             raise ValueError(
-                "Prior has the wrong dimensions: {} vs {} ".format(_nDims, self.eff_nDims()))
+                "Prior has the wrong dimensions: expect {} vs actual {} ".format(_nDims, self.eff_nDims()))
 
     def exec_polychord(self, verbosity=0, file_root=None, noResume=False, nLive=175):
         self._test_loglike()
         self._test_prior()
         _settings = copy.deepcopy(self.settings)
         _settings.feedback = verbosity
-        if not verbosity==0:
+        if not verbosity == 0:
             print('output set to verbose')
         if file_root is not None:
             _settings.file_root = file_root
