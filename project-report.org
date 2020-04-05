@@ -1,4 +1,4 @@
-sema#+TITLE: Cosmological parameter estimation using Bayesian accelerated machine learning
+#+TITLE: Cosmological parameter estimation using Bayesian accelerated machine learning
 
 #+AUTHOR: Aleksandr Petrosyan, William J. Handley 
 #+LaTeX_CLASS: mnras
