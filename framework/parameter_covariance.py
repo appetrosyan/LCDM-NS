@@ -6,10 +6,8 @@ from numpy import pi, log, zeros, array
 
 
 class ParameterCovarianceModel(Model):
-    default_file_root = 'parameterCovarianceModel'
-
     def __init__(self, bounds, mu, cov,
-                 settings=None, file_root=default_file_root):
+                 settings=None, file_root='paramCovModel'):
         self.a, self.b = bounds
         self.mu = mu
         self.cov = cov

@@ -4,9 +4,11 @@ from power_posterior import PowerPosteriorPrior
 from general_mixture_model import StochasticMixtureModel
 from true_gaussian import GaussianPeakedPrior
 from numpy import array
+from mpi4py import MPI
 import tikzplotlib
 import matplotlib.pyplot as plt
 from matplotlib import rc
+from parmap import parmap
 
 rc('font', **{'family': 'serif', 'serif': ['Times']})
 rc('text', usetex=True)
@@ -17,15 +19,17 @@ mu = array([1, 2, 3])
 cov = array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
 kwargs = {
     'noResume': True,
-    'nLive': 20
+    'nLive': 200
 }
 
 
-ppr = PowerPosteriorPrior(bounds, mu, cov)
-tgd = GaussianPeakedPrior(bounds, mu, cov)
-bun = BoxUniformModel(bounds, mu, cov)
-run = ResizeableUniformPrior(bounds, mu, cov)
-mix = StochasticMixtureModel([bun, tgd])
+ppr = PowerPosteriorPrior(bounds, mu, cov, file_root='ppr')
+tgd = GaussianPeakedPrior(bounds, mu, cov, file_root='tgd')
+bun = BoxUniformModel(bounds, mu, cov, file_root='bun')
+run = ResizeableUniformPrior(bounds, mu, cov, file_root='run')
+mix = StochasticMixtureModel([bun, tgd], file_root='mix')
+
+# anss = parmap(lambda x: x.exec_polychord(), [ppr, run])
 
 qr, repart = run.exec_polychord(**kwargs)
 q0, reference = bun.exec_polychord(**kwargs)
@@ -49,8 +53,8 @@ plt.xlabel(r'\(\ln {\cal Z}\)')
 plt.ylabel(r'\(P(\ln {\cal Z})\)')
 plt.legend()
 tikzplotlib.save('../illustrations/histograms.tex')
-plt.show(block=False)
-anss = [qm, qg, qr, qp, q0]
+plt.show()
+anss = [qm, qr, qp, q0]
 
 for x in anss:
     print('{:.2e}'.format(x.nlike))
