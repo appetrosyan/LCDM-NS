@@ -841,7 +841,7 @@ TODO
    likelihood is incorrect. Hence we must include (or rather base our
    comparison on) the estimated evidences into consideration.
 
-   #+CAPTION: An illustration of the evidence distributions of different types of repartitioning schemes. The Uniform reference obtained a distribution centered around \( \log {\cal Z} = -62 = - \log V(\Psi) \) (see autoref:eq:evidence, where $(a,b)=(-6, 6)\cdot 10^{8}$ and $G=\mathds{1}_{3}$). Note that both mixture modelling and PPR have found the same value, and the distributions are more sharply peaked. Also notice that if the repartitioning is done incorrectly, the evidnece will also be estimated incorrectly, however the algorithm will converge and produce a distribution that outwardly is no different to the uniform distribution one started with. 
+   #+CAPTION: An illustration of the evidence distributions of different types of repartitioning schemes. The Uniform reference obtained a distribution centered around \( \log {\cal Z} = -62 = - \log V(\Psi) \) (see autoref:eq:evidence, where $(a,b)=(-6, 6)\cdot 10^{8}$ and $G=\mathds{1}_{3}$). Note that both mixture modelling and PPR have found the same value, and the distributions are more sharply peaked. Also notice that if the repartitioning is done incorrectly, the evidnece will also be estimated incorrectly. Finally, Both the true posterior and the mixture repartitioning have terminated without completing a single nested sampling iteration. This was sufficient to (correctly) determine the evidence, but it did not produce all the requisite chains, and hence no histogram could be produced. 
    #+NAME: fig:hist
    \begin{figure}
    \input{./illustrations/histograms.tex}
@@ -978,7 +978,7 @@ TODO
    evaluations of $\ln \mathcal{L}$. As we can see in
    autoref:fig:benchmark, the fastest by far is the true posterior
    distribution. Although it is difficult to see on the figure, the
-   number of evaluations is $O(n_\text{live}$. 
+   number of evaluations is $O(n_\text{live})$. 
 
    On the same figure, we can also see confirmation of that the number
    of $\ln \mathcal{L}$ evaluations, is proportional to
@@ -1168,14 +1168,12 @@ TODO
 
 [fn:11] to save time, the comparison had been automated: two Guassian
 posterior distributions are said to coincide if and only if the means
-were within one standard deviation (of the narrower peak) of each
-other, and the standard deviations differed more than by 10%.
+were within one (the smaller) standard deviation  of each
+other. 
 
 [fn:10] from a frequentist's point of view, our prior knowledge is
 irrelevant. But even a frequentist would agree that the value obtained
 by changing the prior would not be the same.
-
-
 
 
 [fn:4] in mixture modelling one could either introduce $m+1$

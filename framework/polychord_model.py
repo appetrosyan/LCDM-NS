@@ -66,6 +66,7 @@ class Model:
         try:
             samples = NestedSamples(
                 root='./chains/{}'.format(_settings.file_root))
-        except ValueError:
+        except ValueError as e:
+            print(e)
             samples = None
         return output, samples
