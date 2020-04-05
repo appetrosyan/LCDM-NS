@@ -1,4 +1,4 @@
-from parameter_covariance import ParameterCovarianceModel
+from gaussian_models.parameter_covariance import ParameterCovarianceModel
 from numpy import log, pi, diag, sqrt, array, zeros
 from numpy.linalg import inv, slogdet
 from scipy.special import erf, erfinv

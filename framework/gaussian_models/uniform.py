@@ -1,14 +1,19 @@
-from parameter_covariance import ParameterCovarianceModel
-from pypolychord.settings import PolyChordSettings
+from gaussian_models.parameter_covariance import ParameterCovarianceModel
 from pypolychord.priors import UniformPrior
 from numpy.linalg import slogdet, multi_dot, inv
-from numpy import pi, log, zeros, array, concatenate, diag, sqrt
-import numpy
+from numpy import pi, log, zeros, array, nextafter
+
+
+class BoxUniformModel(ParameterCovarianceModel):
+    default_file_root = 'boxUniform'
+
+    def prior_inversion_function(self, hypercube):
+        return UniformPrior(self.a, self.b)(hypercube)
 
 
 class ResizeableUniformPrior(ParameterCovarianceModel):
     default_file_root = 'ResizeableBoxUniform'
-    betamin = numpy.nextafter(0,1)  # Smallest representable +ve float
+    betamin = nextafter(0, 1)  # Smallest representable +ve float
     betamax = 1
 
     def loglikelihood(self, theta):
@@ -17,7 +22,6 @@ class ResizeableUniformPrior(ParameterCovarianceModel):
         if beta <= self.betamin:
             beta = self.betamin
         logl, phi = super().loglikelihood(t/beta)
-        # logl -= self.nDims*log(self.b - self.a)
         logl += 2*self.nDims*(log(beta))
         return logl, phi
 
