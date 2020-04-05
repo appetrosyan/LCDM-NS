@@ -994,9 +994,6 @@ TODO
    The next trial involves a variable offset, where convergence to the
    correct posterior and evidence is not guaranteed even with the
    correct normalisation. 
-
-   
-
   
 
    #+CAPTION: comparison of likelihood calls necessary for obtaining the correct evidence for the case of a spherical uncorrelated Gaussian posterior. Note that almost all series scale linearly with the number of live points. 

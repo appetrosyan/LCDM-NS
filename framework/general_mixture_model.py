@@ -1,42 +1,47 @@
 import matplotlib.pyplot as plt
 from polychord_model import Model
-from power_posterior import PowerPosteriorPrior
-from uniform import BoxUniformModel
-from resizeableUniform import ResizeableUniformPrior
 from pypolychord.settings import PolyChordSettings
 from numpy import array, concatenate, lcm, log
 from random import random, seed
 import fractions
 
 
-class StochasticMixtureModel(Model):
-    default_file_root = 'mixture'
+class AbstractMixtureModel(Model):
+    default_file_root = 'MixtureModel'
 
     def __init__(self, models, settings=None, file_root=default_file_root):
-        """
-        Constructor for the general mixture model, given the models in args.
-        """
         self.models = models
-
-        if not allElementsIdentical(list(map(lambda x: x.nDims, models))):
+        if not allElementsIdentical([x.nDims for x in models]):
             raise ValueError("not all models have the same nDims.")
-        self.nDims = max(map(lambda x: x.eff_nDims(), models))
-
+        self.nDims = max([x.eff_nDims() for x in models])
         if not allElementsIdentical(list(map(lambda x: x.nDerived, models))):
             raise ValueError("not all models have the same nDerived.")
-        else:
-            self.nDerived = models[0].nDerived
-
-        self._eff_nDims = self.nDims + len(self.models)
-
+        self.nDerived = models[0].nDerived
         if settings is None:
             self.settings = PolyChordSettings(self.eff_nDims(), self.nDerived)
         else:
             self.settings = settings
         self.settings.file_root = file_root
 
+    def _test_prior(self):
+        for m in self.models:
+            m._test_prior()
+        super()._test_prior()
+
+    def _test_loglike(self):
+        for m in self.models:
+            m._test_loglike()
+        super()._test_loglike()
+
+
+class StochasticMixtureModel(AbstractMixtureModel):
+    default_file_root = 'StochasticMixture'
+
+    def __init__(self, models, settings=None, file_root=default_file_root):
+        super().__init__(models, settings, file_root)
+
     def eff_nDims(self):
-        return self._eff_nDims
+        return self.nDims + len(self.models)
 
     def _unpack(self, theta):
         physical_params = theta[:self.nDims]
@@ -56,7 +61,6 @@ class StochasticMixtureModel(Model):
         norm = b.sum() if b.sum() != 0 else 1
         ps = b/norm
         index = 0
-        # h = abs(hash(tuple(t)))/(2**63-1)
         h = hash(tuple(t))
         seed(h)
         r = random()
@@ -69,16 +73,6 @@ class StochasticMixtureModel(Model):
         cube, cube_ = t[:_nDims], t[_nDims:]
         theta = self.models[index].prior_inversion_function(cube)
         return concatenate([theta, cube_, b, [index]])
-
-    def _test_prior(self):
-        for m in self.models:
-            m._test_prior()
-        super()._test_prior()
-
-    def _test_loglike(self):
-        for m in self.models:
-            m._test_loglike()
-        super()._test_loglike()
 
 
 def allElementsIdentical(lst):

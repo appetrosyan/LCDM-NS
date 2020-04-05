@@ -1,4 +1,4 @@
-from parameter_covariance import ParameterCovarianceModel
+from gaussian_models.parameter_covariance import ParameterCovarianceModel
 from pypolychord.settings import PolyChordSettings
 from pypolychord.priors import UniformPrior
 from numpy.linalg import slogdet, multi_dot, inv
