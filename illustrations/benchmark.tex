@@ -1,9 +1,8 @@
-% This file was created by tikzplotlib v0.9.1.
 \begin{tikzpicture}
 
 \definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
-\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
-\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137} %red
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843} %green
 \definecolor{color3}{rgb}{0.83921568627451,0.152941176470588,0.156862745098039}
 
 \begin{axis}[
@@ -12,7 +11,7 @@ legend style={fill opacity=0.8, draw opacity=1, text opacity=1, at={(0.03,0.97)}
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
-xlabel={\(n\_{live}\)},
+xlabel={\(n_\text{live}\)},
 xmin=7, xmax=73,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
@@ -148,31 +147,8 @@ ytick style={color=black}
 (axis cs:70,8588.48027282128)
 --(axis cs:70,9612.18639384539);
 
-\addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks]
-table {%
-10 48051.1762746562
-30 141787.579248368
-40 185671.527674282
-50 236296.832694899
-55 262655.71356965
-60 278243.015081106
-65 317116.521541605
-70 318358.948415036
-};
-\addlegendentry{$G$}
-\addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks]
-table {%
-10 51361.4903920105
-30 149701.087418299
-40 245784.472325718
-50 241822.500638435
-55 266952.953097016
-60 306644.984918894
-65 332736.145125062
-70 419081.71825163
-};
-\addlegendentry{$G$}
-\addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks]
+
+\addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 10 17520.6487596482
 30 42472.9620658463
@@ -183,8 +159,7 @@ table {%
 65 88215.9096228476
 70 97882.04633
 };
-\addlegendentry{$G$}
-\addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks]
+\addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 10 19742.0179070185
 30 42994.371267487
@@ -195,8 +170,7 @@ table {%
 65 100992.090377152
 70 105637.95367
 };
-\addlegendentry{$G$}
-\addplot [semithick, color2, mark=-, mark size=4, mark options={solid}, only marks]
+\addplot [semithick, color2, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 10 1980.99743591911
 30 6035.87692136486
@@ -207,8 +181,7 @@ table {%
 65 14804.9685728395
 70 15158.1193669152
 };
-\addlegendentry{$G$}
-\addplot [semithick, color2, mark=-, mark size=4, mark options={solid}, only marks]
+\addplot [semithick, color2, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 10 2284.33589741422
 30 6174.12307863514
@@ -219,8 +192,7 @@ table {%
 65 15505.0314271605
 70 16693.8806330848
 };
-\addlegendentry{$G$}
-\addplot [semithick, color3, mark=-, mark size=4, mark options={solid}, only marks]
+\addplot [semithick, color3, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 10 511.628293172651
 30 4625.34584399058
@@ -231,8 +203,7 @@ table {%
 65 8986.02980736454
 70 8588.48027282128
 };
-\addlegendentry{$G$}
-\addplot [semithick, color3, mark=-, mark size=4, mark options={solid}, only marks]
+\addplot [semithick, color3, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
 table {%
 10 1305.03837349402
 30 4900.65415600942
@@ -243,7 +214,28 @@ table {%
 65 10838.6368593021
 70 9612.18639384539
 };
-\addlegendentry{$G$}
+\addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
+table {%
+10 48051.1762746562
+30 141787.579248368
+40 185671.527674282
+50 236296.832694899
+55 262655.71356965
+60 278243.015081106
+65 317116.521541605
+70 318358.948415036
+};
+\addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks, forget plot]
+table {%
+10 51361.4903920105
+30 149701.087418299
+40 245784.472325718
+50 241822.500638435
+55 266952.953097016
+60 306644.984918894
+65 332736.145125062
+70 419081.71825163
+};
 \addplot [semithick, color0, mark=*, mark size=4, mark options={solid}]
 table {%
 10 49706.3333333333
@@ -255,7 +247,7 @@ table {%
 65 324926.333333333
 70 368720.333333333
 };
-\addlegendentry{$G$}
+\addlegendentry{$U$}
 \addplot [semithick, color1, mark=+, mark size=4, mark options={solid}]
 table {%
 10 18631.3333333333
@@ -267,7 +259,7 @@ table {%
 65 94604
 70 101760
 };
-\addlegendentry{$G$}
+\addlegendentry{$PPR$}
 \addplot [semithick, color2, mark=x, mark size=4, mark options={solid}]
 table {%
 10 2132.66666666667
@@ -279,7 +271,7 @@ table {%
 65 15155
 70 15926
 };
-\addlegendentry{$G$}
+\addlegendentry{$\text{mix}(U,G)$}
 \addplot [semithick, color3, mark=*, mark size=4, mark options={solid}]
 table {%
 10 908.333333333333

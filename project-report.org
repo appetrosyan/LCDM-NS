@@ -183,7 +183,7 @@ TODO
    value of \({\cal Z}\), the more likely is that the model accurately
    describes the physical process in question.
 
-   #+CAPTION: definitions of main quantities in Bayesian analysis. label:table-defs
+   #+CAPTION: Definitions of main quantities in Bayesian analysis. label:table-defs
    | **Term**   | **Symbol**           | **Definition**                 |
    |------------+----------------------+--------------------------------|
    | Prior      | \(\pi(\theta)\)      | \(P ( \theta  \vert D)\)       |
@@ -451,8 +451,8 @@ TODO
    would be favoured. The effective prior would then tend to a uniform
    distribution.
 
-   #+CAPTION: a demonstration of the function $\tilde{\pi}(\theta; \beta)$ for different values of $\beta$. Note that we've started under the assumption that the distribution is a truncated Gaussian, i.e. that it is zero outside the range $(-1, 1)$. This manifests as sharp changes in curvature at the boundaries. Note that $\forall \beta$, $\int_{-1}^{1}\tilde{\pi}(\theta; \beta) = 1$.
-   #+NAME: fig:ppr
+   #+CAPTION: A demonstration of the function $\tilde{\pi}(\theta; \beta)$ for different values of $\beta$. Note that we've started under the assumption that the distribution is a truncated Gaussian, i.e. that it is zero outside the range $(-1, 1)$. This manifests as sharp changes in curvature at the boundaries. Note that $\forall \beta$, $\int_{-1}^{1}\tilde{\pi}(\theta; \beta) = 1$.
+   #+name: fig:ppr
 	\begin{figure}
 	 \input{./illustrations/ppr.tex}
 	\end{figure}
@@ -594,12 +594,11 @@ TODO
 	number, however this is sufficient to bias the sampler in almost
 	all cases.
 
-	In practice, one has to come up with contrived examples (e.g. ppr
-	with $\beta=-1$, see autoref:fig:ppr) where said bias changes the
-	posterior or reduces performance, since by the central limit
-	theorem *most* posterior distributions are Gaussian. Hence, a
-	Gaussian variable-width prior will have a non-zero overlap,
-	mitigating the issue.
+	One needs to be aware of this limitation when choosing which
+	mixing scheme to use. Sometimes, the smooth prior distribution and
+	likelihood are more beneficial; other times, the ability to with
+	some probability sample from a completely uniform prior is more
+	valuable. 
 
 *** Re-sizeable-bounds uniform prior. 
 	
@@ -758,7 +757,7 @@ TODO
 	branch. Thus the value is truly represented, just in a different
 	prior branch.
 
-	#+CAPTION: an example of a mixture re-partitioning. Notice that the mixture is not normalised to emphasise the coincidence of values with both the uniform distribution and a Gaussian.
+	#+CAPTION: An example of a mixture re-partitioning. Notice that the mixture is not normalised to emphasise the coincidence of values with both the uniform distribution and a Gaussian.
 	#+NAME: fig:mixture
 	\begin{figure}
 	 \input{./illustrations/mixture.tex}
@@ -951,13 +950,15 @@ TODO
 	Gaussian.
 	
 	
-*** TODO Discuss tails. 
+	
+
+	
 *** TODO Cosmological simulations
 	For the Cosmological parameter estimation Cobaya citep:cobaya with
 	CLASS citep:Blas_2011, and PolyChord citep:polychord as a sampler
 	were chosen. The main reason being the high modularity of the code,
 	which allows a neater implementation of the re-partitioning
-	machinery.
+	mac
 * Results
   The first test case is an uncorrelated spherical Gaussian posterior
   in three dimensions $\mathcal{P}(\theta) = G(\theta; \mu = (1,2,3),
@@ -966,12 +967,16 @@ TODO
   standard deviation of all the repartitioning schemes is exactly the
   same as that of the posterior. 
 
-** TODO Debug
-   All but one re-partitioning scheme yielded the correct
-   evidence. The resizeable uniform prior model was systematically
-   overestimating the evidence (autoref:fig:hist), which is a sign
-   that the normalisation factor for $\mathcal{L}$ was underestimated.
-** TODO additive mixtures
+  All but one re-partitioning scheme yielded the correct
+  evidence. The resizeable uniform prior model was constructed to
+  systematically overestimating the evidence (autoref:fig:hist),
+  which is due to underestimating the normalisation factor for
+  $\mathcal{L}$.[fn::the boundary dependence was omitted.]
+
+  
+  
+  
+** additive mixtures
 
    Having proven the correctness of the runs, let's turn to
    performance and benchmarks. The central metric is the number of
@@ -991,19 +996,69 @@ TODO
    case of exact coincidence of the mean and the standard deviation
    produces a respectable speed-up. 
 
-   The next trial involves a variable offset, where convergence to the
-   correct posterior and evidence is not guaranteed even with the
-   correct normalisation. 
-  
-
    #+CAPTION: comparison of likelihood calls necessary for obtaining the correct evidence for the case of a spherical uncorrelated Gaussian posterior. Note that almost all series scale linearly with the number of live points. 
    #+NAME: fig:benchmark
    \begin{figure}
      \input{illustrations/benchmark.tex}
    \end{figure}
+
+   
+  
+
+   The next trial involves a variable offset, where convergence to the
+   correct posterior and evidence is not guaranteed even with the
+   correct normalisation.    
+
+  For this case, we have taken a Gaussian in a box of
+  $1000\times1000\times1000$, and generated two nested sampling data
+  ranges. The ``offset'' posteriors are moved relative to the mean of
+  the prior. The parameter labeled '1' is offset by double the amount
+  of parameter '0'. 
+
+  The exemplary results are given in autoref:fig:convergence.
+
+  The main notable feature is the inaccuracy of the posterior for
+  power posterior repartitioning. One does expect it to produce the
+  correct posterior distribution if the offset is large compared to
+  the width of the peaks. If the offset is \(O(2\sigma)\), the
+  posterior is merely shifted, but if the shift is larger,
+  e.g. \(O(4\sigma)\), two peaks can be resolved. Unfortunately for
+  PPR, the evidence was also computed incorrectly: $\ln {\cal
+  Z}\approx -25.4 \pm 0.2$, vs the reference $\ln {\cal Z} = -22.7 \pm
+  0.4$.  Making matters even worse, the smaller of the two peaks is
+  actually the correct posterior.
+
+  This is the fatal flaw of PPR, that prevents it from being useful in
+  any real application. The constant, ever present bias implicit to
+  using a Gaussian prior causes the sampler to be strongly biased
+  towards the original value. It can be redeemed: the mixture model in
+  the same figure involves the same PPR as one of two models. It
+  produced the correct result, while also, remarkably managing to do
+  so faster than a uniform prior would allow[fn::another method could
+  involve a prior on $\beta$, that strongly favours values close to
+  $\beta=0$.].
+
+  #+CAPTION: An illustration of how offsets affect the convergence of nested sampling under different kinds of repartitioning. The offset models should produce an offset posterior, whilst sharing the prior with the model runs. The mixture is of the present uniform model and PPR. 
+  #+NAME: fig:convergence
+  \begin{figure}
+  \includegraphics[width=0.5\textwidth]{./illustrations/convergence.pdf}
+  \end{figure}
+
   
   
 * Discussion
+
+  Re-partitioning, has proven to be fruitful. It succeeds in what it
+  was originally set out to do: provide a more stable convergence
+  than a Gaussian prior would afford. We have also shown that this
+  is able to drastically reduce the run-time compared to using a
+  uniform prior. More specifically, guessing a posterior
+  distribution and using re-partitioning, one may reduce the initial
+  compression stage to virtually none. 
+  
+*** TODO Figure of Tail. 
+
+
 * Conclusions
   
 ** Results

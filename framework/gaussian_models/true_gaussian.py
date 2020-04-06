@@ -1,35 +1,24 @@
-from gaussian_models.parameter_covariance import ParameterCovarianceModel
 from numpy import log, pi, diag, sqrt, array, zeros
 from numpy.linalg import inv, slogdet
-from scipy.special import erf, erfinv
 from pypolychord.priors import GaussianPrior
+from scipy.special import erf, erfinv
 
+from gaussian_models.parameter_covariance import ParameterCovarianceModel
+
+from gaussian_models.power_posterior import PowerPosteriorPrior, log_likelihood_correction, power_gaussian_quantile
 
 class GaussianPeakedPrior(ParameterCovarianceModel):
+    """THis is implemented as a special case of the power posterior repartitioning. One does need to care if it's the right function. """
     default_file_root = 'GaussianPosteriorModel'
 
-    def eff_ndims(self):
-        return self.nDims
-
-    def _ln_z(self, theta):
-        sigma = diag(self.cov)
-        ret = - (theta-self.mu)**2/2/sigma**2
-        ret -= log(pi*sigma**2/2)/2
-        ret -= log(erf((self.b-self.mu)*sqrt(1/2)/sigma)
-                   - erf((self.a-self.mu)*sqrt(1/2)/sigma))
-        return ret
-
-    def prior_inversion_function(self, hypercube):
-        return self._power_gaussian(hypercube)
-
-    def _power_gaussian(self, hypercube):
-        sigma = diag(self.cov)
-        ret = erfinv((1-hypercube)*erf((self.a-self.mu)*sqrt(1/2)/sigma) +
-                     hypercube*erf((self.b-self.mu)*sqrt(1/2)/sigma))
-        return self.mu + sqrt(2)*sigma*ret
-
-    def loglikelihood(self, theta):
-        logl, phi = super().loglikelihood(theta)
-        logl -= len(theta)*log(self.b - self.a)
-        logl -= self._ln_z(theta).sum()
+    def log_likelihood(self, theta):
+        logl, phi = super().log_likelihood(theta)
+        logl += log_likelihood_correction(self, beta=1, theta=theta)
         return logl, phi
+
+    def quantile(self, cube):
+        return power_gaussian_quantile(self, cube, 1)
+
+    @property
+    def dimensionality(self):
+        return self.nDims
