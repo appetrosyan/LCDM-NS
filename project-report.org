@@ -823,6 +823,26 @@ TODO
    in all practical applications of nested sampling, and thus we shall
    ignore them.
 
+   Another information-theoretic performance metric that one could use
+   is the Kullback-Leibler divergence ${\cal D}$. A thorough
+   explanation of the concept can be found at cite:Kullback_1951, but
+   for our purposes, this is a quantity allowing to compare the prior
+   to the inferred posterior. The larger the value, the more Shannon
+   entropy is associated with moving from prior to posterior. 
+   
+   To understand why K-L divergence is useful, consider that under
+   ideal circumstances inference with the posterior also the prior is
+   optimal. Hence, justifiably we expect priors with the smallest
+   $\mathcal{D}$ to converge faster. This is a useful worldview when
+   considering general Bayesian inference, but its applicability to
+   nested sampling is limited. The performance of a nested sampler
+   depends on many factors besides the entropy. For example, as we've
+   shown in a preliminary experiment, [fn:1] nested sampling can
+   converge faster if the distribution is narrower than the posterior
+   (PPR takes care of the correctness). 
+
+   
+
 ** Correctness
    One simple and unreliable way of determining the correctness of a
    run is to compare the posteriors of two runs: if the means of two
@@ -1026,7 +1046,11 @@ TODO
   PPR, the evidence was also computed incorrectly: $\ln {\cal
   Z}\approx -25.4 \pm 0.2$, vs the reference $\ln {\cal Z} = -22.7 \pm
   0.4$.  Making matters even worse, the smaller of the two peaks is
-  actually the correct posterior.
+  actually the correct posterior. This fact is also reflected in
+  Kullback-Leibler divergence computed for each run: the faster runs
+  had the smaller divergence, however the divergence for PPR with an
+  offset was greatly enhanced compared to the stochastic mixture of it
+  with Uniform prior. 
 
   This is the fatal flaw of PPR, that prevents it from being useful in
   any real application. The constant, ever present bias implicit to
@@ -1217,9 +1241,11 @@ TODO
    result, hence the necessity to repartition. 
    
    
-
+   
 ** Obtaining a prior inversion function from the closed form of 
 * Footnotes
+
+[fn:1] =./toy-models/2/2.1 Repartitioning with power posterior.py=
 
 [fn:11] to save time, the comparison had been automated: two Guassian
 posterior distributions are said to coincide if and only if the means
