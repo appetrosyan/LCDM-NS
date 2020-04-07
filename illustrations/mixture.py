@@ -1,5 +1,3 @@
-# FUCK YOU FOR NOT DEBUGGING THIS THING!!!!
-
 import common_dists as dist
 import matplotlib.pyplot as plt
 import tikzplotlib

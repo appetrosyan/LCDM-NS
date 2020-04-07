@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+/framework/__pycache__/
+/framework/gaussian_models/__pycache__/*.pyc
+/framework/misc/__pycache__/data_series.cpython-38.pyc
+/framework/misc/__pycache__/dataseries.cpython-38.pyc
+/framework/misc/__pycache__/parallelism.cpython-38.pyc
+/framework/misc/__pycache__/ui.cpython-38.pyc
+/framework/tails.py~
+/toy-models/0/chains/
+/toy-models/2/chains/
+/toy-models/chains/
+/framework/chains/
+/ltximg/
+*.py#

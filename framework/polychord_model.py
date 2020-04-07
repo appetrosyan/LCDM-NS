@@ -1,51 +1,76 @@
-
-import copy
+from anesthetic import NestedSamples
+from copy import deepcopy
+from numpy import log, zeros
 from pypolychord import run_polychord
 from pypolychord.settings import PolyChordSettings
-from numpy import log, zeros
-from anesthetic import NestedSamples
 
 
 class Model:
-    def __init__(self, *args, **kwargs):
-        raise NotImplementedError()
+    default_file_root = 'blankModel'
 
-    def loglikelihood(self, theta):
-        """A Loglikelihood respective of the model in question. This is the
-unmodified version, i.e. without any kind of repartitioning.
+    def __init__(self, dimensionality, number_derived, file_root='', **kwargs):
+        self.settings = PolyChordSettings(dimensionality, number_derived)
+        self.settings.file_root = file_root
+
+    def log_likelihood(self, theta):
+        """A Ln(likelihood) of the data given the model. With a uniform
+        prior, this defines the posterior distribution up to a
+        multiplicative factor.
 
         """
         raise NotImplementedError()
 
-    def prior_inversion_function(self, hypercube):
-        """Prior inversion function which maps the values in a unit hypercube
-onto the real parameter space."""
+    def quantile(self, hypercube):
+        """Inverse Cumulative distribution function of the prior. Aka the
+        quantile. If the prior has PDF \pi, then this is (CDF (pi))^-1. 
+
+        """
         raise NotImplementedError()
 
-    def eff_nDims(self):
-        return self.nDims
+    @property
+    def dimensionality(self):
+        """
+        This is how many elements in the \theta vector need to be
+        present. Usually the same as the nDims of the nested self.settings
+        object. This is read-only. Ideally it should be cached.
+        """
+        return int(self.nDims)
 
-    def _test_loglike(self):
-        q, r = self.loglikelihood(zeros(self.eff_nDims()))
+    @property
+    def num_derived(self):
+        return 0
 
-    def _test_prior(self):
-        _nDims = len(self.prior_inversion_function(zeros(self.eff_nDims())))
-        if _nDims != self.eff_nDims():
-            raise ValueError(
-                "Prior has the wrong dimensions: {} vs {} ".format(_nDims, self.eff_nDims()))
+    def test_log_like(self):
+        p = self.log_likelihood(zeros(self.dimensionality))
+        try:
+            q, r = p
+        except ValueError as e:
+            raise ValueError(e.msg + "Did you forget to return the derived parameters?")
 
-    def exec_polychord(self, verbosity=0, file_root=None, noResume=False, nLive=175):
-        self._test_loglike()
-        self._test_prior()
-        _settings = copy.deepcopy(self.settings)
+    def test_quantile(self):
+        _nDims = len(self.quantile(zeros(self.dimensionality)))
+        if _nDims != self.dimensionality:
+            raise ValueError("Prior has the wrong dimensions: expect {} vs actual {} "
+                             .format(_nDims, self.dimensionality))
+
+    def nested_sample(self, **kwargs):
+        self.test_log_like()
+        self.test_quantile()
+        _settings = self.setup_settings(**kwargs)
+        output = run_polychord(self.log_likelihood, self.dimensionality, self.num_derived, _settings, self.quantile)
+        try:
+            samples = NestedSamples(
+                root='./chains/{}'.format(_settings.file_root))
+        except ValueError as e:
+            print(e)
+            samples = None
+        return output, samples
+
+    def setup_settings(self, file_root=None, live_points=175, resume=True, verbosity=0):
+        _settings = deepcopy(self.settings)
         _settings.feedback = verbosity
         if file_root is not None:
             _settings.file_root = file_root
-        if noResume:
-            _settings.read_resume = False
-        _settings.nlive = nLive
-        output = run_polychord(self.loglikelihood, self.eff_nDims(), self.nDerived,
-                               _settings, self.prior_inversion_function)
-        samples = NestedSamples(
-            root='./chains/{}'.format(self.settings.file_root))
-        return output, samples
+        _settings.read_resume = resume
+        _settings.nlive = live_points
+        return _settings
