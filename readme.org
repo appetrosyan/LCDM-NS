@@ -2,6 +2,11 @@
 #+AUTHOR: Aleksandr Petrosyan, William James Handley (supervisor).
 * About
 
+  
+
+  <a href="https://zenodo.org/badge/latestdoi/220308166"><img src="https://zenodo.org/badge/220308166.svg" alt="DOI"></a>
+
+
   This is my masters' thesis  at the University of Cambridge. 
 
   The corresponding article is given in \LaTeX form. 
