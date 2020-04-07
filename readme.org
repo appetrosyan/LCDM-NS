@@ -1,0 +1,71 @@
+#+TITLE: Stochastic superpositional Mixture re-partitioning framework. 
+#+AUTHOR: Aleksandr Petrosyan, William James Handley (supervisor).
+* About
+
+  This is my masters' thesis  at the University of Cambridge. 
+
+  The corresponding article is given in \LaTeX form. 
+
+  This repository contains the general framework for using Stochastic
+  superpositional mixture repartitioning, as a technique to improve
+  robustness and performance of nested sampling. 
+
+  It was designed for [[https://github.com/PolyChord/PolyChordLite][PolyChord]], and the currently present framework
+  directly depends on it, however it can be adapted to work with any
+  nested sampling library.
+
+  This contains some benchmark results in PGF format, and can be
+  viewed if you compile the article using \LaTeX. 
+* Illustrations
+  All of the figures were produced using the provided programs. For
+  each illustration the =.py= file with the corresponding name
+  produces it. Keep in mind that the benchmark takes over a day to
+  complete.
+
+  Illustrations without dependencies are in the same folder, while
+  ones that refer to polychord, are in the =framework= folder.
+
+  All dependencies besides PolyChord are =pip= installable. 
+* TODO Documentation. 
+
+  Simply put, to do Bayesian inference you should have a prior, and a
+  likelihood. To provide your own, subclass =Model= from
+  =polychord_model=. You will need to provide a [[https://en.wikipedia.org/wiki/Quantile_function][quantile]] function,
+  similar to PolyChord which refers to them as Priors (which they are
+  related to, but are not themselves). The LogLikelihood also needs to
+  be specified, and it follows the conventions of PolyChord. 
+
+  Models of this kind can be =.nested_sample='d, where you can specify
+  the settings for PolyChord.
+
+  Examples of use are provided in =.framework/benchmarks.py=. 
+* Use
+
+  In short, Bayesian inference using a uniform (and otherwise) prior
+  can be sped up, while Bayesian inference using a Gaussian Prior made
+  more robust by a technique called Posterior Repartitioning (details
+  in =project-report.org=). There was, as of this writing, only one
+  such documented method. 
+
+  The included paper discusses the general requirements one needs to
+  satisfy in order to have successfully come up with a repartitioning
+  scheme. Also, included, is a scheme I have devised: stochastic
+  superpositional mixture repartitioning. What this allows you to do,
+  is to combine different schemes together. It's intelligent enough to
+  make use of the representative priors in the mixture and ignore the
+  unrepresentative ones. 
+
+  It's abstract, in that it does not set restrictions beyond the ones
+  you already needed to satisfy to use your prior.
+
+  According to my benchmarks, it's remarkably performant. It is also
+  more stable to perturbations than Power Posterior Repartitioning,
+  (the documented method, also implemented here). 
+* Cobaya
+  The cobaya submodule contains the modified version of Cobaya, that
+  makes use of Posterior repartitioning. It was tested on the CSD3
+  cluster, so beware of attempting this at home. 
+* Credits
+
+  Will Handley et al. : Polychord, Anesthetic, project supervisor. 
+  TODO. 
