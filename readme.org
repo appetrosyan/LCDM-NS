@@ -2,9 +2,7 @@
 #+AUTHOR: Aleksandr Petrosyan, William James Handley (supervisor).
 * About
 
-  
-
-  <a href="https://zenodo.org/badge/latestdoi/220308166"><img src="https://zenodo.org/badge/220308166.svg" alt="DOI"></a>
+  [[https://zenodo.org/badge/220308166.svg]]
 
 
   This is my masters' thesis  at the University of Cambridge. 
