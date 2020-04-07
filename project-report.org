@@ -667,9 +667,9 @@ TODO
 	while the prior and the likelihood are in the from corresponding
 	to $\beta$.
 
-	Putting it all together we get 
+	Finally, 
 	\begin{equation}
-	 {\cal P}(\theta) = \frac{J(\beta_{0})}{J(\beta)} \frac{\pi(\theta; \beta) {\cal l}(\theta; \beta)}{\int \pi(\theta; \beta) {\cal L}(\theta; \beta) d \theta}.
+	 {\cal P}(\theta) = \frac{J(\beta_{0})}{J(\beta)} \frac{\pi(\theta; \beta) {\cal L}(\theta; \beta)}{\int \pi(\theta; \beta) {\cal L}(\theta; \beta) d \theta}.
 	\end{equation}
 	So we expect that for the simple case of scaling the uniform box
 	prior with $\beta$, that we need to re-scale the likelihood by
@@ -996,79 +996,6 @@ TODO
   
   
   
-** additive mixtures
-
-   Having proven the correctness of the runs, let's turn to
-   performance and benchmarks. The central metric is the number of
-   evaluations of $\ln \mathcal{L}$. As we can see in
-   autoref:fig:benchmark, the fastest by far is the true posterior
-   distribution. Although it is difficult to see on the figure, the
-   number of evaluations is $O(n_\text{live})$. 
-
-   On the same figure, we can also see confirmation of that the number
-   of $\ln \mathcal{L}$ evaluations, is proportional to
-   $n_\text{live}$. Crucially, one can see that the faster
-   repartitioning schemes also scale better. 
-
-   Of the repartitioning schemes, using the posterior directly, as our
-   intuition suggests, produces the best time, closely followed by the
-   stochastic mixture of it and the uniform reference. PPR, in the
-   case of exact coincidence of the mean and the standard deviation
-   produces a respectable speed-up. 
-
-   #+CAPTION: comparison of likelihood calls necessary for obtaining the correct evidence for the case of a spherical uncorrelated Gaussian posterior. Note that almost all series scale linearly with the number of live points. 
-   #+NAME: fig:benchmark
-   \begin{figure}
-     \input{illustrations/benchmark.tex}
-   \end{figure}
-
-   
-  
-
-   The next trial involves a variable offset, where convergence to the
-   correct posterior and evidence is not guaranteed even with the
-   correct normalisation.    
-
-  For this case, we have taken a Gaussian in a box of
-  $1000\times1000\times1000$, and generated two nested sampling data
-  ranges. The ``offset'' posteriors are moved relative to the mean of
-  the prior. The parameter labeled '1' is offset by double the amount
-  of parameter '0'. 
-
-  The exemplary results are given in autoref:fig:convergence.
-
-  The main notable feature is the inaccuracy of the posterior for
-  power posterior repartitioning. One does expect it to produce the
-  correct posterior distribution if the offset is large compared to
-  the width of the peaks. If the offset is \(O(2\sigma)\), the
-  posterior is merely shifted, but if the shift is larger,
-  e.g. \(O(4\sigma)\), two peaks can be resolved. Unfortunately for
-  PPR, the evidence was also computed incorrectly: $\ln {\cal
-  Z}\approx -25.4 \pm 0.2$, vs the reference $\ln {\cal Z} = -22.7 \pm
-  0.4$.  Making matters even worse, the smaller of the two peaks is
-  actually the correct posterior. This fact is also reflected in
-  Kullback-Leibler divergence computed for each run: the faster runs
-  had the smaller divergence, however the divergence for PPR with an
-  offset was greatly enhanced compared to the stochastic mixture of it
-  with Uniform prior. 
-
-  This is the fatal flaw of PPR, that prevents it from being useful in
-  any real application. The constant, ever present bias implicit to
-  using a Gaussian prior causes the sampler to be strongly biased
-  towards the original value. It can be redeemed: the mixture model in
-  the same figure involves the same PPR as one of two models. It
-  produced the correct result, while also, remarkably managing to do
-  so faster than a uniform prior would allow[fn::another method could
-  involve a prior on $\beta$, that strongly favours values close to
-  $\beta=0$.].
-
-  #+CAPTION: An illustration of how offsets affect the convergence of nested sampling under different kinds of repartitioning. The offset models should produce an offset posterior, whilst sharing the prior with the model runs. The mixture is of the present uniform model and PPR. 
-  #+NAME: fig:convergence
-  \begin{figure}
-  \includegraphics[width=0.5\textwidth]{./illustrations/convergence.pdf}
-  \end{figure}
-
-  
   
 * Discussion
 
@@ -1241,13 +1168,32 @@ TODO
    result, hence the necessity to repartition. 
    
    
+** Code 
+
+   All of the illustrations, figures, code that generated them along
+   with a generalised framework for mixing any kinds of priors into a
+   properly re partitioned posterior is available at the Git
+   repository: [[https://github.com/appetrosyan/LCDM-NS]]. 
+
+   All the preliminary testing was done in the =toy-models=
+   section. Code that generates simple dependency-less examples is in
+   the =illustrations= folder, code that generates the benchmarks and
+   correctness testing is given in the =framework= folder. Finally,
+   the modifications to Cobaya were done in-situ, therefore the fork
+   of Cobaya that contains a branch with posterior re-partitioning is
+   available as a =git= sub-module.
+
+   The current project depends on PolyChord cite:polychord, Cobaya
+   cite:cobaya, anesthetic cite:anesthetic and their respective
+   dependencies cite:Blas_2011.
+
    
-** Obtaining a prior inversion function from the closed form of 
+
 * Footnotes
 
 [fn:1] =./toy-models/2/2.1 Repartitioning with power posterior.py=
 
-[fn:11] to save time, the comparison had been automated: two Guassian
+[fn:11] to]] save time, the comparison had been automated: two Guassian
 posterior distributions are said to coincide if and only if the means
 were within one (the smaller) standard deviation  of each
 other. 
