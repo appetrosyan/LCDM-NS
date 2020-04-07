@@ -1173,7 +1173,7 @@ TODO
    All of the illustrations, figures, code that generated them along
    with a generalised framework for mixing any kinds of priors into a
    properly re partitioned posterior is available at the Git
-   repository: [[https://github.com/appetrosyan/LCDM-NS]]. 
+   repository: [[https://github.com/appetrosyan/LCDM-NS]] cite:sspr. 
 
    All the preliminary testing was done in the =toy-models=
    section. Code that generates simple dependency-less examples is in
