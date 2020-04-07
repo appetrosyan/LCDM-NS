@@ -43,3 +43,5 @@
 /framework/chains/
 /ltximg/
 *.py#
+*~
+*__pycache__*
