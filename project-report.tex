@@ -1,4 +1,4 @@
-% Created 2020-04-08 Wed 08:37
+% Created 2020-04-08 Wed 08:46
 \documentclass[usenatbib]{mnras}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -38,7 +38,7 @@ TODO
 \end{abstract}
 
 \section{Introduction}
-\label{sec:org0059181}
+\label{sec:orgc52b583}
 
 The standard model of the universe and its evolution in modern
 cosmology is the accepted \(\Lambda\)CDM model \citep{Condon2018},
@@ -167,10 +167,10 @@ methods when applied to a modern Cosmological parameter estimator
 such as Cobaya \citep{cobaya}.
 
 \section{Background theory}
-\label{sec:orgc2b4ae4}
+\label{sec:org56e8eff}
 
 \subsection{Brief primer on Bayesian inference.}
-\label{sec:org391a8fd}
+\label{sec:org8748740}
 
 This topic has been discussed at length in literature
 \citep{jeffreys2010scientific}, so we shall restrict ourselves to the
@@ -255,7 +255,7 @@ notable exception and therefore of interest to us is nested
 sampling.
 
 \subsection{Nested Sampling.}
-\label{sec:orga70f78f}
+\label{sec:org856d540}
 
 This algorithm is discussed in depth, so we shall restrict
 ourselves to descriptions that are necessary for understanding how
@@ -377,7 +377,7 @@ issue.
 
 
 \subsection{Power posterior re-partitioning}
-\label{sec:org5783af6}
+\label{sec:org361059a}
 
 The basic idea is as follows. If we had two priors, one much
 narrower than the other, we expect that the convergence in the
@@ -482,7 +482,7 @@ distribution.
 
 \begin{figure}
  \input{./illustrations/ppr.tex}
-\caption{\label{orgb527298}
+\caption{\label{org66851a8}
 A demonstration of the function \(\tilde{\pi}(\theta; \beta)\) for different values of \(\beta\). Note that we've started under the assumption that the distribution is a truncated Gaussian, i.e. that it is zero outside the range \((-1, 1)\). This manifests as sharp changes in curvature at the boundaries. Note that \(\forall \beta\), \(\int_{-1}^{1}\tilde{\pi}(\theta; \beta) = 1\).}
 \end{figure}
 
@@ -495,7 +495,7 @@ execution time should decrease.
 
 
 \subsection{Argument scaling}
-\label{sec:orgd6aebd8}
+\label{sec:org1ea43fb}
 
 Power posterior re-partitioning in the case of a Gaussian
 distribution (also a Cauchy distribution), can be thought of as
@@ -525,7 +525,7 @@ functions, as it only requires for them to be normalised once
 factor.
 
 \subsection{General automatic posterior re-partitioning.}
-\label{sec:org3b80f34}
+\label{sec:orgff95c31}
 
 Let's recap the key components of posterior re-partitioning. We have
    a baseline prior, with its likelihood \((\pi(\theta), \cal L
@@ -564,7 +564,7 @@ the same result, and our goal is to identify which shall produce
 better run-times.
 
 \subsubsection{Additive mixtures.}
-\label{sec:orgc32ccf8}
+\label{sec:orgbdbb516}
 Consider a weighted sum of a uniform distribution with
 a Gaussian, e.g. in one dimension
 \begin{equation}\label{eq:additive-mix}
@@ -580,7 +580,7 @@ distributions the inverse of the sum exists.
 
 \begin{figure}
   \input{illustrations/additive_mixtures.tex}
-\caption{\label{org9a3df54}
+\caption{\label{org416f367}
 An illustration of the additive mixture repartitioning. PPR for the same value of \(\beta=0.3\), added for comparison.}
 \end{figure}
 
@@ -635,7 +635,7 @@ some probability sample from a completely uniform prior is more
 valuable. 
 
 \subsubsection{Re-sizeable-bounds uniform prior.}
-\label{sec:orge593f4d}
+\label{sec:orga65ab25}
 
 The three requirements outlined at the beginning of this section
 are not necessary and sufficient. As we have noted on page
@@ -715,7 +715,7 @@ posterior and evidence as seen in the experiments.
 
 
 \subsubsection{Stochastic superpositional re-partitioning.}
-\label{sec:orgf9c6bdb}
+\label{sec:orgb54c7da}
 
 Hence we come to the concept of \emph{stochastic superposition-al
 posterior repetition} (SSPR). Consider \(\tilde{\pi}(\theta)\) and
@@ -795,14 +795,14 @@ prior branch.
 
 \begin{figure}
  \input{./illustrations/mixture.tex}
-\caption{\label{orgf83cc21}
+\caption{\label{org9f5cd74}
 An example of a mixture re-partitioning. Notice that the mixture is not normalised to emphasise the coincidence of values with both the uniform distribution and a Gaussian.}
 \end{figure}
 
 
 
 \section{Method}
-\label{sec:org759bd76}
+\label{sec:org3a8b650}
 In this section we shall describe in detail the types of simulations
 and bench-marking that was done. As this project is highly
 computational, Cosmological issues are discussed only incidentally,
@@ -821,7 +821,7 @@ suggested optimisations on the CSD3 cluster (University of Cambridge).
 
 
 \subsection{Performance and bench-marking}
-\label{sec:org80ad06f}
+\label{sec:org63e4919}
 One cannot use CPU time as a reliable indicator of
 performance. There are multiple factors leading to unpredictable
 overheads, and these can be practically averaged out on a small
@@ -891,7 +891,7 @@ converge faster if the distribution is narrower than the posterior
 
 
 \subsection{Correctness}
-\label{sec:orgab723c1}
+\label{sec:orgd69c2a2}
 One simple and unreliable way of determining the correctness of a
 run is to compare the posteriors of two runs: if the means of two
 runs are within one standard deviation of each other, then the
@@ -910,7 +910,7 @@ comparison on) the estimated evidences into consideration.
 
 \begin{figure}
 \input{./illustrations/histograms.tex}
-\caption{\label{orgecc39df}
+\caption{\label{orgbcc105b}
 An illustration of the evidence distributions of different types of repartitioning schemes. The Uniform reference obtained a distribution centered around \(\log {\cal Z} = -62 = - \log V(\Psi)\) (see \autoref{eq:evidence}, where \((a,b)=(-6, 6)\cdot 10^{8}\) and \(G=\mathds{1}_{3}\)). Note that both mixture modelling and PPR have found the same value, and the distributions are more sharply peaked. Also notice that if the repartitioning is done incorrectly, the evidnece will also be estimated incorrectly. Finally, Both the true posterior and the mixture repartitioning have terminated without completing a single nested sampling iteration. This was sufficient to (correctly) determine the evidence, but it did not produce all the requisite chains, and hence no histogram could be produced.}
 \end{figure}
 
@@ -926,7 +926,7 @@ other.}.
 
 \begin{figure}
  \includegraphics[width=0.5\textwidth]{./illustrations/misfit.pdf}
-\caption{\label{orgd969708}
+\caption{\label{orgabdf99c}
 An example of a posterior distribution generated with power posterior re-partitioning, based on data from planck. The posteriors are near identical, and a slight misfit can be explained with arithmetic rounding errors, and run-to-run variance of the position of the live points (see top right figure).}
 \end{figure}
 
@@ -934,7 +934,7 @@ An example of a posterior distribution generated with power posterior re-partiti
 
 
 \subsection{Qualitative observations.}
-\label{sec:org318f3c8}
+\label{sec:orgdc652cb}
 Last but not least, an interactive cartoon of the convergence
 process for as many parameters as one likes can be obtained from
 
@@ -957,9 +957,9 @@ colloquially referred to as the \emph{tail}.
 
 
 \subsection{Simulations}
-\label{sec:org863b0ec}
+\label{sec:org64dc6fa}
 \subsubsection{Toy models}
-\label{sec:org9512a8f}
+\label{sec:orga5b11f6}
 
 We shall begin our analysis with help of a simplified model that is
 general-enough to share features with the Cosmological scale
@@ -1028,14 +1028,14 @@ Gaussian.
 
 
 \subsubsection{{\bfseries\sffamily TODO} Cosmological simulations}
-\label{sec:org0aa9c59}
+\label{sec:org5327712}
 For the Cosmological parameter estimation Cobaya \citep{cobaya} with
 CLASS \citep{Blas_2011}, and PolyChord \citep{polychord} as a sampler
 were chosen. The main reason being the high modularity of the code,
 which allows a neater implementation of the re-partitioning
 mac
 \section{Results and Discussion.}
-\label{sec:org048c282}
+\label{sec:org13d3901}
 The first test case is an uncorrelated spherical Gaussian posterior
 in three dimensions \(\mathcal{P}(\theta) = G(\theta; \mu = (1,2,3),
   \sigma = 1)\). The corresponding evidence (\autoref{eq:evidence}) is
@@ -1068,7 +1068,7 @@ correct normalisation.
 
 \begin{figure}
   \input{illustrations/benchmark.tex}
-\caption{\label{org671c650}
+\caption{\label{orgae7d1c7}
 comparison of likelihood calls necessary for obtaining the correct evidence for the case of a spherical uncorrelated Gaussian posterior. Note that almost all series scale linearly with the number of live points.}
 \end{figure}
 
@@ -1110,7 +1110,7 @@ involve a prior on \(\beta\), that strongly favours values close to
 
 \begin{figure}
 \includegraphics[width=0.5\textwidth]{./illustrations/convergence.pdf}
-\caption{\label{orgb4fd87c}
+\caption{\label{orga696daf}
 An illustration of how offsets affect the convergence of nested sampling under different kinds of repartitioning. The offset models should produce an offset posterior, whilst sharing the prior with the model runs. The mixture is of the present uniform model and PPR.}
 \end{figure}
 
@@ -1126,7 +1126,7 @@ both a standard uniform-prior sampling, and the mixture
 repartitioning. 
 
 \begin{figure}
-\input{./illustrations/tails.tex}
+\includegraphics[width=0.5\textwidth]{./illustrations/higson.pdf}
 \caption{An evolutionary insight into the behaviour of nested sampling. The \{\color{red} red\} series corresponds to mixture repartitioning, while the \{ \color{blue} blue\} series -- to a reference uniform. All plots are given in \(\ln X\), where \(X(\mathcal{L}) \in [0,1]\) is the fraction of the prior with likelihood greater than \(\mathcal{L}\). The top plot is the relative posterior mass, which is the total weight assigned to samples from the region. In each row, we're presented with the posterior in the given parameter. The gradients represent degree of confidence. \label{fig:higson}}
 \end{figure}
 
@@ -1146,10 +1146,10 @@ accuracy.
 
 
 \section{Conclusions}
-\label{sec:orga8d41cc}
+\label{sec:orgbee1414}
 
 \subsection{Results}
-\label{sec:org1d748cc}
+\label{sec:orgaf7f9d9}
 Our project's purpose had been to investigate the performance
 increase attainable by algorithmic optimisations of the inputs to
 nested samplers. 
@@ -1181,7 +1181,7 @@ input from the user, beyond ensuring the three properties.
 
 
 \subsection{Further research}
-\label{sec:org828d1be}
+\label{sec:orgeb69ba5}
 The proposed algorithm of superpositional mixtures, maps neatly
 onto concepts of quantum computation. Indeed one can model two
 different priors as states of qubits. The benefits are potentially
@@ -1234,7 +1234,7 @@ suggestion might be a smooth top-hat, or a combination of error
 functions.
 
 \subsection{Applications}
-\label{sec:org13150ee}
+\label{sec:org55543fe}
 Nested sampling is a universal algorithm that can be applied to any
 problem involving either direct parameter estimation (e.g. analysis
 of Planck data), or indirectly such as neural-network based machine
@@ -1275,10 +1275,10 @@ identical architecture.
 \bibliographystyle{mnras}
 
 \section{Appendices}
-\label{sec:orgb13afda}
+\label{sec:org9f5ab4d}
 
 \subsection{Why do we need to alter the likelihood.}
-\label{sec:org4f52cd9}
+\label{sec:orge8538cb}
 One may ask why such a change of the likelihood is at all
 necessary. Indeed, the likelihood may be chosen based on a precise
 theory of error, e.g. a least-squares fit argument based on
@@ -1314,7 +1314,7 @@ result, hence the necessity to repartition.
 
 
 \subsection{Code}
-\label{sec:org24b884d}
+\label{sec:orge0956ea}
 
 All of the illustrations, figures, code that generated them along
 with a generalised framework for mixing any kinds of priors into a
