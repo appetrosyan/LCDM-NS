@@ -999,12 +999,72 @@ TODO
   the run-time compared to using a uniform prior. More specifically,
   guessing a posterior distribution and using re-partitioning, one may
   reduce the initial compression stage to virtually none.
+  
+     Having proven the correctness of the runs, let's turn to
+   performance and benchmarks. The central metric is the number of
+@@ -991,19 +996,69 @@ TODO
+   case of exact coincidence of the mean and the standard deviation
+   produces a respectable speed-up. 
+
+   The next trial involves a variable offset, where convergence to the
+   correct posterior and evidence is not guaranteed even with the
+   correct normalisation. 
 
 
-  An important metric is the so-called posterior mass. This allows
+   #+CAPTION: comparison of likelihood calls necessary for obtaining the correct evidence for the case of a spherical uncorrelated Gaussian posterior. Note that almost all series scale linearly with the number of live points. 
+   #+NAME: fig:benchmark
+   \begin{figure}
+     \input{illustrations/benchmark.tex}
+   \end{figure}
+
+
+
+
+   The next trial involves a variable offset, where convergence to the
+   correct posterior and evidence is not guaranteed even with the
+   correct normalisation.    
+
+  For this case, we have taken a Gaussian in a box of
+  $1000\times1000\times1000$, and generated two nested sampling data
+  ranges. The ``offset'' posteriors are moved relative to the mean of
+  the prior. The parameter labeled '1' is offset by double the amount
+  of parameter '0'. 
+
+  The exemplary results are given in autoref:fig:convergence.
+
+  The main notable feature is the inaccuracy of the posterior for
+  power posterior repartitioning. One does expect it to produce the
+  correct posterior distribution if the offset is large compared to
+  the width of the peaks. If the offset is \(O(2\sigma)\), the
+  posterior is merely shifted, but if the shift is larger,
+  e.g. \(O(4\sigma)\), two peaks can be resolved. Unfortunately for
+  PPR, the evidence was also computed incorrectly: $\ln {\cal
+  Z}\approx -25.4 \pm 0.2$, vs the reference $\ln {\cal Z} = -22.7 \pm
+  0.4$.  Making matters even worse, the smaller of the two peaks is
+  actually the correct posterior.
+
+  This is the fatal flaw of PPR, that prevents it from being useful in
+  any real application. The constant, ever present bias implicit to
+  using a Gaussian prior causes the sampler to be strongly biased
+  towards the original value. It can be redeemed: the mixture model in
+  the same figure involves the same PPR as one of two models. It
+  produced the correct result, while also, remarkably managing to do
+  so faster than a uniform prior would allow[fn::another method could
+  involve a prior on $\beta$, that strongly favours values close to
+  $\beta=0$.].
+
+  #+CAPTION: An illustration of how offsets affect the convergence of nested sampling under different kinds of repartitioning. The offset models should produce an offset posterior, whilst sharing the prior with the model runs. The mixture is of the present uniform model and PPR. 
+  #+NAME: fig:convergence
+  \begin{figure}
+  \includegraphics[width=0.5\textwidth]{./illustrations/convergence.pdf}
+  \end{figure}
+
+
+
+  One last discussion is that of so-called posterior mass. This allows
   us to judge how quckly does the algorithm converge to the correct
   values cite:higson2018nestcheck, as well as diagnose pathological
-  issues.
+  issues, specific to nested sampling. 
   
   The plot on autoref:fig:higson showcases typical behaviour for
   both a standard uniform-prior sampling, and the mixture
@@ -1012,7 +1072,7 @@ TODO
   
   #+CAPTION: An evolutionary insight into the behaviour of nested sampling. The {\color{red} red} series corresponds to mixture repartitioning, while the { \color{blue} blue} series -- to a reference uniform. All plots are given in $\ln X$, where $X(\mathcal{L}) \in [0,1]$ is the fraction of the prior with likelihood greater than $\mathcal{L}$. The top plot is the relative posterior mass, which is the total weight assigned to samples from the region. In each row, we're presented with the posterior in the given parameter. The gradients represent degree of confidence. label:fig:higson
   \begin{figure}
-   \input{./illustrations/tails.tex}
+  \input{./illustrations/tails.tex}
   \end{figure}
     
   Firstly, note that the compression with repartitioning happens
