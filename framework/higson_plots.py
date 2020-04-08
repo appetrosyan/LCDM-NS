@@ -33,5 +33,4 @@ file_roots = [k for k in file_roots]
 
 runs = batch_process_data(file_roots, parallel=False, process_func=process_polychord_run)
 fig = param_logx_diagram(runs[:2], logx_min=-20.00, fthetas =[lambda x: x[:, 0], lambda x: x[:,1], lambda x: x[:,2]], ftheta_lims={0: (-4, 5), 1:(0, 9), 2:(4, 13)})
-tikzplotlib.save('../illustrations/tails.tex')
 plt.show()
