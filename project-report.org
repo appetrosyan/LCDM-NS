@@ -994,14 +994,12 @@ TODO
   which is due to underestimating the normalisation factor for
   $\mathcal{L}$.[fn::the boundary dependence was omitted.]
   
-  Re-partitioning, has proven to be fruitful. It succeeds in what it
-  was originally designed to do: provide a more stable convergence
-  than a Gaussian prior would afford. We have also shown that this
-  is able to drastically reduce the run-time compared to using a
-  uniform prior. More specifically, guessing a posterior
-  distribution and using re-partitioning, one may reduce the initial
-  compression stage to virtually none. 
-  
+
+  We shall now show that repartitioning is able to drastically reduce
+  the run-time compared to using a uniform prior. More specifically,
+  guessing a posterior distribution and using re-partitioning, one may
+  reduce the initial compression stage to virtually none.
+
 
   An important metric is the so-called posterior mass. This allows
   us to judge how quckly does the algorithm converge to the correct
@@ -1028,6 +1026,7 @@ TODO
   parameter covariance matrix \(G = 1\), we can also confirm the
   accuracy. 
 
+ 
     
 
 
