@@ -8,6 +8,7 @@
 #+LATEX_HEADER: \usetikzlibrary{patterns,shapes.arrows}
 #+LATEX_HEADER: \pgfplotsset{compat=newest}
 #+LATEX_HEADER: \usepackage{dsfont}
+#+LATEX_HEADER: \usepackage{xcolor}
 #+OPTIONS: toc:nil 
 #+BIBLIOGRAPHY: bibliography
 #+LATEX_COMPILER: tectonic
@@ -979,7 +980,7 @@ TODO
 	were chosen. The main reason being the high modularity of the code,
 	which allows a neater implementation of the re-partitioning
 	mac
-* Results
+* Results and Discussion. 
   The first test case is an uncorrelated spherical Gaussian posterior
   in three dimensions $\mathcal{P}(\theta) = G(\theta; \mu = (1,2,3),
   \sigma = 1)$. The corresponding evidence (autoref:eq:evidence) is
@@ -992,22 +993,42 @@ TODO
   systematically overestimating the evidence (autoref:fig:hist),
   which is due to underestimating the normalisation factor for
   $\mathcal{L}$.[fn::the boundary dependence was omitted.]
-
   
-  
-  
-  
-* Discussion
-
   Re-partitioning, has proven to be fruitful. It succeeds in what it
-  was originally set out to do: provide a more stable convergence
+  was originally designed to do: provide a more stable convergence
   than a Gaussian prior would afford. We have also shown that this
   is able to drastically reduce the run-time compared to using a
   uniform prior. More specifically, guessing a posterior
   distribution and using re-partitioning, one may reduce the initial
   compression stage to virtually none. 
   
-*** TODO Figure of Tail. 
+
+  An important metric is the so-called posterior mass. This allows
+  us to judge how quckly does the algorithm converge to the correct
+  values cite:higson2018nestcheck, as well as diagnose pathological
+  issues.
+  
+  The plot on autoref:fig:higson showcases typical behaviour for
+  both a standard uniform-prior sampling, and the mixture
+  repartitioning. 
+  
+  #+CAPTION: An evolutionary insight into the behaviour of nested sampling. The {\color{red} red} series corresponds to mixture repartitioning, while the { \color{blue} blue} series -- to a reference uniform. All plots are given in $\ln X$, where $X(\mathcal{L}) \in [0,1]$ is the fraction of the prior with likelihood greater than $\mathcal{L}$. The top plot is the relative posterior mass, which is the total weight assigned to samples from the region. In each row, we're presented with the posterior in the given parameter. The gradients represent degree of confidence. label:fig:higson
+  \begin{figure}
+   \input{./illustrations/tails.tex}
+  \end{figure}
+    
+  Firstly, note that the compression with repartitioning happens
+  much more quickly, consistent with our observations of run-time
+  reduction. Secondly, notice that the repartitioned series has a
+  much longer ``tail'', i.e. has a longer extinction phase. This is
+  a result of introducing extra nuisance parameters. Finally, notice
+  that the confidence intervals for the parameters' distributions
+  are near identical. This is a sign that the obtained posteriors
+  are more precise. Knowing that the means are \({0, 4, 8}\) with
+  parameter covariance matrix \(G = 1\), we can also confirm the
+  accuracy. 
+
+    
 
 
 * Conclusions

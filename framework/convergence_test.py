@@ -1,3 +1,4 @@
+
 from gaussian_models.uniform import BoxUniformModel
 from gaussian_models.power_posterior import PowerPosteriorPrior
 from general_mixture_model import StochasticMixtureModel
