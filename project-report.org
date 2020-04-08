@@ -1072,7 +1072,7 @@ TODO
   
   #+CAPTION: An evolutionary insight into the behaviour of nested sampling. The {\color{red} red} series corresponds to mixture repartitioning, while the { \color{blue} blue} series -- to a reference uniform. All plots are given in $\ln X$, where $X(\mathcal{L}) \in [0,1]$ is the fraction of the prior with likelihood greater than $\mathcal{L}$. The top plot is the relative posterior mass, which is the total weight assigned to samples from the region. In each row, we're presented with the posterior in the given parameter. The gradients represent degree of confidence. label:fig:higson
   \begin{figure}
-  \input{./illustrations/tails.tex}
+  \includegraphics[width=0.5\textwidth]{./illustrations/higson.pdf}
   \end{figure}
     
   Firstly, note that the compression with repartitioning happens
