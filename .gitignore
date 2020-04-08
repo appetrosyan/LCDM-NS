@@ -45,3 +45,15 @@
 *.py#
 *~
 *__pycache__*
+/project-report.pdf
+/auto/
+*.dpth
+*.log
+*.md5
+/project-report-figure0.pdf
+/project-report-figure1.pdf
+/project-report-figure2.pdf
+/project-report-figure3.pdf
+/project-report-figure4.pdf
+/project-report.aux
+/project-report.auxlock
