@@ -59,13 +59,13 @@ def bench(repeats, nlike, series):
 nlive = [10, 30, 40, 50, 55, 60, 65, 70]
 
 
-def compare(data, nlike, series):
+def compare(runs, nlike, series):
     for k in series:
-        xdata = nlike
-        ydata = array([mean(x) for x in data[k]])
-        yerr = array([std(x) for x in data[k]])
-        print('x={}, y={}, yerr={}'.format(xdata, ydata, yerr))
-        plt.errorbar(xdata, ydata, yerr,
+        x_data = nlike
+        y_data = array([mean(x) for x in runs[k]])
+        y_err = array([std(x) for x in runs[k]])
+        print('x={}, y={}, y_err={}'.format(x_data, y_data, y_err))
+        plt.errorbar(x_data, y_data, y_err,
                      label=series[k].label, marker=series[k].style, markersize=8)
     plt.xlabel(r'\(n_{live}\)')
     plt.ylabel(r'\# of \({\cal L}\) evaluations')
@@ -85,7 +85,6 @@ def generate_offset(series, factor=3):
 def main():
     # runs = bench(3, nlive, coincidingSeries)
     # compare(runs, coincidingSeries)
-    global data, offsets
     offsets = generate_offset(coincidingSeries)
     data = bench(3, [10, 20], offsets)
     compare(data, [10, 20], offsets)
