@@ -63,7 +63,7 @@ plt.hist(power.logZ(hist_samples), label='PPR', alpha=0.3)
 # plt.hist(gaussian.logZ(hist_samples), label='\(G\) - true posterior', alpha=0.3, )
 overlay_gaussian(qg.logZ, qg.logZerr,
                  label=r'$G$ - true posterior', hatch='|', alpha=0.3)
-plt.hist(reference.logZ(hist_samples), label='\(U\) - reference',
+plt.hist(reference.logZ(hist_samples), label=r'\(U\) - reference',
          alpha=0.3, fill=True)
 plt.xlim(z_lower, z_upper)
 plt.xlabel(r'\(\ln {\cal Z}\)')
