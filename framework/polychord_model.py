@@ -67,6 +67,7 @@ class Model:
             samples = None
         return output, samples
 
+    # noinspection SpellCheckingInspection
     def setup_settings(self, file_root=None, live_points=175, resume=True, verbosity=0):
         _settings = deepcopy(self.settings)
         _settings.feedback = verbosity
