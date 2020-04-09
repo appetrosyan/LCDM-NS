@@ -7,6 +7,7 @@ from gaussian_models.uniform import BoxUniformModel
 from general_mixture_model import StochasticMixtureModel
 from offset_model import OffsetModel
 
+print(MPI)
 b = 10 ** 3
 a = array([-b, -b, -b])
 bounds = (a, -a)

@@ -2,7 +2,12 @@ from copy import deepcopy
 
 from anesthetic import NestedSamples
 from numpy import zeros
+
+# As of not PolyChord is not pip-installable.
+# noinspection PyUnresolvedReferences,PyUnresolvedReferences
+
 from pypolychord import run_polychord
+# noinspection PyUnresolvedReferences,PyUnresolvedReferences
 from pypolychord.settings import PolyChordSettings
 
 
@@ -45,7 +50,7 @@ class Model:
     def test_log_like(self):
         p = self.log_likelihood(zeros(self.dimensionality))
         try:
-            q, r = p
+            _, _ = p
         except ValueError as e:
             raise ValueError(e.msg + "Did you forget to return the derived parameters?")
 

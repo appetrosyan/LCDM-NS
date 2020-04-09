@@ -9,6 +9,7 @@ from gaussian_models.true_gaussian import GaussianPeakedPrior
 from gaussian_models.uniform import BoxUniformModel, StrawManResizeablePrior
 from general_mixture_model import StochasticMixtureModel
 
+print(MPI)
 rc('font', **{'family': 'serif', 'serif': ['Times']})
 rc('text', usetex=True)
 plt.rcParams["font.size"] = 14

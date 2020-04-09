@@ -1,6 +1,6 @@
 # from multiprocessing import Pool
 try:
-    from pathos.multiprocessing import ProcessingPool as Pool
+    from pathos.multiprocessing import ProcessPool as Pool
 
 
     def parmap(f, x):

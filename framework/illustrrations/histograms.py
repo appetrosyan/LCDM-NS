@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import tikzplotlib
-import mpi4py
+from mpi4py import MPI
 from matplotlib import rc
 from numpy import array
 
@@ -10,6 +10,7 @@ from gaussian_models.uniform import BoxUniformModel
 from gaussian_models.uniform import StrawManResizeablePrior
 from general_mixture_model import StochasticMixtureModel
 
+print(MPI)
 rc('font', **{'family': 'serif', 'serif': ['Times']})
 rc('text', usetex=True)
 plt.rcParams['font.size'] = 14
@@ -27,7 +28,6 @@ tgd = GaussianPeakedPrior(bounds, mu, cov, file_root='tgd')
 bun = BoxUniformModel(bounds, mu, cov, file_root='bun')
 run = StrawManResizeablePrior(bounds, mu, cov, file_root='run')
 mix = StochasticMixtureModel([bun, tgd], file_root='mix')
-
 
 qr, resizeable = run.nested_sample(**kwargs)
 q0, reference = bun.nested_sample(**kwargs)
