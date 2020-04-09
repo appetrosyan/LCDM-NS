@@ -1,15 +1,13 @@
-
-from gaussian_models.uniform import BoxUniformModel
-from gaussian_models.power_posterior import PowerPosteriorPrior
-from general_mixture_model import StochasticMixtureModel
-from gaussian_models.true_gaussian import GaussianPeakedPrior
-from offset_model import OffsetModel
-from anesthetic.plot import get_legend_proxy
 import matplotlib.pyplot as plt
-import tikzplotlib
+from anesthetic.plot import get_legend_proxy
 from numpy import array
+from mpi4py import MPI
+from gaussian_models.power_posterior import PowerPosteriorPrior
+from gaussian_models.uniform import BoxUniformModel
+from general_mixture_model import StochasticMixtureModel
+from offset_model import OffsetModel
 
-b = 10**3
+b = 10 ** 3
 a = array([-b, -b, -b])
 bounds = (a, -a)
 mu = array([1, 2, 3])
@@ -25,7 +23,7 @@ models = {
     'uniform': BoxUniformModel(*args)
 }
 models['mix'] = StochasticMixtureModel([models['ppr'], BoxUniformModel(*args)])
-offsets = {k: OffsetModel(models[k], mu*2) for k in models}
+offsets = {k: OffsetModel(models[k], mu * 2) for k in models}
 answers = {
     'model': {k: models[k].nested_sample(**kwargs) for k in models},
     'offset': {k: offsets[k].nested_sample(**kwargs) for k in offsets}

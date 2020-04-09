@@ -1,10 +1,12 @@
-from polychord_model import Model
 from numpy import pad
 
-class OffsetModel(Model):
-    defaul_file_root = 'OffsetModel'
+from polychord_model import Model
 
-    def __init__(self, base_model, offset, file_root=defaul_file_root, **kwargs):
+
+class OffsetModel(Model):
+    default_file_root = 'OffsetModel'
+
+    def __init__(self, base_model, offset, file_root=default_file_root, **kwargs):
         self.model = base_model
         self.offset = offset
         if not self.offset.size == self.model.dimensionality:

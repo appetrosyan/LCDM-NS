@@ -1,12 +1,12 @@
-from numpy import pi, log, zeros, array
+from abc import ABC
+
+from numpy import pi, array
 from numpy.linalg import slogdet, multi_dot, inv
-from pypolychord.priors import UniformPrior
-from pypolychord.settings import PolyChordSettings
 
 from polychord_model import Model
 
 
-class ParameterCovarianceModel(Model):
+class ParameterCovarianceModel(Model, ABC):
     def __init__(self, bounds, mu, cov, file_root='paramCovModel', **kwargs):
         self.a, self.b = bounds
         self.mu = mu
