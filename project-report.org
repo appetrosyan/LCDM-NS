@@ -185,12 +185,12 @@ TODO
    accurately describe the underlying physical process.
 
    #+CAPTION: Definitions of main quantities in Bayesian analysis. label:table-defs
-   | **Term**   | **Symbol**           | **Definition**                 |
-   |------------+----------------------+--------------------------------|
-   | Prior      | \(\pi(\theta)\)      | \(P ( \theta  \vert D)\)       |
-   | Likelihood | \({\cal L}(\theta)\) | \(P ( D \vert \theta \cup M)\) |
-   | Posterior  | \({\cal P}(\theta)\) | \(P ( \theta \vert D \cup M)\) |
-   | Evidence   | \({\cal Z}\)                | \(P ( D \vert M)\)             |
+   | **Term**         | **Symbol**           | **Definition**                 | **units**                     |
+   |------------------+----------------------+--------------------------------+-------------------------------|
+   | Prior (PDF)      | \(\pi(\theta)\)      | \(P ( \theta  \vert D)\)       | Parameter Volume Element$^-1$ |
+   | Likelihood (PDF) | \({\cal L}(\theta)\) | \(P ( D \vert \theta \cup M)\) | Parameter Volume Element$^-1$ |
+   | Posterior (PDF)  | \({\cal P}(\theta)\) | \(P ( \theta \vert D \cup M)\) | Parameter Volume Element$^-1$ |
+   | Evidence         | \({\cal Z}\)         | \(P ( D \vert M)\)             | arbitrary units               |
 
    The two independent quantities, ${\cal L}$ and $\pi$ defined in
    autoref:table-defs are the inputs to the Bayesian Sampler. Their
