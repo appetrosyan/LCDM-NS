@@ -1,4 +1,5 @@
 from numpy import log, nextafter, concatenate
+# noinspection PyUnresolvedReferences
 from pypolychord.priors import UniformPrior
 
 from gaussian_models.parameter_covariance import ParameterCovarianceModel

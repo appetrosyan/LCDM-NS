@@ -12,6 +12,7 @@ from misc.parallelism import parmap
 from misc.ui import progressbar as tqdm
 from offset_model import OffsetModel
 
+print(MPI)
 rc('font', **{'family': 'serif', 'serif': ['Times']})
 rc('text', usetex=True)
 plt.rcParams["font.size"] = 14

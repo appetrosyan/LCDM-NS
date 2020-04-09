@@ -13,7 +13,7 @@ class GaussianPeakedPrior(ParameterCovarianceModel):
         return log_l, phi
 
     def quantile(self, cube):
-        return power_gaussian_quantile(self, cube, 1)
+        return power_gaussian_quantile(self, cube)
 
     @property
     def dimensionality(self):
