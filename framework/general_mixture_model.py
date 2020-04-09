@@ -1,8 +1,7 @@
-import fractions
-import matplotlib.pyplot as plt
-from numpy import array, concatenate, lcm, log
-from pypolychord.settings import PolyChordSettings
+from abc import ABC
 from random import random, seed
+
+from numpy import concatenate
 
 from polychord_model import Model
 
@@ -11,7 +10,7 @@ def _are_all_elements_identical(lst):
     return not lst or lst.count(lst[0]) == len(lst)
 
 
-class AbstractMixtureModel(Model):
+class AbstractMixtureModel(Model, ABC):
     default_file_root = 'MixtureModel'
 
     def __init__(self, models, file_root=default_file_root, **kwargs):

@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 import tikzplotlib
 from matplotlib import rc
 from numpy import array, mean, std
-
+from mpi4py import MPI
 from gaussian_models.power_posterior import PowerPosteriorPrior
 from gaussian_models.true_gaussian import GaussianPeakedPrior
-from gaussian_models.uniform import BoxUniformModel, StrawManResizeablePrior
+from gaussian_models.uniform import BoxUniformModel
 from general_mixture_model import StochasticMixtureModel
 from misc.data_series import Series
 from misc.parallelism import parmap
@@ -17,8 +17,7 @@ rc('text', usetex=True)
 plt.rcParams["font.size"] = 14
 plt.rcParams["errorbar.capsize"] = 4
 
-
-bounds = (-6*10**8, 6*10**8)
+bounds = (-6 * 10 ** 8, 6 * 10 ** 8)
 mu = array([1, 2, 3])
 cov = array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
 args = [bounds, mu, cov]
@@ -78,19 +77,19 @@ def compare(data, nlike, series):
 def generate_offset(series, factor=3):
     result = {}
     for k in series:
-        result[k] = Series(OffsetModel(series[k].model, factor*mu),
+        result[k] = Series(OffsetModel(series[k].model, factor * mu),
                            style=series[k].style, label=series[k].label)
     return result
 
 
-if __name__ == '__main__':
-    main()
-
-
 def main():
-    # data = bench(3, nlive, coincidingSeries)
-    # compare(data, coincidingSeries)
+    # runs = bench(3, nlive, coincidingSeries)
+    # compare(runs, coincidingSeries)
     global data, offsets
     offsets = generate_offset(coincidingSeries)
     data = bench(3, [10, 20], offsets)
     compare(data, [10, 20], offsets)
+
+
+if __name__ == '__main__':
+    main()

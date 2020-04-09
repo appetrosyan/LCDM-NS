@@ -1,0 +1,18 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pathos = '*'
+
+[packages]
+matplotlib = "*"
+tikzplotlib = "*"
+anesthetic = "*"
+nestcheck = "*"
+mpi4py = "*"
+pypolychord = "*"
+
+[requires]
+python_version = "3.7"

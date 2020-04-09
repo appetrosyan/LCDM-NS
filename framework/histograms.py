@@ -8,8 +8,6 @@ from gaussian_models.power_posterior import PowerPosteriorPrior
 from gaussian_models.true_gaussian import GaussianPeakedPrior
 from gaussian_models.uniform import BoxUniformModel, StrawManResizeablePrior
 from general_mixture_model import StochasticMixtureModel
-from misc.parallelism import parmap
-from offset_model import OffsetModel
 
 rc('font', **{'family': 'serif', 'serif': ['Times']})
 rc('text', usetex=True)
@@ -44,8 +42,8 @@ qm, samples = mix.nested_sample(**kwargs)
 
 hist_samples = 1000
 
-z_lower = min([x.logZ - x.logZerr for x in [qr, q0, qg, qp, qpp, qm]])-1
-z_upper = max([x.logZ + x.logZerr for x in [qr, q0, qg, qp, qpp, qm]])+1
+z_lower = min([x.logZ - x.logZerr for x in [qr, q0, qg, qp, qpp, qm]]) - 1
+z_upper = max([x.logZ + x.logZerr for x in [qr, q0, qg, qp, qpp, qm]]) + 1
 
 
 def overlay_gaussian(mu, sigma, **kwargs):
@@ -60,7 +58,7 @@ plt.hist(repart.logZ(hist_samples),
 # plt.hist(samples.logZ(hist_samples), label=r'mix\((U, G)\)', alpha=1)
 overlay_gaussian(qm.logZ, qm.logZerr, label=r'mix\((U, G)\)', hatch='//')
 # This would contain the right histogram, except polychord
-# terminates before generating any usable data.
+# terminates before generating any usable runs.
 plt.hist(power.logZ(hist_samples), label='PPR', alpha=0.3)
 # plt.hist(gaussian.logZ(hist_samples), label='\(G\) - true posterior', alpha=0.3, )
 overlay_gaussian(qg.logZ, qg.logZerr,
