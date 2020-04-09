@@ -32,36 +32,36 @@ coincidingSeries = {
 }
 
 
-def nlike_calls(model, repeats, **kwargs):
+def count_log_like_calls(model, repeats, **kwargs):
     fr = kwargs.pop('file_root')
     outs = parmap(lambda r: model.nested_sample(
         **kwargs, file_root=(fr + '{}'.format(r))), range(repeats))
-    rval = [out[0].nlike for out in outs]
-    print(rval)
-    return rval
+    result = [out[0].nlike for out in outs]
+    print(result)
+    return result
 
 
-def bench(repeats, nlike, series):
+def bench(repeats, n_like, series):
     rv = {}
     config = {'noResume': True}
     for k in tqdm(series):
         print('Running {}'.format(k))
-        nlikes = [nlike_calls(series[k].model,
-                              repeats,
-                              **config,
-                              nLive=nl,
-                              file_root='{}{}'.format(k, nl))
-                  for nl in nlike]
-        rv[k] = nlikes
+        log_like_calls = [count_log_like_calls(series[k].model,
+                                               repeats,
+                                               **config,
+                                               nLive=nl,
+                                               file_root='{}{}'.format(k, nl))
+                          for nl in n_like]
+        rv[k] = log_like_calls
     return rv
 
 
-nlive = [10, 30, 40, 50, 55, 60, 65, 70]
+live_points = [10, 30, 40, 50, 55, 60, 65, 70]
 
 
-def compare(runs, nlike, series):
+def compare(runs, n_like, series):
     for k in series:
-        x_data = nlike
+        x_data = n_like
         y_data = array([mean(x) for x in runs[k]])
         y_err = array([std(x) for x in runs[k]])
         print('x={}, y={}, y_err={}'.format(x_data, y_data, y_err))
@@ -83,7 +83,7 @@ def generate_offset(series, factor=3):
 
 
 def main():
-    # runs = bench(3, nlive, coincidingSeries)
+    # runs = bench(3, n_live, coincidingSeries)
     # compare(runs, coincidingSeries)
     offsets = generate_offset(coincidingSeries)
     data = bench(3, [10, 20], offsets)

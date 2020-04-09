@@ -23,7 +23,7 @@ class ParameterCovarianceModel(Model, ABC):
             self.cov = array(self.cov)
             rows, cols = self.cov.shape  # raise VE if too few to unpack
         if rows != cols or rows != self.nDims:
-            raise ValueError('Dimensions of cov and mu are incompatible: mu – {}, cov ({}, {}) '.format(
+            raise ValueError('Dimensions of cov and mean are incompatible: mean – {}, cov ({}, {}) '.format(
                 self.nDims, rows, cols))
         super().__init__(self.dimensionality, self.num_derived, file_root, **kwargs)
 

@@ -60,8 +60,8 @@ class StochasticMixtureModel(AbstractMixtureModel):
         t, _, m = self._unpack(theta)
         _current_model = self.models[int(m)]
         _nDims = _current_model.dimensionality
-        logl, phi = _current_model.log_likelihood(t[:_nDims])
-        return logl, phi
+        log_l, phi = _current_model.log_likelihood(t[:_nDims])
+        return log_l, phi
 
     def quantile(self, hypercube):
         """This is where black magic happens!"""

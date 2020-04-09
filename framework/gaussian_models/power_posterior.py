@@ -13,9 +13,9 @@ class PowerPosteriorPrior(ParameterCovarianceModel):
     def log_likelihood(self, theta):
         t = theta[:self.nDims]
         beta = theta[-1]
-        logl, phi = super().log_likelihood(t)
-        logl += log_likelihood_correction(self, beta, t)
-        return logl, phi
+        log_l, phi = super().log_likelihood(t)
+        log_l += log_likelihood_correction(self, beta, t)
+        return log_l, phi
 
     def quantile(self, cube):
         beta = self.beta_min + (self.beta_max - self.beta_min) * cube[-1]

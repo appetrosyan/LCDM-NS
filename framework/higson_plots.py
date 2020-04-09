@@ -24,7 +24,7 @@ models = {
 }
 models['mix'] = StochasticMixtureModel([models['ppr'], BoxUniformModel(*args)])
 file_roots = {k: k for k in models}
-# answers = {k: models[k].nested_sample(file_root=file_roots[k], **kwargs) for k in models}
+# answers = {k: models[k].nested_sample(file_root=file_roots[k], **fill_kwargs) for k in models}
 
 file_roots = [k for k in file_roots]
 
