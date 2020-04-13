@@ -185,12 +185,12 @@ TODO
    accurately describe the underlying physical process.
 
    #+CAPTION: Definitions of main quantities in Bayesian analysis. label:table-defs
-   | **Term**   | **Symbol**           | **Definition**                 |
-   |------------+----------------------+--------------------------------|
-   | Prior      | \(\pi(\theta)\)      | \(P ( \theta  \vert D)\)       |
-   | Likelihood | \({\cal L}(\theta)\) | \(P ( D \vert \theta \cup M)\) |
-   | Posterior  | \({\cal P}(\theta)\) | \(P ( \theta \vert D \cup M)\) |
-   | Evidence   | \({\cal Z}\)                | \(P ( D \vert M)\)             |
+   | **Term**         | **Symbol**           | **Definition**                 | **units**                     |
+   |------------------+----------------------+--------------------------------+-------------------------------|
+   | Prior (PDF)      | \(\pi(\theta)\)      | \(P ( \theta  \vert D)\)       | Parameter Volume Element$^-1$ |
+   | Likelihood (PDF) | \({\cal L}(\theta)\) | \(P ( D \vert \theta \cup M)\) | Parameter Volume Element$^-1$ |
+   | Posterior (PDF)  | \({\cal P}(\theta)\) | \(P ( \theta \vert D \cup M)\) | Parameter Volume Element$^-1$ |
+   | Evidence         | \({\cal Z}\)         | \(P ( D \vert M)\)             | arbitrary units               |
 
    The two independent quantities, ${\cal L}$ and $\pi$ defined in
    autoref:table-defs are the inputs to the Bayesian Sampler. Their
@@ -596,16 +596,17 @@ TODO
 	non-zero in their domain), which is not always true for every
 	value of $\beta$ and every prior in PPR.
 
-	Another advantage is that by construction the normalisation
-	factor $Z \{ \pi\}(\beta) = 1$ for arbitrary $\beta$. This
-	saves considerable effort: one does not care if the degree of correlation
-	of the Gaussian, alongside orientation issues can be corrected
-	for analytically, as one would with PPR[fn::one could argue
-	that correlated-ness is irrelevant, as one can always
-	diagonalise the covariance matrix. The problem, however, is
-	thus transferred onto the boundary, where for a narrow prior
-	the orientation of the rectangle's edges in the covariance
-	eigen-basis can cause issues. ].
+	Another advantage is that by construction the normalisation factor
+	$Z \{ \pi\}(\beta) = 1$ for arbitrary $\beta$. This saves
+	considerable effort: one does not care if the degree of
+	correlation of the Gaussian, alongside orientation issues can be
+	corrected for analytically, as one would with PPR[fn::one could
+	argue that correlated-ness is irrelevant, as one can always
+	diagonalise the covariance matrix. The problem, however, is thus
+	transferred onto the boundary, where for a narrow prior the
+	orientation of the rectangle's edges in the covariance eigen-basis
+	can cause issues. ]. 
+	
 
 	A flaw, which additive mixtures share with PPR, is that the
 	probability of having no bias is negligible. There's always a
@@ -614,13 +615,25 @@ TODO
 	value $\beta=0$ at random. It is not nil, in our case, where
 	$\beta$ can only be machine-represent-able 64-bit floating point
 	number, however this is sufficient to bias the sampler in almost
-	all cases.
+	all cases(see autoref:fig:convergence). 
+	
+	However, in terms of numerical computations, additive mixtures
+	don't significantly outperform PPR. In fact, due to the not
+	insignificant overhead of inverting functions, the instability of
+	said inversion, one would generally prefer PPR to additive mixture
+	posterior re-partitioning. The only exception are the cases where
+	there is a ring of suppressed likelihood around a broad peak, but
+	that situation can more neatly be described with superposition-al
+	re-partitioning combined with two PPR models. As we shall later
+	show, this is also the quicker of the two approaches.
 
 	One needs to be aware of this limitation when choosing which
 	mixing scheme to use. Sometimes, the smooth prior distribution and
 	likelihood are more beneficial; other times, the ability to with
 	some probability sample from a completely uniform prior is more
 	valuable. 
+
+	
 
 *** Re-sizeable-bounds uniform prior. 
 	

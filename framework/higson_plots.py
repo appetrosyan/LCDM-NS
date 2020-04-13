@@ -1,16 +1,13 @@
-from gaussian_models.uniform import BoxUniformModel
-from gaussian_models.power_posterior import PowerPosteriorPrior
-from general_mixture_model import StochasticMixtureModel
-from gaussian_models.true_gaussian import GaussianPeakedPrior
-from offset_model import OffsetModel
-from anesthetic.plot import get_legend_proxy
-from nestcheck.plots import param_logx_diagram, plot_run_nlive, rel_posterior_mass
-from nestcheck.data_processing import batch_process_data, process_polychord_run
 import matplotlib.pyplot as plt
-import tikzplotlib
+from nestcheck.data_processing import batch_process_data, process_polychord_run
+from nestcheck.plots import param_logx_diagram
 from numpy import array
+from mpi4py import MPI
+from gaussian_models.power_posterior import PowerPosteriorPrior
+from gaussian_models.uniform import BoxUniformModel
+from general_mixture_model import StochasticMixtureModel
 
-b = 10**2
+b = 10 ** 2
 a = array([-b, -b, -b])
 bounds = (a, -a)
 mu = array([0, 4, 8])
@@ -26,11 +23,14 @@ models = {
     'uniform': BoxUniformModel(*args)
 }
 models['mix'] = StochasticMixtureModel([models['ppr'], BoxUniformModel(*args)])
-file_roots={k: k for k in models}
-# anss = {k: models[k].nested_sample(file_root=file_roots[k], **kwargs) for k in models}
+file_roots = {k: k for k in models}
+# answers = {k: models[k].nested_sample(file_root=file_roots[k], **fill_kwargs) for k in models}
 
 file_roots = [k for k in file_roots]
 
 runs = batch_process_data(file_roots, parallel=False, process_func=process_polychord_run)
-fig = param_logx_diagram(runs[:2], logx_min=-20.00, fthetas =[lambda x: x[:, 0], lambda x: x[:,1], lambda x: x[:,2]], ftheta_lims={0: (-4, 5), 1:(0, 9), 2:(4, 13)})
+fig = param_logx_diagram(runs[:2],
+                         logx_min=-20.00,
+                         fthetas=[lambda x: x[:, 0], lambda x: x[:, 1], lambda x: x[:, 2]],
+                         ftheta_lims={0: (-4, 5), 1: (0, 9), 2: (4, 13)})
 plt.show()
