@@ -3,6 +3,7 @@
 
 \definecolor{color0}{rgb}{0.12156862745098,0.266666666666667,0.705882352941177}
 \definecolor{color1}{rgb}{1,0.098039215686275,0.0549019607843137}
+\definecolor{colorblack}{rgb}{0, 0, 0}
 \definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.072549019607843}
 
 \begin{axis}[
@@ -4030,7 +4031,7 @@ ytick style={color=black}
 --(axis cs:-63.8069635084846,0)
 --(axis cs:-63.8198069562379,0)
 --cycle;
-\addlegendimage{area legend, fill=color1, fill opacity=0.3}
+\addlegendimage{area legend, fill=colorblack, fill opacity=0.3}
 \addlegendentry{$G$ -- true posterior}
 
 \draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-59.0953888166818,0) rectangle (axis cs:-58.4157262633793,1);
