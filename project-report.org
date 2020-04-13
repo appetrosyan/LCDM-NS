@@ -864,6 +864,16 @@ TODO
    for our purposes, this is a quantity allowing to compare the prior
    to the inferred posterior. The larger the value, the more Shannon
    entropy is associated with moving from prior to posterior. 
+
+   #+CAPTION: Kullback-Leibler divergence for different offsets. Notice that the faster repartitioning methods produce a lower value of $D$. Notice that the value of $D$ scales linearly with increasing the offset. label:fig:kl-d
+   \begin{figure}
+     \input{./illustrations/kullback-leibler.tex}
+   \end{figure}
+
+   #+CAPTION: Scaling of number of likelihood calls as a function of Kullback-Leibler divergence. The best fit line indicates that generally the divergence is a reliable performance indicator for PolyChord. label:fig:kl-scaling
+   \begin{figure}
+     \input{./illustrations/scaling-kld.tex}
+   \end{figure}
    
    To understand why K-L divergence is useful, consider that under
    ideal circumstances inference with the posterior also the prior is
@@ -1034,16 +1044,16 @@ TODO
   guessing a posterior distribution and using re-partitioning, one may
   reduce the initial compression stage to virtually none.
   
-     Having proven the correctness of the runs, let's turn to
-   performance and benchmarks. The central metric is the number of
-@@ -991,19 +996,69 @@ TODO
-   case of exact coincidence of the mean and the standard deviation
-   produces a respectable speed-up. 
-
-   The next trial involves a variable offset, where convergence to the
-   correct posterior and evidence is not guaranteed even with the
-   correct normalisation. 
-
+  Having proven the correctness of the runs, let's turn to performance
+  and benchmarks. The central metric is the number of ${\cal L}$
+  evaluations. autoref:fig:benchmark shows that mixture
+  re-partitioning, produces a significant speed-up compared to even
+  power-posterior re-partitioning. Moreover, the slope of the curve of
+  the number of ${\cal L}$ evaluations is much steeper for the slower
+  re-partitioning schemes, indicating that for large numbers of live
+  points, mixture re-partitioning yields an even greater speed-up.
+  
+  
 
    #+CAPTION: comparison of likelihood calls necessary for obtaining the correct evidence for the case of a spherical uncorrelated Gaussian posterior. Note that almost all series scale linearly with the number of live points. 
    #+NAME: fig:benchmark
@@ -1072,16 +1082,20 @@ TODO
   the width of the peaks. If the offset is \(O(2\sigma)\), the
   posterior is merely shifted, but if the shift is larger,
   e.g. \(O(4\sigma)\), two peaks can be resolved. Unfortunately for
-  PPR, the evidence was also computed incorrectly: $\ln {\cal
-  Z}\approx -25.4 \pm 0.2$, vs the reference $\ln {\cal Z} = -22.7 \pm
-  0.4$.  Making matters even worse, the smaller of the two peaks is
-  actually the correct posterior.
+  PPR, the evidence was also computed incorrectly (see
+  autoref:fig:drift): $\ln {\cal Z}\approx -25.4 \pm 0.2$, vs the
+  reference $\ln {\cal Z} = -22.7 \pm 0.4$.  Making matters even
+  worse, the smaller of the two peaks is actually the correct
+  posterior.
 
-  In practice one has the following options: 
+  In practice one has the following options:
   1) accept the posterior as is label:opt:accept
-  2) accept the posterior, but as a less credible result label:opt:accept-with-err
-  3) reject the PPR result entirely, and perform a run with only a uniform prior label:opt:uniform
-  4) readjust the PPR mean and variance using the posterior, and re-run label:opt:shift
+  2) accept the posterior, but as a less credible result
+     label:opt:accept-with-err
+  3) reject the PPR result entirely, and perform a run with only a
+     uniform prior label:opt:uniform
+  4) readjust the PPR mean and variance using the posterior, and
+     re-run label:opt:shift
   5) combine PPR with SSPR in mixture with a uniform prior
   Option ref:opt:accept is adequate for low accuracy estimation
   problems. However, for parameter $\theta_{0}$, this caused a
@@ -1090,7 +1104,7 @@ TODO
   one must be mindful of posteriors obtained with any re-partitioning
   scheme, as they can generally bias the sampler. Even if the Gaussian
   entering PPR was the correct prior, peak doubling as with parameter
-  1, is always a sign of error. 
+  1, is always a sign of error.
   
   Option ref:opt:accept-with-err is what one is eventually forced to
   do. At some point further re-runs may not be capable of reducing the
@@ -1120,15 +1134,18 @@ TODO
   obtain, as we've shown in autoref:fig:convergence, a much more
   accurate ${\cal P}$, by using PPR from inside an SSPR mixture. The
   performance impact has considerable run-to-run variance, however it
-  never exceeded $20\%$, more ${\cal L}$ calls: an order of magnitude
+  never exceeded $20\%$ more ${\cal L}$ calls: an order of magnitude
   less than either options ref:opt:uniform or ref:opt:shift. 
   
-  #+CAPTION: An illustration of how offsets affect the convergence of nested sampling under different kinds of re-partitioning. The offset models should produce an offset posterior, whilst sharing the prior with the model runs. The mixture is of the present uniform model and PPR. 
-  #+NAME: fig:convergence
+  #+CAPTION: An illustration of how offsets affect the convergence of nested sampling under different kinds of re-partitioning. The offset models should produce an offset posterior, whilst sharing the prior with the model runs. The mixture is of the present uniform model and PPR. label:fig:convergence
   \begin{figure}
   \includegraphics[width=0.5\textwidth]{./illustrations/convergence.pdf}
   \end{figure}
 
+  #+CAPTION: Comparison of evidence estimates produced by different re-partitioning schemes. The true value is constant, and should not depend on the offset. Mixture repartitioning is able to correctly cope with the offset, producing the correct evidence and posterior, while PPR is gradually drifting. label:fig:drift
+  \begin{figure}
+    \input{./illustrations/evidence-drift.tex}
+  \end{figure}
 
 
   One last discussion is that of so-called posterior mass. This allows

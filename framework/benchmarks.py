@@ -44,13 +44,13 @@ def count_log_like_calls(model, repeats, **kwargs):
 
 def bench(repeats, n_like, series):
     rv = {}
-    config = {'noResume': True}
+    config = {'resume': False}
     for k in tqdm(series):
         print('Running {}'.format(k))
         log_like_calls = [count_log_like_calls(series[k].model,
                                                repeats,
                                                **config,
-                                               nLive=nl,
+                                               live_points=nl,
                                                file_root='{}{}'.format(k, nl))
                           for nl in n_like]
         rv[k] = log_like_calls

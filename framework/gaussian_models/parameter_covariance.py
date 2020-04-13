@@ -7,6 +7,12 @@ from polychord_model import Model
 
 
 class ParameterCovarianceModel(Model, ABC):
+    def __str__(self):
+        return f'Gaussian posterior with \nmu = {self.mu}\ncov = {self.cov}'
+
+    def __reprt__(self):
+        return self.__str__().replace('\n', ' ')
+
     def __init__(self, bounds, mu, cov, file_root='paramCovModel', **kwargs):
         self.a, self.b = bounds
         self.mu = mu

@@ -13,6 +13,9 @@ def _are_all_elements_identical(lst):
 class AbstractMixtureModel(Model, ABC):
     default_file_root = 'MixtureModel'
 
+    def __str__(self):
+        return f'\nMixture of {self.models}'
+
     def __init__(self, models, file_root=default_file_root, **kwargs):
         self.models = models
         if not _are_all_elements_identical([x.nDims for x in models]):
