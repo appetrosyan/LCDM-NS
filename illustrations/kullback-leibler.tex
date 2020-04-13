@@ -1,0 +1,186 @@
+% This file was created by tikzplotlib v0.9.1.
+\begin{tikzpicture}
+
+\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
+\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
+\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+
+\begin{axis}[
+legend cell align={left},
+legend style={fill opacity=0.8, draw opacity=1, text opacity=1, at={(0.91,0.5)}, anchor=east, draw=white!80!black},
+tick align=outside,
+tick pos=left,
+x grid style={white!69.0196078431373!black},
+xlabel={Offset / \(\displaystyle \vec{\mu}\)},
+xmin=-2.5, xmax=272.5,
+xtick style={color=black},
+y grid style={white!69.0196078431373!black},
+ylabel={Kullback-Leibler Divergence \(\displaystyle D\)},
+ymin=-2.93567696145677, ymax=62.1613818701095,
+ytick style={color=black}
+]
+\path [draw=color0, semithick]
+(axis cs:10,5.71795365099151)
+--(axis cs:10,5.77133948534581);
+
+\path [draw=color0, semithick]
+(axis cs:20,6.6768824419002)
+--(axis cs:20,6.77321107556694);
+
+\path [draw=color0, semithick]
+(axis cs:50,8.02877279045042)
+--(axis cs:50,8.63543918622054);
+
+\path [draw=color0, semithick]
+(axis cs:100,9.52185212376919)
+--(axis cs:100,10.4908349952443);
+
+\path [draw=color0, semithick]
+(axis cs:170,10.3029683750536)
+--(axis cs:170,10.9155451202318);
+
+\path [draw=color0, semithick]
+(axis cs:260,10.954510866509)
+--(axis cs:260,11.9335782130671);
+
+\path [draw=color1, semithick]
+(axis cs:10,0.0271909650803472)
+--(axis cs:10,0.030089733601838);
+
+\path [draw=color1, semithick]
+(axis cs:20,0.029683008672791)
+--(axis cs:20,0.0308036500189849);
+
+\path [draw=color1, semithick]
+(axis cs:50,0.0282101242046804)
+--(axis cs:50,0.0298855157628486);
+
+\path [draw=color1, semithick]
+(axis cs:100,0.0278177027329167)
+--(axis cs:100,0.0348526563256524);
+
+\path [draw=color1, semithick]
+(axis cs:170,0.0232802581598788)
+--(axis cs:170,0.0301604324600733);
+
+\path [draw=color1, semithick]
+(axis cs:260,0.0304771056975755)
+--(axis cs:260,0.0323746358923458);
+
+\path [draw=color2, semithick]
+(axis cs:10,53.6407046096139)
+--(axis cs:10,57.7293889288474);
+
+\path [draw=color2, semithick]
+(axis cs:20,56.1280894679801)
+--(axis cs:20,58.3022565457241);
+
+\path [draw=color2, semithick]
+(axis cs:50,55.3633380690649)
+--(axis cs:50,58.47445725549);
+
+\path [draw=color2, semithick]
+(axis cs:100,55.5223746731559)
+--(axis cs:100,57.7271641567295);
+
+\path [draw=color2, semithick]
+(axis cs:170,56.8924880373743)
+--(axis cs:170,58.1261131182599);
+
+\path [draw=color2, semithick]
+(axis cs:260,56.3603430284318)
+--(axis cs:260,59.2024246504929);
+
+\addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks]
+table {%
+10 5.71795365099151
+20 6.6768824419002
+50 8.02877279045042
+100 9.52185212376919
+170 10.3029683750536
+260 10.954510866509
+};
+\addlegendentry{$U$}
+\addplot [semithick, color0, mark=-, mark size=4, mark options={solid}, only marks]
+table {%
+10 5.77133948534581
+20 6.77321107556694
+50 8.63543918622054
+100 10.4908349952443
+170 10.9155451202318
+260 11.9335782130671
+};
+\addlegendentry{$U$}
+\addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks]
+table {%
+10 0.0271909650803472
+20 0.029683008672791
+50 0.0282101242046804
+100 0.0278177027329167
+170 0.0232802581598788
+260 0.0304771056975755
+};
+\addlegendentry{$U$}
+\addplot [semithick, color1, mark=-, mark size=4, mark options={solid}, only marks]
+table {%
+10 0.030089733601838
+20 0.0308036500189849
+50 0.0298855157628486
+100 0.0348526563256524
+170 0.0301604324600733
+260 0.0323746358923458
+};
+\addlegendentry{$U$}
+\addplot [semithick, color2, mark=-, mark size=4, mark options={solid}, only marks]
+table {%
+10 53.6407046096139
+20 56.1280894679801
+50 55.3633380690649
+100 55.5223746731559
+170 56.8924880373743
+260 56.3603430284318
+};
+\addlegendentry{$U$}
+\addplot [semithick, color2, mark=-, mark size=4, mark options={solid}, only marks]
+table {%
+10 57.7293889288474
+20 58.3022565457241
+50 58.47445725549
+100 57.7271641567295
+170 58.1261131182599
+260 59.2024246504929
+};
+\addlegendentry{$U$}
+\addplot [semithick, color0, mark=+, mark size=3, mark options={solid}, only marks]
+table {%
+10 5.74464656816866
+20 6.72504675873357
+50 8.33210598833548
+100 10.0063435595067
+170 10.6092567476427
+260 11.4440445397881
+};
+\addlegendentry{$U$}
+\addplot [semithick, color1, mark=x, mark size=3, mark options={solid}, only marks]
+table {%
+10 0.0286403493410926
+20 0.0302433293458879
+50 0.0290478199837645
+100 0.0313351795292845
+170 0.026720345309976
+260 0.0314258707949607
+};
+\addlegendentry{$U$}
+\addplot [semithick, color2, mark=*, mark size=3, mark options={solid}, only marks]
+table {%
+10 55.6850467692306
+20 57.2151730068521
+50 56.9188976622774
+100 56.6247694149427
+170 57.5093005778171
+260 57.7813838394624
+};
+\addlegendentry{$U$}
+\end{axis}
+
+\end{tikzpicture}
