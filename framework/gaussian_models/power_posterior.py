@@ -1,8 +1,6 @@
 from functools import lru_cache
-from numpy import pi, log, zeros, array, concatenate, diag, sqrt, nextafter
-from numpy.linalg import slogdet, multi_dot, inv
-from pypolychord.priors import UniformPrior
-from pypolychord.settings import PolyChordSettings
+
+from numpy import pi, log, array, concatenate, diag, sqrt, nextafter
 from scipy.special import erf, erfinv
 
 from gaussian_models.parameter_covariance import ParameterCovarianceModel
@@ -15,9 +13,9 @@ class PowerPosteriorPrior(ParameterCovarianceModel):
     def log_likelihood(self, theta):
         t = theta[:self.nDims]
         beta = theta[-1]
-        logl, phi = super().log_likelihood(t)
-        logl += log_likelihood_correction(self, beta, t)
-        return logl, phi
+        log_l, phi = super().log_likelihood(t)
+        log_l += log_likelihood_correction(self, beta, t)
+        return log_l, phi
 
     def quantile(self, cube):
         beta = self.beta_min + (self.beta_max - self.beta_min) * cube[-1]
@@ -46,6 +44,13 @@ def power_gaussian_quantile(m, cube, beta=1):
     return m.mu + sqrt(2 / beta) * sigma * ret
 
 
+def log_box(m):
+    if hasattr(m.b, '__iter__') or hasattr(m.a, '__iter__'):
+        return log(m.b - m.a).sum()
+    else:
+        return m.nDims * log(m.b - m.a)
+
+
 def log_likelihood_correction(model, beta, theta):
     ll = 0
 
@@ -57,12 +62,6 @@ def log_likelihood_correction(model, beta, theta):
         da = _erf_term(m.a - m.mu, b, sigma)
         ret -= log(db - da)
         return ret
-
-    def log_box(m):
-        if hasattr(m.b, '__iter__') or hasattr(m.a, '__iter__'):
-            return log(m.b - m.a).sum()
-        else:
-            return m.nDims * log(m.b - m.a)
 
     ll -= log_box(model)
     ll -= ln_z(model, theta, beta).sum()

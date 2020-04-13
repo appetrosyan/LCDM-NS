@@ -1,6 +1,7 @@
-from anesthetic import NestedSamples
 from copy import deepcopy
-from numpy import log, zeros
+
+from anesthetic import NestedSamples
+from numpy import zeros
 from pypolychord import run_polychord
 from pypolychord.settings import PolyChordSettings
 
@@ -9,11 +10,12 @@ class Model:
     default_file_root = 'blankModel'
 
     def __init__(self, dimensionality, number_derived, file_root='', **kwargs):
+        self.nDims = 0  # Override this!.
         self.settings = PolyChordSettings(dimensionality, number_derived)
         self.settings.file_root = file_root
 
     def log_likelihood(self, theta):
-        """A Ln(likelihood) of the data given the model. With a uniform
+        """A Ln(likelihood) of the runs given the model. With a uniform
         prior, this defines the posterior distribution up to a
         multiplicative factor.
 
@@ -22,7 +24,7 @@ class Model:
 
     def quantile(self, hypercube):
         """Inverse Cumulative distribution function of the prior. Aka the
-        quantile. If the prior has PDF \pi, then this is (CDF (pi))^-1. 
+        quantile. If the prior has PDF \\pi, then this is (CDF (\\pi))^-1.
 
         """
         raise NotImplementedError()
@@ -30,7 +32,7 @@ class Model:
     @property
     def dimensionality(self):
         """
-        This is how many elements in the \theta vector need to be
+        This is how many elements in the \\theta vector need to be
         present. Usually the same as the nDims of the nested self.settings
         object. This is read-only. Ideally it should be cached.
         """
@@ -50,8 +52,7 @@ class Model:
     def test_quantile(self):
         _nDims = len(self.quantile(zeros(self.dimensionality)))
         if _nDims != self.dimensionality:
-            raise ValueError("Prior has the wrong dimensions: expect {} vs actual {} "
-                             .format(_nDims, self.dimensionality))
+            raise ValueError(f'Prior has the wrong dimensions: expect {_nDims} vs actual {self.dimensionality}')
 
     def nested_sample(self, **kwargs):
         self.test_log_like()
@@ -60,12 +61,13 @@ class Model:
         output = run_polychord(self.log_likelihood, self.dimensionality, self.num_derived, _settings, self.quantile)
         try:
             samples = NestedSamples(
-                root='./chains/{}'.format(_settings.file_root))
+                root=f'./chains/{_settings.file_root}')
         except ValueError as e:
             print(e)
             samples = None
         return output, samples
 
+    # noinspection SpellCheckingInspection
     def setup_settings(self, file_root=None, live_points=175, resume=True, verbosity=0):
         _settings = deepcopy(self.settings)
         _settings.feedback = verbosity
