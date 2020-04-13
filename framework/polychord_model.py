@@ -15,7 +15,6 @@ class Model:
     default_file_root = 'blankModel'
 
     def __init__(self, dimensionality, number_derived, file_root='', **kwargs):
-        self.nDims = 0  # Override this!.
         self.settings = PolyChordSettings(dimensionality, number_derived)
         self.settings.file_root = file_root
 
