@@ -6,8 +6,8 @@ likelihood:
 params:
   logA:
     prior:
-      min: 1.61
-      max: 3.91
+      min: 2.2
+      max: 3.7
     ref:
       dist: norm
       loc: 3.05
@@ -20,28 +20,18 @@ params:
     latex: A_\mathrm{s}
   n_s:
     prior:
-      min: 0.8
-      max: 1.2
+      min: 0.885
+      max: 1.04
     ref:
       dist: norm
       loc: 0.965
       scale: 0.004
     proposal: 0.002
     latex: n_\mathrm{s}
-  Omega_k:
-    prior:
-      min: -0.3
-      max: 0.3
-    ref:
-      dist: norm
-      loc: -0.009
-      scale: 0.001
-    proposal: 0.001
-    latex: \Omega_k
   theta_s_1e2:
     prior:
-      min: 0.5
-      max: 10
+      min: 1.03
+      max: 1.05
     ref:
       dist: norm
       loc: 1.0416
@@ -56,8 +46,8 @@ params:
     latex: H_0
   omega_b:
     prior:
-      min: 0.005
-      max: 0.1
+      min: 0.019
+      max: 0.025
     ref:
       dist: norm
       loc: 0.0224
@@ -66,8 +56,8 @@ params:
     latex: \Omega_\mathrm{b} h^2
   omega_cdm:
     prior:
-      min: 0.001
-      max: 0.99
+      min: 0.095
+      max: 0.145
     ref:
       dist: norm
       loc: 0.12
@@ -88,12 +78,13 @@ params:
     latex: Y_\mathrm{P}
   tau_reio:
     prior:
-      min: 0.01
-      max: 0.8
+      dist: norm
+      loc: 0.048636376
+      scale: 0.0082070609
     ref:
       dist: norm
-      loc: 0.055
-      scale: 0.006
+      loc: 0.048636376
+      scale: 0.0082070609
     proposal: 0.003
     latex: \tau_\mathrm{reio}
   z_reio:
@@ -125,7 +116,11 @@ params:
       chi2__planck_2018_highl_plik_TTTEEE, chi2__planck_2018_lensing_clik])'
     latex: \chi^2_\mathrm{CMB}
 sampler:
-  polychord: {}
+  polychord:
+   num_repeats: 2d
+   blocking:
+     - [1, [omega_b, omega_cdm, theta_s_1e2, tau_reio, logA, n_s]]
+     - [20, [A_planck, A_cib_217, xi_sz_cib, A_sz, ps_A_100_100, ps_A_143_143, ps_A_143_217, ps_A_217_217, ksz_norm, gal545_A_100, gal545_A_143, gal545_A_143_217, gal545_A_217, calib_100T, calib_217T, galf_TE_A_100_143, galf_TE_A_143_217, galf_TE_A_100_217, galf_TE_A_100, galf_TE_A_143, galf_TE_A_217]]
 theory:
   classy:
     extra_args:

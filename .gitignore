@@ -57,3 +57,12 @@
 /project-report-figure4.pdf
 /project-report.aux
 /project-report.auxlock
+/cobaya/.DS_Store
+/framework/.idea/dictionaries/
+/framework/.idea/misc.xml
+/framework/fort.15
+/project-report.bbl
+*.out
+*/*.out
+cobaya/*.out
+/cobaya/latest.out 
