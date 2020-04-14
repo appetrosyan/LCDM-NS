@@ -124,7 +124,7 @@ TODO
   unlike other Markov-chain Monte-Carlo algorithms, is sensitive to
   how the two conditional probabilities /likelihood/ and /prior/ are
   defined, with respect to the posterior distribution. Hence the name
-  of the technique -- /automatic power posterior re-partitioning/
+  of the technique --- /automatic power posterior re-partitioning/
   (PPR). While citeauthor:chen-ferroz-hobson used PPR to improve the
   stability of convergence for prior distributions that may have been
   at variance with the true posterior, we shall show that it can be
