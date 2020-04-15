@@ -25,6 +25,10 @@ Bayesian inference is one of the most robust scientific hypothesis testing frame
 
 \end{abstract}
 
+\begin{keywords}
+Bayesian inference -- automated posterior repartitioning -- nested sampling -- cosmology: miscellaneous -- methods: statistical -- methods: data analysis
+\end{keywords}
+
 * Introduction 
 
   The standard model of the universe and its evolution in modern
@@ -118,10 +122,9 @@ Bayesian inference is one of the most robust scientific hypothesis testing frame
 
   Hence a large number of algorithms was developed to accelerate the
   computation: Metropolis-Hastings citep:Metropolis in conjunction
-  with the Gibbs sampler citep:Metropolis-Hastings-Gibbs, Hybrid
-  (Hamiltonian) Monte Carlo citep:1701.02434,Duane_1987 and more
-  recently --- nested Sampling citep:Skilling2006, which will be our
-  focus.
+  with the Gibbs sampler citep:Metropolis-Hastings-Gibbs; Hybrid
+  (Hamiltonian) Monte Carlo citep:1701.02434,Duane_1987, and ---
+  nested Sampling citep:Skilling2006, which we shall focus on.
 
   Nested sampling cite:Skilling2006 describes a family of
   algorithms, each with their own unique implementation details:
