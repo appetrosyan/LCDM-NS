@@ -1,4 +1,4 @@
-#+TITLE: Bayesian Machine learning in application to Cosmological Parameter estimation
+#+TITLE: Bayesian Machine learning in context of cosmological parameter estimation
 #+AUTHOR: Aleksandr Petrosyan, William J. Handley 
 #+LaTeX_CLASS: mnras
 #+LATEX_HEADER: \usepackage{natbib}
@@ -21,15 +21,16 @@
 
 
 \begin{abstract}
-TODO
+Bayesian inference is one of the most robust scientific hypothesis testing frameworks. It is utilised in many areas of physics that require detailed analysis of the underlying hypothesis. Cosmology, one such field is faced with challenges due to the complexity of the underlying theory, making inference computationally expensive even with the state of the art Bayesian inference software:  nested sampling packages like =PolyChord=. We here present a methodology that allows one to simultaneously improve the robustness and accelerate nested sampling based Bayesian inference. In this paper we introduce a formal mathematical framework that explicates previous work in the field, as well as allows further developments to be made. We subsequently introduce three other methodologies for conducting re-partitioning: argument scaling, boundary re-sizing and superpositional mixing. We demonstrate that these techniques are able to produce more accurate and more precise results, while also /significantly/ improving run-time characteristics of the nested sampling package they're used with. Finally, as a demonstration of its most lucrative application, we demonstrate that it is able to reduce the execution time of a =Cobaya=/=CLASS= based cosmological parameter inference by a factor of TODO. 
+
 \end{abstract}
 
 * Introduction 
 
   The standard model of the universe and its evolution in modern
   cosmology is the \(\Lambda\)CDM model citep:Condon2018, so named
-  after the main components of the universe: the cosmological constant
-  and cold dark matter. It has six major independent parameters:
+  after the main components of the universe: the /cosmological constant/ \(\Lambda\)
+  and /cold dark matter/. It has six major independent parameters:
   physical baryon density \(\Omega_{b}h^{2}\); physical dark matter
   density \(\Omega_{c}h^{2}\); the age of the universe \(t_{0}\); scalar
   spectral index \(n_{s}\); curvature fluctuation amplitude
@@ -81,12 +82,12 @@ TODO
   conditional probabilities, which are governed by Bayes' theorem.
 
   Bayesian inference is immune to over-fitting: the ability to
-  introduce multiple parameters to make the fit ``better''.[fn::this
-  peculiarity of statistical methods lead John von Neumann to remark
-  that four parameters in a model were sufficient to produce a
-  statistically significant fit to an elephant. And that five would
-  be consistent with it moving its snout.] Simpler models with fewer
-  parameters are naturally preferred by the formalism. 
+  introduce multiple parameters to make the fit ``better[fn::this
+  peculiarity of frequentist statistical methods lead John von Neumann
+  to remark that /four/ parameters in a model were sufficient to produce
+  a statistically significant fit to an elephant and /five/, to fit a
+  moving snout.]''. Simpler models with fewer parameters are naturally
+  preferred by the formalism citep:Occam.
 
   Some aspects of a model may be, for various reasons, more
   interesting than others: one may like to construct a model that
@@ -756,13 +757,13 @@ TODO
 	and \({\cal \tilde{L}}_{i}(\bm{\theta})\) which satisfy the
 	normalisation condition for \(i = 1, \ldots m\) . We construct the
 	parameterised prior like so:
-	\begin{equation*}
-	  \tilde{\pi}(\bm{\theta}; \beta)  = \begin{cases}
-		\tilde{\pi}(\bm{\theta})_{1} & \text{with probability } \beta_{1},\\
-		& \vdots,\\
-		\tilde{\pi}(\bm{\theta})_{n} & \text{with probability } (1- \sum_{i}^{n}\beta_{i}),
-		\end{cases}
-	\end{equation*}
+  \begin{equation*}
+	\tilde{\pi}(\bm{\theta}; \beta)  = \begin{cases}
+	  \tilde{\pi}_{1}(\bm{\theta}) & \text{with probability } \beta_{1},\\
+	  & \vdots,\\
+	  \tilde{\pi}_{n}(\bm{\theta}) & \text{with probability } (1- \sum_{i}^{n}\beta_{i}),
+	  \end{cases}
+  \end{equation*}
 	and similarly the likelihood:
 	\begin{equation*}
 	  {\cal L}(\bm{\theta}; \bm{\beta})  = \begin{cases}
@@ -914,9 +915,9 @@ TODO
      \input{./illustrations/scaling-kld.tex}
    \end{figure}
    
-   To understand why K-L divergence is useful, consider that under
-   ideal circumstances inference with the prior equal to the
-   posterior, has optimal performance
+   To understand why Kullback-Leibler divergence is useful, consider
+   that under ideal circumstances inference with the prior equal to
+   the posterior, has optimal performance
    (autoref:discussion-bias). Hence, we expect priors with the
    smallest \(\mathcal{D}\) to converge the fastest, (which we observe
    on autoref:fig:kl-scaling). This is a useful worldview when
@@ -1358,94 +1359,93 @@ TODO
    \bibliography{bibliography} \bibliographystyle{mnras}
 
 \appendix{}
-* Appendices
 
-** Why do we need to alter the likelihood. 
-   One may ask why such a change of the likelihood is at all
-   necessary. Indeed, the likelihood may be chosen based on a precise
-   theory of error, e.g. a least-squares fit argument based on
-   Gaussian assumptions. Why does changing the prior knowledge
-   necessitate the change of likelihood?
+* Why do we need to alter the likelihood. 
+  One may ask why such a change of the likelihood is at all
+  necessary. Indeed, the likelihood may be chosen based on a precise
+  theory of error, e.g. a least-squares fit argument based on
+  Gaussian assumptions. Why does changing the prior knowledge
+  necessitate the change of likelihood?
    
-   In addition to what was mentioned in answer to a similar question
-   at the end of the previous subsection, there's an intuitive way of
-   answering this question. Consider a posterior distribution that at
-   no point takes the value nil (e.g. a Gaussian).]. If we constrain
-   one prior \( \pi\) to lie within one standard deviation of the
-   peak, (e.g. a sphere of radius \(\sigma\)), and another that spans
-   twenty standard deviations. If we picked 20 points at random from
-   one and the other, we shall expect that the iso-likelihood
-   hyper-surfaces would encase drastically different
-   volumes. Moreover, finding a point that's within one standard
-   deviation from the perspective of the broader prior is a much more
-   significant result than finding one from the narrower one. Indeed,
-   we will not expect the posterior distributions to be the same, but
-   nested sampling would produce a narrower peak based on outwardly
-   the same model.[fn::from a frequentist point of view, our prior
-   knowledge is subjective, therefore irrelevant. But even a
-   frequentist would agree that the value obtained by changing the
-   prior would not be the same.]
+  In addition to what was mentioned in answer to a similar question
+  at the end of the previous subsection, there's an intuitive way of
+  answering this question. Consider a posterior distribution that at
+  no point takes the value nil (e.g. a Gaussian).]. If we constrain
+  one prior \( \pi\) to lie within one standard deviation of the
+  peak, (e.g. a sphere of radius \(\sigma\)), and another that spans
+  twenty standard deviations. If we picked 20 points at random from
+  one and the other, we shall expect that the iso-likelihood
+  hyper-surfaces would encase drastically different
+  volumes. Moreover, finding a point that's within one standard
+  deviation from the perspective of the broader prior is a much more
+  significant result than finding one from the narrower one. Indeed,
+  we will not expect the posterior distributions to be the same, but
+  nested sampling would produce a narrower peak based on outwardly
+  the same model.[fn::from a frequentist point of view, our prior
+  knowledge is subjective, therefore irrelevant. But even a
+  frequentist would agree that the value obtained by changing the
+  prior would not be the same.]
 
-   Of course, a Bayesian would say that if our true prior knowledge
-   represented by the narrower prior, we would indeed need to consider
-   the posterior distribution to be the true one, as it combines
-   information that we've obtained earlier with information that can
-   be extracted from the data. In other words, it would be the correct
-   value for the person who indeed constrained the values of model
-   parameters to the one standard deviation, based on /other
-   data/. Simply picking a prior out of thin air would bias the
-   result, hence the necessity to re-partition.
+  Of course, a Bayesian would say that if our true prior knowledge
+  represented by the narrower prior, we would indeed need to consider
+  the posterior distribution to be the true one, as it combines
+  information that we've obtained earlier with information that can
+  be extracted from the data. In other words, it would be the correct
+  value for the person who indeed constrained the values of model
+  parameters to the one standard deviation, based on /other
+  data/. Simply picking a prior out of thin air would bias the
+  result, hence the necessity to re-partition.
    
-** Optimal set-up for general Bayesian inference. 
+* Optimal set-up for general Bayesian inference. 
 
-   We have established that mixture re-partitioning is able to
-   increase the performance of the sampling run, to slightly less than
-   the best re-partitioning scheme in its mixture. Specifically, one
-   gets optimal convergence if one uses the posterior distribution as
-   the prior for inference. Sub-optimal convergence is expected one
-   uses a mixture of a uniform prior and said posterior. But the
-   associated overhead is minimal.
+  We have established that mixture re-partitioning is able to
+  increase the performance of the sampling run, to slightly less than
+  the best re-partitioning scheme in its mixture. Specifically, one
+  gets optimal convergence if one uses the posterior distribution as
+  the prior for inference. Sub-optimal convergence is expected one
+  uses a mixture of a uniform prior and said posterior. But the
+  associated overhead is minimal.
 
-   Thus for a general problem if one expects the result to be a
-   Gaussian centered at one of either \(\bm{\mu}^{1}\) or \(\bm{\mu}^{2}\) etc.,
-   one can mix the Gaussians (with proper normalisation, given by the
-   special case of PPR when \(\beta=1\) to improve the run-time
-   considerably without risking to bias the sampler.
+  Thus for a general problem if one expects the result to be a
+  Gaussian centered at one of either \(\bm{\mu}^{1}\) or \(\bm{\mu}^{2}\) etc.,
+  one can mix the Gaussians (with proper normalisation, given by the
+  special case of PPR when \(\beta=1\) to improve the run-time
+  considerably without risking to bias the sampler.
 
-   This works if the offset between the true posterior is small
-   compared to the breadth of the peak. If that is not the case, one
-   may be better served by PPR in the mixture.
+  This works if the offset between the true posterior is small
+  compared to the breadth of the peak. If that is not the case, one
+  may be better served by PPR in the mixture.
 
-   However, in general, when we don't know how much our guesses are
-   misaligned with the posterior, we are better served by adding both
-   PPR and Gaussians into the mixture. The main culprit is that the
-   SSPR algorithm automatically elects to use the prior that is most
-   representative. It will converge faster than PPR concentric to a
-   Gaussian even if both are in the mixture, and as an added bonus,
-   will mitigate any offset from the Gaussian.
+  However, in general, when we don't know how much our guesses are
+  misaligned with the posterior, we are better served by adding both
+  PPR and Gaussians into the mixture. The main culprit is that the
+  SSPR algorithm automatically elects to use the prior that is most
+  representative. It will converge faster than PPR concentric to a
+  Gaussian even if both are in the mixture, and as an added bonus,
+  will mitigate any offset from the Gaussian.
 
-   If the posterior is of a different shape, combining multiple
-   re-partitioning schemes may yield a significant improvement in
-   performance.
-** Code 
+  If the posterior is of a different shape, combining multiple
+  re-partitioning schemes may yield a significant improvement in
+  performance.
+* Code 
 
-   All of the illustrations, figures, code that generated them along
-   with a generalised framework for mixing any kinds of priors into a
-   properly re partitioned posterior is available at the Git
-   repository: [[https://github.com/appetrosyan/LCDM-NS]] cite:sspr.
+  All of the illustrations, figures, code that generated them along
+  with a generalised framework for mixing any kinds of priors into a
+  properly re partitioned posterior is available at the Git
+  repository: [[https://github.com/appetrosyan/LCDM-NS]] cite:sspr.
 
-   All the preliminary testing was done in the =toy-models=
-   section. Code that generates simple dependency-less examples is in
-   the =illustrations= folder, code that generates the benchmarks and
-   correctness testing is given in the =framework= folder. Finally,
-   the modifications to =Cobaya= were done in-situ, therefore the fork
-   of =Cobaya= that contains a branch with posterior re-partitioning is
-   available as a =git= sub-module.
+  All the preliminary testing was done in the =toy-models=
+  section. Code that generates simple dependency-less examples is in
+  the =illustrations= folder, code that generates the benchmarks and
+  correctness testing is given in the =framework= folder. Finally,
+  the modifications to =Cobaya= were done in-situ, therefore the fork
+  of =Cobaya= that contains a branch with posterior re-partitioning is
+  available as a =git= sub-module.
 
-   The current project depends on =PolyChord= cite:polychord, =Cobaya=
-   cite:cobaya, anesthetic cite:anesthetic and their respective
-   dependencies cite:Blas_2011.
-** Comments on bench-marking
+  The current project depends on =PolyChord= cite:polychord, =Cobaya=
+  cite:cobaya, anesthetic cite:anesthetic and their respective
+  dependencies cite:Blas_2011.
+* Comments on bench-marking
    Note, that this ignores potential complexity introduced by the
    re-partitioning. For example for PPR, the effect of adding the
    extra parameter can be reduced to 
