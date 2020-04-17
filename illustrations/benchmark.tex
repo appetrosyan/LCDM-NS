@@ -12,12 +12,14 @@ tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
 xlabel={\(n_\text{live}\)},
-xmin=7, xmax=73,
+xmin=7, xmax=90,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
 ylabel={\# of \({\cal L}\) evaluations},
-ymin=-20416.8762047502, ymax=440010.222749553,
-ytick style={color=black}
+ymin=1.0, ymax=1000000.0,
+ytick style={color=black},
+xmode=log,
+ymode=log
 ]
 \path [draw=color0, semithick]
 (axis cs:10,48051.1762746562)
@@ -236,7 +238,7 @@ table {%
 65 332736.145125062
 70 419081.71825163
 };
-\addplot [semithick, color0, mark=*, mark size=4, mark options={solid}]
+\addplot [semithick, color0, mark=*, mark size=2, mark options={solid}]
 table {%
 10 49706.3333333333
 30 145744.333333333
@@ -272,7 +274,7 @@ table {%
 70 15926
 };
 \addlegendentry{$\text{mix}(U,G)$}
-\addplot [semithick, color3, mark=*, mark size=4, mark options={solid}]
+\addplot [semithick, color3, mark=*, mark size=2, mark options={solid}]
 table {%
 10 908.333333333333
 30 4763

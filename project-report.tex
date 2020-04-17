@@ -19,15 +19,16 @@
 \usepackage[nameinlink, capitalize, noabbrev]{cleveref}
 
 \usepgfplotslibrary{groupplots,dateplot}
-\usetikzlibrary{patterns,shapes.arrows}
+\usetikzlibrary{patterns,shapes.arrows,external}
+\tikzexternalize
 \pgfplotsset{compat=newest}
 \usepackage{dsfont}
 \usepackage{xcolor}
 \usepackage{listings}
-\usetikzlibrary{external}
-\tikzexternalize[prefix=tikz/]
+
 \DeclareMathOperator{\TopHat}{TH}
 \DeclareMathOperator{\CDF}{CDF}
+
 \author[A. Petrosyan and W. J. Handley]{
   Aleksandr Petrosyan,$^{1}$
   William James Handley$^{2}$
@@ -980,7 +981,8 @@ distributions are said to coincide if and only if the means were
 within one (the smaller) standard deviation of each other.}
 
 \begin{figure}
- \includegraphics[width=0.5\textwidth]{./illustrations/misfit.pdf}
+  \includegraphics[width=0.5\textwidth]{./illustrations/triangle-fit.pdf}
+  % \includegraphics[width=0.5\textwidth]{./illustrations/convergence.pdf}
 \caption{An example of a posterior distribution generated with power posterior re-partitioning, based on data from Planck. The posteriors are near identical, and a slight misfit can be explained with arithmetic rounding errors, and run-to-run variance of the position of the live points (see top right figure).\label{fig:overlay-posteriors}}
 \end{figure}
 
@@ -1219,7 +1221,7 @@ The plot on~\cref{fig:higson} showcases typical behaviour for both
 a standard uniform-prior sampling, and the mixture re-partitioning.
 
 \begin{figure}
-\includegraphics[width=0.5\textwidth]{./illustrations/higson.png}
+\includegraphics[width=.5\textwidth]{./illustrations/higson.png}
 \caption{An evolutionary insight into the behaviour of nested sampling. The \color{red} red \color{black} series corresponds to mixture re-partitioning, while the \color{blue} blue \color{black} series --- to a reference uniform. All plots are given in \(\ln X\), where \(X(\mathcal{L}) \in [0,1]\) is the fraction of the prior with likelihood greater than \(\mathcal{L}\). The top plot is the relative posterior mass, which is the total weight assigned to samples from the region. In each row, we're presented with the posterior in the given parameter. The gradients represent degree of confidence.\label{fig:higson}}
 \end{figure}
 
