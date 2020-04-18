@@ -1,5 +1,5 @@
 #+TITLE: Stochastic superpositional Mixture re-partitioning framework. 
-#+AUTHOR: Aleksandr Petrosyan, William James Handley (supervisor).
+#+AUTHOR: Aleksandr Petrosyan, [][]William James Handley (supervisor).
 * About
 
   [[https://zenodo.org/badge/220308166.svg]]
@@ -29,16 +29,17 @@
   ones that refer to polychord, are in the =framework= folder.
 
   All dependencies besides PolyChord are =pip= installable. 
-* TODO Documentation. 
+* Documentation. 
 
   Simply put, to do Bayesian inference you should have a prior, and a
   likelihood. To provide your own, subclass =Model= from
-  =polychord_model=. You will need to provide a [[https://en.wikipedia.org/wiki/Quantile_function][quantile]] function,
-  similar to PolyChord which refers to them as Priors (which they are
-  related to, but are not themselves). The LogLikelihood also needs to
-  be specified, and it follows the conventions of PolyChord. 
+  =polychord_model=. 
 
-  Models of this kind can be =.nested_sample='d, where you can specify
+  You will need to provide a [[https://en.wikipedia.org/wiki/Quantile_function][quantile]] function, which maps from the unit hyper-cube onto the  (which they are related to, but are
+  not themselves). The LogLikelihood also needs to be specified, and
+  it follows the conventions of PolyChord.
+
+  Models of this kind can be =model.nested_sample='d, where you can specify
   the settings for PolyChord.
 
   Examples of use are provided in =.framework/benchmarks.py=. 
@@ -71,4 +72,4 @@
 * Credits
 
   Will Handley et al. : Polychord, Anesthetic, project supervisor. 
-  TODO. 
+  Anthony Lewis, Cobaya
