@@ -3,7 +3,7 @@ from copy import deepcopy
 from anesthetic import NestedSamples
 from numpy import zeros
 
-# As of not PolyChord is not pip-installable.
+# As of now PolyChord is not pip-installable.
 # noinspection PyUnresolvedReferences,PyUnresolvedReferences
 
 from pypolychord import run_polychord
