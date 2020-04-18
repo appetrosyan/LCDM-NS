@@ -2,70 +2,79 @@
 #+AUTHOR: Aleksandr Petrosyan
 #+BIBLIOGRAPHY: bibliography.bib
 
-This file contains the notes and the project diary for the aforementioned project. The diary comes first. If specified, the timestamp on the notes is when the note was originally written. 
+This file contains the notes and the project diary for the
+aforementioned project. The diary comes first. If specified, the
+timestamp on the notes is when the note was originally written.
 
 
 * Michaelmas
 ** Week 3
 *** DONE Meet Dr Handley 
-	SCHEDULED: <2019-10-25 Fri>
-	Discussed the project. Talked about Nested Sampling. Applications to Machine Learning. 
-
-	Primordial power spectrum, and discretisation. This causes the Fourier transform /multipole plot/ of the CMB. Multipole moment related to size of blotches on the picture. 
-
+    SCHEDULED: <2019-10-25 Fri>
+    Discussed the project. Talked about Nested
+    Sampling. Applications to Machine Learning.
+    
+    Primordial power spectrum, and discretisation. This causes the
+    Fourier transform /multipole plot/ of the CMB. Multipole
+    moment related to size of blotches on the picture.
+    
 ** Week 4
 *** DONE Read the Abstract. , 
-	SCHEDULED: <2019-10-28 Mon>
-	Read [[https://arxiv.org/abs/0803.4089][Bayes in the sky]] Read about Bayesian analysis. 
-	$\Omega_{k}$ more significant than thought. 
+    SCHEDULED: <2019-10-28 Mon>
+    Read [[https://arxiv.org/abs/0803.4089][Bayes in the sky]] Read about Bayesian analysis. 
+    $\Omega_{k}$ more significant than thought. 
 *** DONE Install PolyChord, Cobaya, anesthetic, CosmoChord. 
-	SCHEDULED: <2019-10-26 Sat>
-	Issues with Mac OS X/XCode. 
-	GFortran was installed but not on PATH. 
-	PolyChord not Pip installable. 
-	C=cc CXX=cxx python setup.py install —user doesn't work on OS X. 
-	Use Python3 
+    SCHEDULED: <2019-10-26 Sat>
+    Issues with Mac OS X/XCode. 
+    GFortran was installed but not on PATH. 
+    PolyChord not Pip installable. 
+    #+BEGIN_SRC bash
+    C=cc CXX=cxx python setup.py install —user
+    #+END_SRC
+    doesn't work on OS X. 
+    
+    Use Python3. 
 *** DONE EMail will and create a PR to fix Python version. 
-	SCHEDULED: <2019-10-27 Sun>
+    SCHEDULED: <2019-10-27 Sun>
 	Fixed. Merged. Working. 
 *** FAILED Reproduce plots. 
-	SCHEDULED: <2019-11-08 Fri>
+    SCHEDULED: <2019-11-08 Fri>
 
-	 Laptop inoperative due to Liquid damage. 
+	Laptop inoperative due to Liquid damage. 
 ** Week 5
    Laptop inoperative due to liquid damage.  Until week 2 of Vacation
    laptop remained under liquid damage. These entries filled
    retroactively from Todoist.
 *** Talk on nested sampling <2019-11-14>
-	It's a method of inference. Much the same as least squares
-	fitting, except it's not assuming the central limit theorem and
-	works for arbitrary distributions of error.
-
+    It's a method of inference. Much the same as least squares
+    fitting, except it's not assuming the central limit theorem and
+    works for arbitrary distributions of error.
+    
    
 *** DONE Start final report writeup <2019-11-19>
-	See git history. 
+    See git history. 
 *** DONE Finish reading Skilling. 
-	SCHEDULED: <2019-11-15 Fri>
-	See notes. 
+    SCHEDULED: <2019-11-15 Fri>
+    See notes. 
 *** DONE Implement Skilling's algorithm
-	SCHEDULED: <2019-11-17 Sun>
-	Tried to do on the PWF, using example code at the end of the paper. cite:skilling. 
-	Hard to do. Need laptop repaired. C code in the repository.
+    SCHEDULED: <2019-11-17 Sun>
+    Tried to do on the PWF, using example code at the end of the paper. cite:skilling. 
+    Hard to do. Need laptop repaired. C code in the repository.
 *** Note from meeting. <2019-11-15 Fri>
-	Implementing Skilling's algorithm wasn't necessary. 
+    Implementing Skilling's algorithm wasn't necessary. 
 *** Note from meeting. <2019-11-15 Fri>
-	The idea of re-partitioning. Read [[https://arxiv.org/pdf/1908.04655.pdf][Chen-Feroz-Hobson]]. 
+    The idea of re-partitioning. Read [[https://arxiv.org/pdf/1908.04655.pdf][Chen-Feroz-Hobson]]. 
 *** Note from meeting <2019-11-15 Fri> 
-	Project writeup
+    Project writeup
 
 ** Week 7
 
 *** DONE Implement Multivariate Gaussian Likelihood <2019-11-17>
-	Used example code as template. 
-	See toy-models/multivariate-gaussian.py
+    Used example code as template. 
+    See toy-models/multivariate-gaussian.py
 *** DONE Investigate the C++ front-end. <2019-11-19>
-	PolyChord works as a framework. Unable to control many things
-	including verbosity of output. 
+    PolyChord works as a framework. Unable to control many things
+    including verbosity of output. 
 *** DONE Project report. <2019-11-21 Thu>
 	[[http://www.mrao.cam.ac.uk/~wh260/Galileo/
 	][Example writeups]].
@@ -73,42 +82,83 @@ This file contains the notes and the project diary for the aforementioned projec
 *** DONE Finalise Project report. <2019-11-25 Mon>
 *** DONE Proof read the report <2019-11-29 Fri>
 *** DONE Submit the report. <2019-12-04 Wed>
-	Good staplers are not in Cavendish. Had to re-print and re-submit
-	because the one in Kavli chewed up the paper and the one at
-	Rayleigh library was not functional.
+    Good staplers are not in Cavendish. Had to re-print and re-submit
+    because the one in Kavli chewed up the paper and the one at
+    Rayleigh library was not functional.
 ** Vacation Weeks
 *** DONE Re-install software <2019-12-04 Wed>
-	a) =polychord= (GitHub)
-	b) =anesthetic= (=pip=)
-	c) =fgivenx= (=pip=)
+    a) =polychord= (GitHub)
+    b) =anesthetic= (=pip=)
+    c) =fgivenx= (=pip=)
 *** DONE Line Fitting example. <2019-12-09 Mon>
-	See =0/extended-example.py=. 
+    See =0/extended-example.py=. 
 *** DONE Set up CSD3 login information. <2019-12-19 Thu>
-	
-	PI Name: Will Handley
-	PI Status: Research fellow
-	PI Email: wh260@cam.ac.uk
-	PI Phone: +44-(0)1223-764042
-	PI Department: Cavendish Laboratory (Astrophysics)
-	PI School: Physical Sciences
-
-	Research Group: Astrophysics
-	Department: Cavendish Laboratory
-	School: Physical Sciences
-	Service Level: Non-paying (SL3) only
-	Project: (Leave blank)
-
-	End Date: 01/01/2021 (To give us time to write up)
-	Compute Platforms: (leave blank)
-	Dedicated nodes: (None)
-	PI Declaration: tick yes
+    
+    PI Name: Will Handley
+    PI Status: Research fellow
+    PI Email: wh260@cam.ac.uk
+    PI Phone: +44-(0)1223-764042
+    PI Department: Cavendish Laboratory (Astrophysics)
+    PI School: Physical Sciences
+    
+    Research Group: Astrophysics
+    Department: Cavendish Laboratory
+    School: Physical Sciences
+    Service Level: Non-paying (SL3) only
+    Project: (Leave blank)
+    
+    End Date: 01/01/2021 (To give us time to write up)
+    Compute Platforms: (leave blank)
+    Dedicated nodes: (None)
+    PI Declaration: tick yes
 *** DONE Read about Bayesian statistics. $\Chi^2$ test. 
-	Notes. 
+    Notes. 
 * Lent
 ** Week 1. 
-*** Meet Dr Handley <2020-01-16 Thu>
-	Talked about the line fitting example. 
+*** Meet Dr Handley <2020-01-17 Fri>
+    Talked about the line fitting example. 
+*** DONE Re-factor the line-fitting examples
+    SCHEDULED: <2020-01-17 Fri>
+    :LOGBOOK:
+    CLOCK: [2020-01-17 Fri 22:58]--[2020-01-18 Sat 00:25] =>  1:27
+    CLOCK: [2020-01-17 Fri 20:32]--[2020-01-17 Fri 22:40] =>  2:08
+    :END:
+    [[./toy-models/0/0.1 extended_example.py]].  Do I need to generate the
+    data? Can I use the parameter covariance matrix to emulate the
+    data? 
 
+    better to have a data generator and not use it than to not have it
+    and need it.
+*** DONE Implement the Data generator
+    SCHEDULED: <2020-01-20 Mon>
+    :LOGBOOK:
+    CLOCK: [2020-01-22 Wed 19:20]--[2020-01-23 Thu 01:16] =>  5:56
+    CLOCK: [2020-01-22 Sat 09:15]--[2020-01-22 Wed 13:15] =>  4:00
+    CLOCK: [2020-01-21 Tue 09:03]--[2020-01-21 Tue 16:30] =>  7:27
+    CLOCK: [2020-01-20 Mon 09:17]--[2020-01-20 Mon 12:20] =>  3:03
+    :END:
+    DEADLINE: <2020-01-22 Wed> 
+    Implemented! It works!
+    [[./toy-models/0/0.2 DataCovarianceWithGenerator/DataGenerator.py]]
+    Probably overengineered. 
+
+    Simple noise overlayed on top of data predicted by model. Use
+    chi-squared likelihood fit from 
+    [[./toy-models/0/0.2 DataCovarianceWithGenerator/Polychord.py]]. 
+    
+    Credit to 
+
+    [[http://jrmeyer.github.io/machinelearning/2017/08/18/mle.html]]
+
+    update: ln_z is an exceedingly bad name for the loglikelihood. 
+** Week 2
+*** DONE meet Dr Handley. 
+    SCHEDULED: <2020-01-24 Fri>
+    The data generator isn't necessary. I was using too many live
+    points. $200$ live points is good-enough for publication quality
+    results. Reduce that to 20. Try it with Planck chains. 
+
+    [[]]
 
 * Easter ''Vacation''
 ** Week 1. 
@@ -139,9 +189,32 @@ This file contains the notes and the project diary for the aforementioned projec
      to connect. 
 *** DONE install Cobaya
     :LOGBOOK:
-    CLOCK: [2020-03-19 Thu 19:21]--[2020-04-18 Sat 22:21] => 723:00
+    CLOCK: [2020-03-19 Thu 19:00]--[2020-03-21 Sat 22:30] => 51:30
     :END:
-    Did it very thoroughly. MKL not identified. Will need to debug. Later
+    Did it very thoroughly. MKL not identified. Will need to
+    debug. Later. =mpirun cobaya= works. It doesn't output, but at
+    this stage it's not important.
+*** DONE Modify cobaya
+    :LOGBOOK:
+    CLOCK: [2020-03-19 Thu 11:47]--[2020-03-21 Sat 22:47] => 59:00
+    :END:
+    
+    Cobaya is mess. There's no notion of OOP design. Overridin a class
+    should *not* have an =initialize= method. Instead it should have
+    an =__init__= method. 
+
+    Tried to extract commented blocks out into functions. This is hard
+    work. I'm not even paid to do it. Implementing a proper channel in
+    =.yaml= will be untenable. It will take more time than this entire
+    project to figure out how to do it without breaking anything.
+
+    I should speak to Dr Handley about this and discuss how Cobaya's
+    sampler should be implemented.
+
+    update: I should create a fork. Implement in situ and reference in
+    the project writeup. As much as I'd like to clean it up, it's not
+    really even my project to worry about.
+    
 *** DONE Meet Dr Handley 
     :LOGBOOK:
     CLOCK: [2020-03-20 Fri 13:00]--[2020-03-20 Fri 13:40] =>  0:40
@@ -195,6 +268,16 @@ This file contains the notes and the project diary for the aforementioned projec
     ask Lukas Hergt about the values. 
     
     Cobaya's generated =.yaml= file is not working. Needs a few updates. 
+*** DONE Add figures
+    :LOGBOOK:
+    CLOCK: [2020-03-29 Sun 14:22]--[2020-04-18 Sat 22:26] => 488:04
+    CLOCK: [2020-03-29 Sun 09:22]--[2020-03-29 Sun 11:10] =>  1:48
+    :END:
+    Used =tikzplotlib=. Plots in illustrations. Added illustrations of
+    repartitioining functions.
+
+
+    
 *** DONE Writeup 
     :LOGBOOK:
     CLOCK: [2020-03-27 Fri 09:46]--[2020-03-27 Fri 10:47] =>  1:01
@@ -226,7 +309,8 @@ This file contains the notes and the project diary for the aforementioned projec
 
 *** DONE Refactor of framework
     SCHEDULED: <2020-03-29 Sun>
-    DEADLINE: <2020-04-02 Thu> Use PyCharm. Fixed a bug. Reference
+    DEADLINE: <2020-04-02 Thu> 
+    Used PyCharm. Fixed a bug. Reference
     Python hash is not random, but linear in regions. For small values
     of $\theta$ this may and does cause issues. 
 
@@ -242,13 +326,128 @@ This file contains the notes and the project diary for the aforementioned projec
 *** DONE Test
     SCHEDULED: <2020-04-02 Thu>
     DEADLINE: <2020-04-04 Sat> 
-    All tests clear. Performance improved. Significantly. Bugs. 
+    All tests clear. Performance improved. Significantly. No bugs. 
+    
+    Also a discovery! Under some circumstances PPR can
+    break. [[./illustrations/convergence.pdf]]. In the same environment,
+    Gaussian under SSPR finishes faster and gets the right
+    answer. Under the same circumstances PPR inside SSPR also finishes
+    faster.
+
+    Choosing which one to include is like choosing your favourite
+    child. I could make the case that SSPR makes the simulation more
+    robust if wrapped inside PPR. On the other hand SSPR doesn't need
+    PPR. Maybe give Hobson and Feroz some credit here. I'm already
+    being overly negative about their discovery, even though my
+    discovery is based on theirs. PPR it is then. 
 
 *** DONE Project presentations. 
     SCHEDULED: <2020-04-06 Mon>
-    According to Charles Smith we need to present our findings and do so quickly. 
+    According to Charles Smith we need to present our findings. 
+
+    update: Meeting is scheduled. 
 
 *** DONE e-mail Dr Handley about findings.
+
+** Week 3
+
+*** DONE Add Kullback-Leibler Divergence
+    :LOGBOOK:
+    CLOCK: [2020-04-13 Mon 18:26]--[2020-04-18 Sat 22:47] => 124:21
+    :END:
+    Kullbakc leibler divergence is useful but only marginally
+    so. Kullback Leibler from prior to posterior indicates performance
+    up to a point. 
+
+    PolyChord may converge faster for a stronger bias: e.g. if the
+    prior is sharply peaked at the origin. In that case
+    \(\mathcal{D}\) is larger but run-time is smaller.
+
+    
+    
+    
+
+*** DONE Install Cosmochord. 
+    :LOGBOOK:
+    CLOCK: [2020-04-18 Sat 13:04]--[2020-04-18 Sat 14:04] =>  1:00
+    :END:
+    Need [[https://cosmologist.info/cosmomc/readme_planck.html][external Planck likelihood]]. 
+
+*** DONE Install on Cluster 
+    :LOGBOOK:
+    CLOCK: [2020-04-18 Sat 14:09]--[2020-04-18 Sat 20:25] =>  6:16
+    :END:
+    Planck is typical academic abandonware. They have a ``python''
+    script that installs the dependencies called =waf=. In their
+    wizdom, they decided that they can do a better job than either
+    pypi, or conda. They wrote their own package manager that
+    downloads an outdated dependency if it can't find it (which it
+    can't because if you think and it can't. Because if you think
+    that writing your own package manager is a good idea, you're
+    really too stupid to do it properly.  find it, because people who
+    do pip and conda, don't abandon their software and move on.
+    
+    As this may be read by someone who's writing academic code; the
+    proper procedure is telling the end-user that they need packages
+    x, y and z. If you're writing a package and it needs a package
+    manager, and you're not thinking of maintaining it -- Don't write
+    a package manager! Mainly because I don't think you'd bother to
+    check the venv, and update the download links. Also, you're
+    probably thinking that either pip or conda can't do what you need
+    them to do... So you don't ask. 
+
+    This is at least six hours of wasted time, that could have been
+    avoided if people were not in the sweet-spot of writing difficult
+    to replicate, but at the same time completely unmaintained and
+    under-developed code. This is why I insist on **proper** software
+    engineering techniques! 
+
+    Also! Keep Science away from Python. It's design philosophy 'we're
+    all consenting adults', basically means that people do however,
+    whatever and there's no responsibility. Python is a unique
+    language: it has a few surface-level good ideas, a bunch of
+    terrible ones, and is moderated by people that clearly have no
+    idea what they're doing. That latter point is especially painful,
+    as for some reason they thought that creating a breaking change to
+    Python 3 was a good idea, yet they were unable to phase out
+    python2, and after all of that, they thought that keeping the
+    names of packages the same was not going to backfire.
+
+    The bigger problem is that people are seduced by the mild
+    syntactic sugar of python. Big projects are dragged down by the
+    cesspool of moronic design. It's giving me nightmares at this
+    point.
+
+    The project report guideline asks us to think of ways that could
+    make this easier. My suggestions. Don't use python. Don't! All the
+    time you save by avoiding the curly braces is being paid for in
+    sleep-deprived tortured people that just want to get their degree
+    done with. I'm fed up with Cobaya's overengineered nonsense. I
+    wanted to use CosmoChord to avoid Python at all costs. It doesn't
+    work. Because Python is used there as well. It's 2am. I'm trying
+    to figure out why pip swears that astropy is installed. While at
+    the same time no version of python seems to detect it. If that
+    wasn't enough; there's 17 version of pip on the cluster. I don't
+    know which one to use to install that damn thing! I shouldn't have
+    to know!
+
+    ANd the worst part is, people assume that writing python code is
+    easy, because of all the light-weight stuff. If I told someone
+    that I was stuck for an entire 24 hours trying to fix a build on a
+    cluster people would say "how hard can it be". Just pip install?
+    Right? 
+
+    Eventual workaround
+    #+BEGIN_SRC python
+    module load python@3.8
+    sudo /usr/local/software/master/python/3.8/bin/python -m ensurepip 
+    module purge
+    module load python
+    /usr/local/bin/python -m ensurepip 
+    /usr/local/bin/python -m pip install astropy cython 
+    #+END_SRC
+    Notice that I had to use a python3 pip to install a python2
+    pip. Naturally this is just stupidity.
 
 * Notes
 ** Michaelmas Term
@@ -268,7 +467,8 @@ This file contains the notes and the project diary for the aforementioned projec
 
 	\[Likelihood \times Prior = Posterior \times Evidence\]
 
-	So can use this to find the parameter values of a model, + the likelihood that the model fits the data at all. 
+	So can use this to find the parameter values of a model, + the
+	likelihood that the model fits the data at all.
 
    
 *** How does nested sampling work
@@ -289,17 +489,42 @@ This file contains the notes and the project diary for the aforementioned projec
 	 L = \frac{1}{N} \exp{\left[ - \chi^{2}\right]}
 	 \]
 	
-	 So what we need to do for Nested Sampling to work, is to provide a model for estimating the fit to the hypothesis - likelihood, and a prior. 
+	 So what we need to do for Nested Sampling to work, is to
+	 provide a model for estimating the fit to the hypothesis -
+	 likelihood, and a prior.
 
-	 The likelihood, or how likely is the value of data given the model and the parameters, reflects how we expect the fluctuations to develop. Many distributions are possible, but due to the Central Limit theorem, best choice would be a Normal (Gaussian) distribution. 
+	 The likelihood, or how likely is the value of data given the
+	 model and the parameters, reflects how we expect the
+	 fluctuations to develop. Many distributions are possible, but
+	 due to the Central Limit theorem, best choice would be a
+	 Normal (Gaussian) distribution.
 
-	 The prior represents our prior knowledge of the original parameters. For example, if we know nothing about the possible model parameters, we can expect a uniform distribution within constraints. These constraints may be artificial (for example, we may only be interested in model parameters that are within machine-representable floating point numbers), or natural (the Hubble parameter is positive). 
+	 The prior represents our prior knowledge of the original
+	 parameters. For example, if we know nothing about the
+	 possible model parameters, we can expect a uniform
+	 distribution within constraints. These constraints may be
+	 artificial (for example, we may only be interested in model
+	 parameters that are within machine-representable floating
+	 point numbers), or natural (the Hubble parameter is
+	 positive).
 	
-	 If we know more about the model parameters, that information can also be presented as a guideline for parameter inference. For example if we have done parameter estimation of the same model, using a different set of data; the posterior of the aforementioned investigation can be used directly as the prior for this run. 
+	 If we know more about the model parameters, that information
+	 can also be presented as a guideline for parameter
+	 inference. For example if we have done parameter estimation
+	 of the same model, using a different set of data; the
+	 posterior of the aforementioned investigation can be used
+	 directly as the prior for this run.
 
-	 Nested sampling exploits that extra data to converge upon the so-called typical set; which represents the data that has statistically significant phase volume. The latter point can be understood intuitively. 
+	 Nested sampling exploits that extra data to converge upon the
+	 so-called typical set; which represents the data that has
+	 statistically significant phase volume. The latter point can
+	 be understood intuitively.
 
-	 More accurate or tight constraints on the true data should lead to better convergence time. Ideally the convergence to the posterior of a distribution is the fastest, as this minimises the number of errors, and given a suitable sampling algorithm should lead to few wasted computations. 
+	 More accurate or tight constraints on the true data should
+	 lead to better convergence time. Ideally the convergence to
+	 the posterior of a distribution is the fastest, as this
+	 minimises the number of errors, and given a suitable sampling
+	 algorithm should lead to few wasted computations.
 
 
 ***** TODO Phase volume example. 
@@ -310,15 +535,32 @@ This file contains the notes and the project diary for the aforementioned projec
 
 **** Notes on the Algorithm itself:
 
-	 Rasterising the phase space is too computationally ineffective, as for a model with 27 parameters, the space would be 27 dimensional. This leads to many quirks of geometry and counter-intuitive outcomes, that will be touched on later. 
+	 Rasterising the phase space is too computationally
+	 ineffective, as for a model with 27 parameters, the space
+	 would be 27 dimensional. This leads to many quirks of
+	 geometry and counter-intuitive outcomes, that will be touched
+	 on later.
 
-	 We must first select a number of live points randomly from the phase space, usually taken to a be a hypercube with edge length normalised to 1. 
+	 We must first select a number of live points randomly from
+	 the phase space, usually taken to a be a hypercube with edge
+	 length normalised to 1.
 
-	 For each point one expects there to be a locus of points with the exact same likelihood. This locus is often connected, and so in analogy with isotherms it is often referred to as the iso-likelihood contour. 
+	 For each point one expects there to be a locus of points with
+	 the exact same likelihood. This locus is often connected, and
+	 so in analogy with isotherms it is often referred to as the
+	 iso-likelihood contour.
 
-	 Then one selects the least likely point and picks according to some algorithm, a point of higher likelihood. The original point is now referred to as dead, while the new point is added to the set of live points. 
+	 Then one selects the least likely point and picks according
+	 to some algorithm, a point of higher likelihood. The original
+	 point is now referred to as dead, while the new point is
+	 added to the set of live points.
 
-	 This process is then repeated until we have reached a typical set. This is often determined by estimating the /evidence/ contained outside each contour (since the points are picked at random, if we have n_\text{live} points, each contour will statistically include \frac{1}{n_\text{live}} of the total phase volume). 
+	 This process is then repeated until we have reached a typical
+	 set. This is often determined by estimating the /evidence/
+	 contained outside each contour (since the points are picked
+	 at random, if we have n_\text{live} points, each contour will
+	 statistically include \frac{1}{n_\text{live}} of the total
+	 phase volume).
 
 	
 **** Piecewise power repartitioning notes.
@@ -387,21 +629,39 @@ This file contains the notes and the project diary for the aforementioned projec
 
 **** Data and Parameter covariance matrices. 
 
-	 To avoid having to generate data with a given distribution, we can simply and directly use the Parameter covariance matrix, for our toy models. 
+	 To avoid having to generate data with a given distribution,
+	 we can simply and directly use the Parameter covariance
+	 matrix, for our toy models.
 
-	 This basically means that instead of using the model's functional form, we directly assume that the distribution is of Gaussian nature. This we simply plug into the log likelihood, and the rest of the algorithm proceeds as if we had data and the functional form, and the \(chi^2\) computation was done for free. 
+	 This basically means that instead of using the model's
+	 functional form, we directly assume that the distribution is
+	 of Gaussian nature. This we simply plug into the log
+	 likelihood, and the rest of the algorithm proceeds as if we
+	 had data and the functional form, and the \(chi^2\)
+	 computation was done for free.
 
 	
 ***** Correlated vs Uncorrelated Gaussian log likelihoods
 
 	 
-	  If the parameter covariance matrix is completely diagonal, then the parameters are each individually Gaussian distributed, with a standard deviation being the diagonal element. 
+	  If the parameter covariance matrix is completely diagonal,
+	  then the parameters are each individually Gaussian
+	  distributed, with a standard deviation being the diagonal
+	  element.
 	 
-	  An arbitrary coupling can lead to covariance on the off-diagonal. These mixtures can be unmixed by using either Singular Value or eigenvalue  decomposition of the covariance matrix. This can be simply regarded as a coordinate transform, a passive one at that. Consequently, a Gaussian distribution in Loglikelihood takes the following form. 
+	  An arbitrary coupling can lead to covariance on the
+	  off-diagonal. These mixtures can be unmixed by using either
+	  Singular Value or eigenvalue decomposition of the covariance
+	  matrix. This can be simply regarded as a coordinate
+	  transform, a passive one at that. Consequently, a Gaussian
+	  distribution in Loglikelihood takes the following form.
 
-	  Let \(\vec{\mu}\) be the vector of mean values of Gaussian distributed parameters \(\vec{\theta}\) (we shall drop the vector). The corresponding parameter covariance matrix is \(G_{i,j}\). 
+	  Let \(\vec{\mu}\) be the vector of mean values of Gaussian
+	  distributed parameters \(\vec{\theta}\) (we shall drop the
+	  vector). The corresponding parameter covariance matrix is
+	  \(G_{i,j}\).
 	 
-	  Therefore the corresponding loglilkelihood is 
+	  Therefore the corresponding loglilkelihood is
 
 	  \[ 
 	  \ln {\cal L} = -N - (\theta - \mu)^{T} G^{-1} (\theta - \mu)
@@ -417,22 +677,28 @@ This file contains the notes and the project diary for the aforementioned projec
 
 *** Polychord <2020-01-10 Fri>
 
-	Polychord is a nested sampling program that uses directional slicing, which is not (citation needed) a form of rejection sampling. 
+	Polychord is a nested sampling program that uses directional
+	slicing, which is not (citation needed) a form of rejection
+	sampling.
 
-	To run polychord one needs to do three things: 
+	To run polychord one needs to do three things:
 
 *** =settings= 
 
-	which needs the number of dimesnions with which we're working, (very procedural, probably a consequence of fortran-centric implementation).
+	which needs the number of dimesnions with which we're working,
+	(very procedural, probably a consequence of fortran-centric
+	implementation).
 
-	The Settings have information about the verbosity of the system.
+	The Settings have information about the verbosity of the
+	system.
 
 	#+begin_src ipython 
 	  settings.feedback = 0
 	#+end_src
 	seems to be a good default. 
 
-	Polychord can resume the older run, if instructed (rather by  default), so in order to have clean bench-marking do 
+	Polychord can resume the older run, if instructed (rather by
+	default), so in order to have clean bench-marking do
 
 	#+begin_src python
 	  settings.read_resume=False
@@ -456,29 +722,45 @@ This file contains the notes and the project diary for the aforementioned projec
 
 *** logLikelihood
 
-	This is essentially a \( \chi^2\), which represents the probability of our data, given the model and the parameter values. 
+	This is essentially a \( \chi^2\), which represents the
+	probability of our data, given the model and the parameter
+	values.
 
-	We need to define it for each model. Ideally what it needs to return is the normalised probability, but not giving it the proper normalisation doesn't seem to affect the run-time, only the result. 
+	We need to define it for each model. Ideally what it needs to
+	return is the normalised probability, but not giving it the
+	proper normalisation doesn't seem to affect the run-time, only
+	the result.
 
 *** Prior
 
-	This is a weird function. What this is called, probably has nothing to do with what it actually is: it's taking a point in a unit hypercube and maps it onto the real \( \theta\) values. 
+	This is a weird function. What this is called, probably has
+	nothing to do with what it actually is: it's taking a point in
+	a unit hypercube and maps it onto the real \( \theta\) values.
 
-	This function is where we can get most of our performance uplift. 
+	This function is where we can get most of our performance
+	uplift.
 
-	Ideally assuming that the /real/ prior is the posterior the algorithm should converge the fastest. This should however affect the loglikelihood calls, because we're re-scaling the space. 
+	Ideally assuming that the /real/ prior is the posterior the
+	algorithm should converge the fastest. This should however
+	affect the loglikelihood calls, because we're re-scaling the
+	space.
 
-	I **think** that this simply means that the absolute value of the **loglikelihood** is **not a meaningful** number. 
+	I **think** that this simply means that the absolute value of
+	the **loglikelihood** is **not a meaningful** number.
 
 **** UPDATE: it is meaningful. Just not without the prior.  <2020-02-14 Fri>
 	 AutoPR relies on 
 	
    
-*** Approaches to modelling systems. 
- <2020-01-17 Fri>
-	One way to model all of our systems is by looking at the \( \chi^2\) and dealing with generated data. While this is close to what the system might actually do, this is not itself a good solution, it's slow and it requires extra computations in generating the data with the properties that we need. 
+*** Approaches to modelling systems.  <2020-01-17 Fri>
+	One way to model all of our systems is by looking at the \(
+	\chi^2\) and dealing with generated data. While this is close
+	to what the system might actually do, this is not itself a
+	good solution, it's slow and it requires extra computations in
+	generating the data with the properties that we need.
 
-	Instead we might simply treat the system as if it was already diagonalised in the model parameter space. So if our model has 
+	Instead we might simply treat the system as if it was already
+	diagonalised in the model parameter space. So if our model has
 
  \begin{equation}
    \mu =
@@ -524,13 +806,16 @@ This file contains the notes and the project diary for the aforementioned projec
 
 *** Comparison of runs. <2020-01-24 Fri>
 
-	Planck data can be downloaded from (see references), and using the following constraints, we can compute the misfit between data. 
+	Planck data can be downloaded from (see references), and using
+	the following constraints, we can compute the misfit between
+	data.
 
 
 	[[../LCDM-NS/toy-models/1/Comparison of run with uniform prior and paper.pdf]]
 
    
-	This shows profound agreement, usingThe following constraints on the parameters. 
+	This shows profound agreement, usingThe following constraints
+	on the parameters.
 
 	#+begin_src python
 	  planck_ranges = numpy.array(
@@ -599,7 +884,9 @@ This file contains the notes and the project diary for the aforementioned projec
 
 *** Automated Power Posterior Repartitioning. <2020-01-24 Fri>
 
-	Looking at [[https://arxiv.org/pdf/1908.04655.pdf]] we can see that one can get better convergence if we use something called the Automated posterior repartitioning. 
+	Looking at [[https://arxiv.org/pdf/1908.04655.pdf]] we can see
+	that one can get better convergence if we use something called
+	the Automated posterior repartitioning.
 
 	We start with a Gaussian prior. 
 
@@ -618,43 +905,74 @@ This file contains the notes and the project diary for the aforementioned projec
 	  \end{pmatrix}
 	\end{equation}
 
-	We then use this parameter to rescale the prior that we originally had: 
+	We then use this parameter to rescale the prior that we
+	originally had:
 
 	\begin{equation}
 	  \tilde{\pi}(\tilde{\theta}}) = \frac{{G(\mu, \sigma)(\theta)}^\beta}{Z_\pi(\beta)}
 	\end{equation}
 
-	And normalise it to one Having done that we need to keep the posterior the same, so we need to rescale (citation needed) the loglikelihood to account for this change. 
+	And normalise it to one Having done that we need to keep the
+	posterior the same, so we need to rescale (citation needed)
+	the loglikelihood to account for this change.
 
 **** When, how and why do repartitioning. <2020-02-19 Wed>
 
-	 After multiple experiments I arrived at the following. 
+	 After multiple experiments I arrived at the following.
 
-	 Running PolyChord with a Gaussian is **not the same** as what we want to accomplish. 
+	 Running PolyChord with a Gaussian is **not the same** as what
+	 we want to accomplish.
 
-	 When we consider two different priors, a Uniform from \((a,b)^\otimes n\) and a Gaussian given by an \(n\times n\) matrix \( \sigma \).  
+	 When we consider two different priors, a Uniform from
+	 \((a,b)^\otimes n\) and a Gaussian given by an \(n\times n\)
+	 matrix \( \sigma \).
 
-	 The histogram of the loglikelihood calls and their results will be different, it will differ due to the /effective volume/ which each of those will occupy. 
+	 The histogram of the loglikelihood calls and their results
+	 will be different, it will differ due to the /effective
+	 volume/ which each of those will occupy.
 
-	 Naturally a Gaussian, even if it has the same effective volume cannot simultaneously give the same evidence and the same Posterior. 
+	 Naturally a Gaussian, even if it has the same effective
+	 volume cannot simultaneously give the same evidence and the
+	 same Posterior.
 
 	 So we can ask two kinds of questions:
 
-	 a) What is the Posterior given the prior that has a different volume. 
+	 a) What is the Posterior given the prior that has a different
+	 volume.
 
-	 In this case the loglikelihood calls will cluster around different values. This is a legitimate question to ask, but it requires more information. 
+	 In this case the loglikelihood calls will cluster around
+	 different values. This is a legitimate question to ask, but
+	 it requires more information.
 
-	 If we take a system where we don't have the extra information about the location of the posterior peaks and their shape, and plug in a prior that does, we're biasing the system, and effectively /fudging/ the answer. This can in some cases be useful, but it's not quite what the project aims to do. 
+	 If we take a system where we don't have the extra information
+	 about the location of the posterior peaks and their shape,
+	 and plug in a prior that does, we're biasing the system, and
+	 effectively /fudging/ the answer. This can in some cases be
+	 useful, but it's not quite what the project aims to do.
 
-	 So instead of asking what would our answer be with a different prior, we ask a different question. What would our answer be if our system was biased to picke the values that /suspect/ are the correct posterior values, without that affecting the posterior distribution and injecting extra information that we don't have/ can't quantify. 
+	 So instead of asking what would our answer be with a
+	 different prior, we ask a different question. What would our
+	 answer be if our system was biased to picke the values that
+	 /suspect/ are the correct posterior values, without that
+	 affecting the posterior distribution and injecting extra
+	 information that we don't have/ can't quantify.
 
-	 This is a philosophical issue. Intuitively, if we have the extra information it /must/ be reflected in the prior. It can't otherwise. In fact by biasing the system, even if we repartition the combination \( {\cal L } \pi \) we can still end up with a biased and therefore useless result. 
+	 This is a philosophical issue. Intuitively, if we have the
+	 extra information it /must/ be reflected in the prior. It
+	 can't otherwise. In fact by biasing the system, even if we
+	 repartition the combination \( {\cal L } \pi \) we can still
+	 end up with a biased and therefore useless result.
 
-	 In fact, my experiments clearly show this; if the Prior corresponding to /a/ Gaussian which is not the same as the posterior (has a different value of the mean), it can result in the algorithm terminating and generating a completely false posterior. 
+	 In fact, my experiments clearly show this; if the Prior
+	 corresponding to /a/ Gaussian which is not the same as the
+	 posterior (has a different value of the mean), it can result
+	 in the algorithm terminating and generating a completely
+	 false posterior.
 
 	 See [[./toy-models/1/1.0 Example of parameter covariance.py/]]. 
 
-	 By doing repartitioning we allow our guess to be wrong, without that affecting the outcomes: posterior and evidence. 
+	 By doing repartitioning we allow our guess to be wrong,
+	 without that affecting the outcomes: posterior and evidence.
 
    
 
@@ -662,11 +980,20 @@ This file contains the notes and the project diary for the aforementioned projec
 **** Correlated and Uncorrelated Gaussian:<2020-02-03 Mon>
 
 
-	 Knowing that the parameter covariance matrix, is usually positive defininte, one can argue that the question of whether or not the parameters in the model are correlated, or completely uncorrelated (i.e. each has a single standard deviation value) is moot. 
+	 Knowing that the parameter covariance matrix, is usually
+	 positive defininte, one can argue that the question of
+	 whether or not the parameters in the model are correlated, or
+	 completely uncorrelated (i.e. each has a single standard
+	 deviation value) is moot.
 
-	 We can always perform a linear operation that diagonalises the parameter covariance matrix, and what the algorithm needs to do is only to work with the uncorrelated Gaussians. 
+	 We can always perform a linear operation that diagonalises
+	 the parameter covariance matrix, and what the algorithm needs
+	 to do is only to work with the uncorrelated Gaussians.
 
-	 That of course is true, but some repartitioning schemes are more sensitive to this fact, and can only work after the coordinate transformation has been performed, which itself adds to the complexity. 
+	 That of course is true, but some repartitioning schemes are
+	 more sensitive to this fact, and can only work after the
+	 coordinate transformation has been performed, which itself
+	 adds to the complexity.
 
 
 	 Other algorithms are more capable of doing this properly. 
@@ -677,7 +1004,9 @@ This file contains the notes and the project diary for the aforementioned projec
 
 ** Easter "vacation"
 
-   Notes at this stage already in the form of write-up. If detailed history is needed, just refer to the git history of the project-report.org. 
+   Notes at this stage already in the form of write-up. If detailed
+   history is needed, just refer to the git history of the
+   project-report.org.
 
    
 *** Cobaya settings <2020-03-18 Wed>
@@ -689,7 +1018,11 @@ This file contains the notes and the project diary for the aforementioned projec
        num_repeats: 2d
        blocking:
         - [1, [omega_b, omega_cdm, theta_s_1e2, tau_reio, logA, ns]]
-	- [20, [A_planck, A_cib_217, xi_sz_cib, A_sz, ps_A_100_100, ps_A_143_143, ps_A_143_217, ps_A_217_217, ksz_norm, gal545_A_100, gal545_A_143, gal545_A_143_217, gal545_A_217, calib_100T, calib_217T, galf_TE_A_100_143, galf_TE_A_143_217, galf_TE_A_100_217, galf_TE_A_100, galf_TE_A_143, galf_TE_A_217]]
+	- [20, [A_planck, A_cib_217, xi_sz_cib, A_sz, ps_A_100_100, 
+	   ps_A_143_143, ps_A_143_217, ps_A_217_217, ksz_norm, gal545_A_100, 
+           gal545_A_143, gal545_A_143_217, gal545_A_217, calib_100T, calib_217T, 
+           galf_TE_A_100_143, galf_TE_A_143_217, galf_TE_A_100_217, 
+           galf_TE_A_100, galf_TE_A_143, galf_TE_A_217]]
     #+END_SRC
 
  bibliographystyle:unsrt
