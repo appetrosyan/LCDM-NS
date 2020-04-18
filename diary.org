@@ -108,6 +108,148 @@ This file contains the notes and the project diary for the aforementioned projec
 ** Week 1. 
 *** Meet Dr Handley <2020-01-16 Thu>
 	Talked about the line fitting example. 
+
+
+* Easter ''Vacation''
+** Week 1. 
+*** DONE Set up SSH access to CSD3. 
+    :LOGBOOK:
+    CLOCK: [2020-03-18 Wed 12:19]--[2020-03-18 Wed 19:00] =>  6:41
+    :END:
+    Covid 19 caused a major disruption.  I was forced out of College,
+    required to return to Armenia. Spent the entire week under
+    quarantine.  Thankfully had some internet access. I'm sure no-one
+    is going to account for the time/stress incurred losses. Why would
+    they. That would be putting the Brits that only need to stay in
+    their homes at an unfair disadvantage.
+**** DONE Find out how to bypass restriction.
+     :LOGBOOK:
+     CLOCK: [2020-05-18 Mon 13:23]--[2020-04-18 Sat 18:23] => -715:00
+     :END:
+     Can't =ssh=. Connection rejected. Cambridge VPN not helping. Can't
+     connect to it either. 
+**** DONE Write a script to probe for forwarding ports
+     :LOGBOOK:
+     CLOCK: [2020-03-18 Wed 13:48]--[2020-03-18 Wed 18:24] =>  4:39
+     :END:
+     Found a forwarding port on the router. Use
+     #+BEGIN_SRC bash
+     ssh -R 52.194.1.73:8080:localhost:80 ap886@login-hpc.cam.ac.uk
+     #+END_SRC
+     to connect. 
+*** DONE install Cobaya
+    :LOGBOOK:
+    CLOCK: [2020-03-19 Thu 19:21]--[2020-04-18 Sat 22:21] => 723:00
+    :END:
+    Did it very thoroughly. MKL not identified. Will need to debug. Later
+*** DONE Meet Dr Handley 
+    :LOGBOOK:
+    CLOCK: [2020-03-20 Fri 13:00]--[2020-03-20 Fri 13:40] =>  0:40
+    :END:
+    Minutes. Try to have a writeup. Mentioned that I already have
+    one. Asked about using the cluster to run benchmarks. Given a
+    go-ahead. This should save a lot of time, given that my laptop is
+    nowhere near 64-cores. 
+*** DONE Writeup
+    SCHEDULED: <2020-03-21 Sat>
+    :LOGBOOK:
+    CLOCK: [2020-03-21 Sat 12:27]--[2020-03-21 Sat 14:28] =>  2:01
+    CLOCK: [2020-03-21 Sat 15:30]--[2020-03-21 Sat 17:53] =>  2:23
+    CLOCK: [2020-03-21 Sat 19:00]--[2020-03-21 Sat 21:28] =>  2:28
+    CLOCK: [2020-03-21 Sat 22:00]--[2020-03-22 Sun 02:31] =>  4:31
+    :END:
+    Available on Github. Refined introduction. Added Bayes' theorem to
+    writeup. Migrated to add mnras.
+
+
+** Week 2
+*** DONE Get Home 
+    :LOGBOOK:
+    CLOCK: [2020-03-29 Sun 18:44]--[2020-03-25 Wed 19:00] => -95:44
+    :END:
+    SCHEDULED: <2020-03-25 Wed>
+*** DONE Set up home Computer
+    SCHEDULED: <2020-03-28 Sat>
+    Fresh install of Arch. 
+**** DONE install software
+     :LOGBOOK:
+     CLOCK: [2020-03-29 Sun 16:39]--[2020-03-30 Mon 19:41] => 27:02
+     :END:
+***** DONE numpy
+***** DONE MPI
+***** DONE anesthetic
+***** DONE Cobaya
+***** DONE PolyChord
+      gfortran in the repos not the required version. Used AUR. Created venv. 
+**** DONE Add home computer's ssh key to CSD3
+*** DONE Migrate to Mnras 
+    :LOGBOOK:
+    CLOCK: [2020-03-26 Thu 10:41]--[2020-03-26 Thu 11:25] =>  0:44
+    :END:
+    Add everything needed to conform to the [[https://academic.oup.com/mnras/pages/general_instructions][mnras style guide]]. 
+*** DONE Write an sbatch script to run Cobaya. 
+    :LOGBOOK:
+    CLOCK: [2020-03-24 Tue 12:49]--[2020-03-26 Thu 18:50] => 54:01
+    :END:
+    Completely unsure about the memory and number of clusters. Need to
+    ask Lukas Hergt about the values. 
+    
+    Cobaya's generated =.yaml= file is not working. Needs a few updates. 
+*** DONE Writeup 
+    :LOGBOOK:
+    CLOCK: [2020-03-27 Fri 09:46]--[2020-03-27 Fri 10:47] =>  1:01
+    :END:
+    Added clairifcation. Bayes' theorem paper. Moved defs into table. 
+
+*** DONE Meet Dr Handley
+    :LOGBOOK:
+    CLOCK: [2020-03-27 Fri 14:00]--[2020-03-27 Fri 14:55] =>  0:55
+    :END:
+    Received comments/compliments. 
+
+*** DONE incorporate 
+*** DONE Add Slurm warnings about failures 
+    SCHEDULED: <2020-03-28 Sat>
+
+*** FAILED Debug slurm failures
+    SCHEDULED: <2020-03-28 Sat>
+    DEADLINE: <2020-03-29 Sun> 
+    Weird tracebacks in output. 
+    MKL not recognised. 
+    Yaml doesnt recognise tabs. 
+
+*** DONE Migrate sbatch script to one of the examples. 
+    SCHEDULED: <2020-03-28 Sat>
+
+*** DONE Email Lukas Hergt to ask for help
+    SCHEDULED: <2020-03-31 Tue>
+
+*** DONE Refactor of framework
+    SCHEDULED: <2020-03-29 Sun>
+    DEADLINE: <2020-04-02 Thu> Use PyCharm. Fixed a bug. Reference
+    Python hash is not random, but linear in regions. For small values
+    of $\theta$ this may and does cause issues. 
+
+    fixed with 
+
+    #+BEGIN_SRC python
+    h = hash(tuple(t))
+    seed(h)
+    r = random()
+    #+END_SRC
+
+    
+*** DONE Test
+    SCHEDULED: <2020-04-02 Thu>
+    DEADLINE: <2020-04-04 Sat> 
+    All tests clear. Performance improved. Significantly. Bugs. 
+
+*** DONE Project presentations. 
+    SCHEDULED: <2020-04-06 Mon>
+    According to Charles Smith we need to present our findings and do so quickly. 
+
+*** DONE e-mail Dr Handley about findings.
+
 * Notes
 ** Michaelmas Term
 
@@ -537,4 +679,17 @@ This file contains the notes and the project diary for the aforementioned projec
 
    Notes at this stage already in the form of write-up. If detailed history is needed, just refer to the git history of the project-report.org. 
 
-bibliographystyle:unsrt
+   
+*** Cobaya settings <2020-03-18 Wed>
+    Hi all, I've cc'd Aleksandr who....
+
+    #+BEGIN_SRC yaml
+    sampler:
+      polychord:
+       num_repeats: 2d
+       blocking:
+        - [1, [omega_b, omega_cdm, theta_s_1e2, tau_reio, logA, ns]]
+	- [20, [A_planck, A_cib_217, xi_sz_cib, A_sz, ps_A_100_100, ps_A_143_143, ps_A_143_217, ps_A_217_217, ksz_norm, gal545_A_100, gal545_A_143, gal545_A_143_217, gal545_A_217, calib_100T, calib_217T, galf_TE_A_100_143, galf_TE_A_143_217, galf_TE_A_100_217, galf_TE_A_100, galf_TE_A_143, galf_TE_A_217]]
+    #+END_SRC
+
+ bibliographystyle:unsrt
