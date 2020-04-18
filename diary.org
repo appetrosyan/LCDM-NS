@@ -1,416 +1,540 @@
 #+TITLE: Project Diary for "Cosmological parameter estimation using Bayesian accelerated Machine learning"
 #+AUTHOR: Aleksandr Petrosyan
-#+BIBLIOGRAPHY: bibliography
-#+STARTUP: inlineimages
-* Michaelmas Term
+#+BIBLIOGRAPHY: bibliography.bib
 
-  Doing some research about the subject. 
+This file contains the notes and the project diary for the aforementioned project. The diary comes first. If specified, the timestamp on the notes is when the note was originally written. 
+
+
+* Michaelmas
+** Week 3
+*** DONE Meet Dr Handley 
+	SCHEDULED: <2019-10-25 Fri>
+	Discussed the project. Talked about Nested Sampling. Applications to Machine Learning. 
+
+	Primordial power spectrum, and discretisation. This causes the Fourier transform /multipole plot/ of the CMB. Multipole moment related to size of blotches on the picture. 
+
+** Week 4
+*** DONE Read the Abstract. , 
+	SCHEDULED: <2019-10-28 Mon>
+	Read [[https://arxiv.org/abs/0803.4089][Bayes in the sky]] Read about Bayesian analysis. 
+	$\Omega_{k}$ more significant than thought. 
+*** DONE Install PolyChord, Cobaya, anesthetic, CosmoChord. 
+	SCHEDULED: <2019-10-26 Sat>
+	Issues with Mac OS X/XCode. 
+	GFortran was installed but not on PATH. 
+	PolyChord not Pip installable. 
+	C=cc CXX=cxx python setup.py install —user doesn't work on OS X. 
+	Use Python3 
+*** DONE EMail will and create a PR to fix Python version. 
+	SCHEDULED: <2019-10-27 Sun>
+	Fixed. Merged. Working. 
+*** FAILED Reproduce plots. 
+	SCHEDULED: <2019-11-08 Fri>
+
+	 Laptop inoperative due to Liquid damage. 
+** Week 5
+   Laptop inoperative due to liquid damage.  Until week 2 of Vacation
+   laptop remained under liquid damage. These entries filled
+   retroactively from Todoist.
+*** Talk on nested sampling <2019-11-14>
+	It's a method of inference. Much the same as least squares
+	fitting, except it's not assuming the central limit theorem and
+	works for arbitrary distributions of error.
+
+   
+*** DONE Start final report writeup <2019-11-19>
+	See git history. 
+*** DONE Finish reading Skilling. 
+	SCHEDULED: <2019-11-15 Fri>
+	See notes. 
+*** DONE Implement Skilling's algorithm
+	SCHEDULED: <2019-11-17 Sun>
+	Tried to do on the PWF, using example code at the end of the paper. cite:skilling. 
+	Hard to do. Need laptop repaired. C code in the repository.
+*** Note from meeting. <2019-11-15 Fri>
+	Implementing Skilling's algorithm wasn't necessary. 
+*** Note from meeting. <2019-11-15 Fri>
+	The idea of re-partitioning. Read [[https://arxiv.org/pdf/1908.04655.pdf][Chen-Feroz-Hobson]]. 
+*** Note from meeting <2019-11-15 Fri> 
+	Project writeup
+
+** Week 7
+
+*** DONE Implement Multivariate Gaussian Likelihood <2019-11-17>
+	Used example code as template. 
+	See toy-models/multivariate-gaussian.py
+*** DONE Investigate the C++ front-end. <2019-11-19>
+	PolyChord works as a framework. Unable to control many things
+	including verbosity of output. 
+*** DONE Project report. <2019-11-21 Thu>
+	[[http://www.mrao.cam.ac.uk/~wh260/Galileo/
+	][Example writeups]].
+** Week 8
+*** DONE Finalise Project report. <2019-11-25 Mon>
+*** DONE Proof read the report <2019-11-29 Fri>
+*** DONE Submit the report. <2019-12-04 Wed>
+	Good staplers are not in Cavendish. Had to re-print and re-submit
+	because the one in Kavli chewed up the paper and the one at
+	Rayleigh library was not functional.
+** Vacation Weeks
+*** DONE Re-install software <2019-12-04 Wed>
+	a) =polychord= (GitHub)
+	b) =anesthetic= (=pip=)
+	c) =fgivenx= (=pip=)
+*** DONE Line Fitting example. <2019-12-09 Mon>
+	See =0/extended-example.py=. 
+*** DONE Set up CSD3 login information. <2019-12-19 Thu>
+	
+	PI Name: Will Handley
+	PI Status: Research fellow
+	PI Email: wh260@cam.ac.uk
+	PI Phone: +44-(0)1223-764042
+	PI Department: Cavendish Laboratory (Astrophysics)
+	PI School: Physical Sciences
+
+	Research Group: Astrophysics
+	Department: Cavendish Laboratory
+	School: Physical Sciences
+	Service Level: Non-paying (SL3) only
+	Project: (Leave blank)
+
+	End Date: 01/01/2021 (To give us time to write up)
+	Compute Platforms: (leave blank)
+	Dedicated nodes: (None)
+	PI Declaration: tick yes
+*** DONE Read about Bayesian statistics. $\Chi^2$ test. 
+	Notes. 
+* Lent
+** Week 1. 
+*** Meet Dr Handley <2020-01-16 Thu>
+	Talked about the line fitting example. 
+* Notes
+** Michaelmas Term
+
+   Doing some research about the subject. 
 
   
-** Terminology
+*** Terminology
 
-   Prior - \(P(\theta | M)\)
-   Likelihood - \(P(M, \theta | Data)\)
+	Prior - \(P(\theta | M)\)
+	Likelihood - \(P(M, \theta | Data)\)
    
-   Posterior - \(P(\theta | \text{Data})\)
-   Evidence - \(P(Model | Data)\)
+	Posterior - \(P(\theta | \text{Data})\)
+	Evidence - \(P(Model | Data)\)
 
-   Bayes' theorem says that 
+	Bayes' theorem says that 
 
-   \[Likelihood \times Prior = Posterior \times Evidence\]
+	\[Likelihood \times Prior = Posterior \times Evidence\]
 
-   So can use this to find the parameter values of a model, + the likelihood that the model fits the data at all. 
+	So can use this to find the parameter values of a model, + the likelihood that the model fits the data at all. 
 
    
-** How does nested sampling work
+*** How does nested sampling work
 
-*** Skilling's paper
+**** Skilling's paper
 
-	\cite{skilling2006}
+	 \cite{skilling2006}
 	
-	Nested Sampling is a machine learning technique that allows to do Bayesian parameter estimation. 
+	 Nested Sampling is a machine learning technique that allows to do Bayesian parameter estimation. 
 
-	Fitting a line to data is an example of a parameter fitting model. 
+	 Fitting a line to data is an example of a parameter fitting model. 
 
-	Set \( 
-	\chi^{2} \triangleq \sum_{i} \left(\frac{y_{i} - f(x_{i}, \theta)}{\sigma_{i}} \right)
-	\). We need to ask a question, how likely is the data observed, given that the model is true, and the Model parameters have the given values. The probability is usually given by a Gaussian (or normal distribution). 
+	 Set \( 
+	 \chi^{2} \triangleq \sum_{i} \left(\frac{y_{i} - f(x_{i}, \theta)}{\sigma_{i}} \right)
+	 \). We need to ask a question, how likely is the data observed, given that the model is true, and the Model parameters have the given values. The probability is usually given by a Gaussian (or normal distribution). 
 	
-	\[ 
-	L = \frac{1}{N} \exp{\left[ - \chi^{2}\right]}
-	\]
+	 \[ 
+	 L = \frac{1}{N} \exp{\left[ - \chi^{2}\right]}
+	 \]
 	
-	So what we need to do for Nested Sampling to work, is to provide a model for estimating the fit to the hypothesis - likelihood, and a prior. 
+	 So what we need to do for Nested Sampling to work, is to provide a model for estimating the fit to the hypothesis - likelihood, and a prior. 
 
-	The likelihood, or how likely is the value of data given the model and the parameters, reflects how we expect the fluctuations to develop. Many distributions are possible, but due to the Central Limit theorem, best choice would be a Normal (Gaussian) distribution. 
+	 The likelihood, or how likely is the value of data given the model and the parameters, reflects how we expect the fluctuations to develop. Many distributions are possible, but due to the Central Limit theorem, best choice would be a Normal (Gaussian) distribution. 
 
-	The prior represents our prior knowledge of the original parameters. For example, if we know nothing about the possible model parameters, we can expect a uniform distribution within constraints. These constraints may be artificial (for example, we may only be interested in model parameters that are within machine-representable floating point numbers), or natural (the Hubble parameter is positive). 
+	 The prior represents our prior knowledge of the original parameters. For example, if we know nothing about the possible model parameters, we can expect a uniform distribution within constraints. These constraints may be artificial (for example, we may only be interested in model parameters that are within machine-representable floating point numbers), or natural (the Hubble parameter is positive). 
 	
-	If we know more about the model parameters, that information can also be presented as a guideline for parameter inference. For example if we have done parameter estimation of the same model, using a different set of data; the posterior of the aforementioned investigation can be used directly as the prior for this run. 
+	 If we know more about the model parameters, that information can also be presented as a guideline for parameter inference. For example if we have done parameter estimation of the same model, using a different set of data; the posterior of the aforementioned investigation can be used directly as the prior for this run. 
 
-	Nested sampling exploits that extra data to converge upon the so-called typical set; which represents the data that has statistically significant phase volume. The latter point can be understood intuitively. 
+	 Nested sampling exploits that extra data to converge upon the so-called typical set; which represents the data that has statistically significant phase volume. The latter point can be understood intuitively. 
 
-	More accurate or tight constraints on the true data should lead to better convergence time. Ideally the convergence to the posterior of a distribution is the fastest, as this minimises the number of errors, and given a suitable sampling algorithm should lead to few wasted computations. 
+	 More accurate or tight constraints on the true data should lead to better convergence time. Ideally the convergence to the posterior of a distribution is the fastest, as this minimises the number of errors, and given a suitable sampling algorithm should lead to few wasted computations. 
 
 
-**** TODO Phase volume example. 
+***** TODO Phase volume example. 
 
     
 	
 	
 
-*** Notes on the Algorithm itself:
+**** Notes on the Algorithm itself:
 
-	Rasterising the phase space is too computationally ineffective, as for a model with 27 parameters, the space would be 27 dimensional. This leads to many quirks of geometry and counter-intuitive outcomes, that will be touched on later. 
+	 Rasterising the phase space is too computationally ineffective, as for a model with 27 parameters, the space would be 27 dimensional. This leads to many quirks of geometry and counter-intuitive outcomes, that will be touched on later. 
 
-	We must first select a number of live points randomly from the phase space, usually taken to a be a hypercube with edge length normalised to 1. 
+	 We must first select a number of live points randomly from the phase space, usually taken to a be a hypercube with edge length normalised to 1. 
 
-	For each point one expects there to be a locus of points with the exact same likelihood. This locus is often connected, and so in analogy with isotherms it is often referred to as the iso-likelihood contour. 
+	 For each point one expects there to be a locus of points with the exact same likelihood. This locus is often connected, and so in analogy with isotherms it is often referred to as the iso-likelihood contour. 
 
-	Then one selects the least likely point and picks according to some algorithm, a point of higher likelihood. The original point is now referred to as dead, while the new point is added to the set of live points. 
+	 Then one selects the least likely point and picks according to some algorithm, a point of higher likelihood. The original point is now referred to as dead, while the new point is added to the set of live points. 
 
-	This process is then repeated until we have reached a typical set. This is often determined by estimating the /evidence/ contained outside each contour (since the points are picked at random, if we have n_\text{live} points, each contour will statistically include \frac{1}{n_\text{live}} of the total phase volume). 
+	 This process is then repeated until we have reached a typical set. This is often determined by estimating the /evidence/ contained outside each contour (since the points are picked at random, if we have n_\text{live} points, each contour will statistically include \frac{1}{n_\text{live}} of the total phase volume). 
 
 	
-*** Piecewise power repartitioning notes.
-Are these issues you're encountering for the mixture model, or the
-temperature-dependent gaussian? (in the posterior repartitioning
-paper, the pi^\beta prior is terms 'power posterior repartitioning', so
-we should refer to it as that).
+**** Piecewise power repartitioning notes.
+ Are these issues you're encountering for the mixture model, or the
+ temperature-dependent gaussian? (in the posterior repartitioning
+ paper, the pi^\beta prior is terms 'power posterior repartitioning', so
+ we should refer to it as that).
 
-For the power posterior repartitioning, remember we're doing it with a
-diagonal prior covariance, so everything is separable and Z(beta)
-should be derived as described in the posterior repartitioning paper,
-namely:
+ For the power posterior repartitioning, remember we're doing it with a
+ diagonal prior covariance, so everything is separable and Z(beta)
+ should be derived as described in the posterior repartitioning paper,
+ namely:
 
-\(\tilde{\pi} = G[\mu,\sigma](\theta)^\beta / Z(\beta)\)
+ \(\tilde{\pi} = G[\mu,\sigma](\theta)^\beta / Z(\beta)\)
 
-\[Z(\beta) = \int_a^b G[\mu,\sigma](\theta)^\beta d\theta\].  where \(G\) denotes a gaussian,
-and a and b are the limits of the uniform distribution. This is
-expressible using erf:
+ \[Z(\beta) = \int_a^b G[\mu,\sigma](\theta)^\beta d\theta\].  where \(G\) denotes a gaussian,
+ and a and b are the limits of the uniform distribution. This is
+ expressible using erf:
 
-\begin{equation}
-  Z(\beta) = \frac{erf(\frac{(b-\mu)}{\sqrt{2}} \sigma) - erf(\frac{(a-\mu)}{\sqrt{2}} \sigma)}{2}
-\end{equation}
-
-
-
-I've spent a bit of time thinking this morning, and have realised that
-the mixture model is not quite as trivial as I had imagined.
-
-To be clear, working in 1d for now, our normalised modified prior is
-of the form:
-
-\[\tilde{\pi}(\theta) = \beta U[a,b](\theta) + (1-\beta)G[mu,sigma](\theta)\]
-
-where there will be a,b,\mu,\sigma for each dimension. To compute the prior
-transformation which maps x\in[0,1] onto \theta, nominally we should do this
-via the inverse of the cdf:
  \begin{equation}
-   F(\theta) = \frac{\beta (\theta-a)}{(b-a)} +
-   (1-\beta) \frac{1}{2}\frac{1+erf(\theta-\mu)}{\sqrt{2}\sigma}
+   Z(\beta) = \frac{erf(\frac{(b-\mu)}{\sqrt{2}} \sigma) - erf(\frac{(a-\mu)}{\sqrt{2}} \sigma)}{2}
  \end{equation}
 
-Unfortunately \(x = F(\theta)\) is not invertible. There is another way
-around mapping \(x\in[0,1]\).
-
-In general, if you have a mixture of normalised priors: \[ \pi(\theta) = \sum_i
-A_i f_i(\theta)\]
-
-\[\sum_i A_i = 1 \] where each \(f_i\) has an inverse CDF of \(\theta = F^{-1}_i(x)\)
-
-one can define a piecewise mapping from \(x\in[0,1]\) thus:
-
-\(\theta = F^{-1}_{i}\left(\frac{x-\alpha_{i-1}}{A_i}\right) : \alpha_{i-1} < x < \alpha_i\)
-
-\[\alpha_i = \sum_j^{i} A_j\]
-
-Basically this uses x to first choose which component of the mixture
-is active (via the piecewise bit), and then rescales the portion of x
-within that mixture to [0,1].
-
-This method seems a little hacky at first, but the more I think about
-it the more reasonable it seems. I would be interested to hear your
-opinion, and we can discuss on Wednesday morning. Until then,
-practically you should focus on the diagonal PPR approach, as that is
-much more straightforward, and captures the essence of the method.
 
 
-*** Data and Parameter covariance matrices. 
+ I've spent a bit of time thinking this morning, and have realised that
+ the mixture model is not quite as trivial as I had imagined.
 
-	To avoid having to generate data with a given distribution, we can simply and directly use the Parameter covariance matrix, for our toy models. 
+ To be clear, working in 1d for now, our normalised modified prior is
+ of the form:
 
-	This basically means that instead of using the model's functional form, we directly assume that the distribution is of Gaussian nature. This we simply plug into the log likelihood, and the rest of the algorithm proceeds as if we had data and the functional form, and the \(chi^2\) computation was done for free. 
+ \[\tilde{\pi}(\theta) = \beta U[a,b](\theta) + (1-\beta)G[mu,sigma](\theta)\]
+
+ where there will be a,b,\mu,\sigma for each dimension. To compute the prior
+ transformation which maps x\in[0,1] onto \theta, nominally we should do this
+ via the inverse of the cdf:
+  \begin{equation}
+	F(\theta) = \frac{\beta (\theta-a)}{(b-a)} +
+	(1-\beta) \frac{1}{2}\frac{1+erf(\theta-\mu)}{\sqrt{2}\sigma}
+  \end{equation}
+
+ Unfortunately \(x = F(\theta)\) is not invertible. There is another way
+ around mapping \(x\in[0,1]\).
+
+ In general, if you have a mixture of normalised priors: \[ \pi(\theta) = \sum_i
+ A_i f_i(\theta)\]
+
+ \[\sum_i A_i = 1 \] where each \(f_i\) has an inverse CDF of \(\theta = F^{-1}_i(x)\)
+
+ one can define a piecewise mapping from \(x\in[0,1]\) thus:
+
+ \(\theta = F^{-1}_{i}\left(\frac{x-\alpha_{i-1}}{A_i}\right) : \alpha_{i-1} < x < \alpha_i\)
+
+ \[\alpha_i = \sum_j^{i} A_j\]
+
+ Basically this uses x to first choose which component of the mixture
+ is active (via the piecewise bit), and then rescales the portion of x
+ within that mixture to [0,1].
+
+ This method seems a little hacky at first, but the more I think about
+ it the more reasonable it seems. I would be interested to hear your
+ opinion, and we can discuss on Wednesday morning. Until then,
+ practically you should focus on the diagonal PPR approach, as that is
+ much more straightforward, and captures the essence of the method.
+
+
+**** Data and Parameter covariance matrices. 
+
+	 To avoid having to generate data with a given distribution, we can simply and directly use the Parameter covariance matrix, for our toy models. 
+
+	 This basically means that instead of using the model's functional form, we directly assume that the distribution is of Gaussian nature. This we simply plug into the log likelihood, and the rest of the algorithm proceeds as if we had data and the functional form, and the \(chi^2\) computation was done for free. 
 
 	
-**** Correlated vs Uncorrelated Gaussian log likelihoods
+***** Correlated vs Uncorrelated Gaussian log likelihoods
 
 	 
-	 If the parameter covariance matrix is completely diagonal, then the parameters are each individually Gaussian distributed, with a standard deviation being the diagonal element. 
+	  If the parameter covariance matrix is completely diagonal, then the parameters are each individually Gaussian distributed, with a standard deviation being the diagonal element. 
 	 
-	 An arbitrary coupling can lead to covariance on the off-diagonal. These mixtures can be unmixed by using either Singular Value or eigenvalue  decomposition of the covariance matrix. This can be simply regarded as a coordinate transform, a passive one at that. Consequently, a Gaussian distribution in Loglikelihood takes the following form. 
+	  An arbitrary coupling can lead to covariance on the off-diagonal. These mixtures can be unmixed by using either Singular Value or eigenvalue  decomposition of the covariance matrix. This can be simply regarded as a coordinate transform, a passive one at that. Consequently, a Gaussian distribution in Loglikelihood takes the following form. 
 
-	 Let \(\vec{\mu}\) be the vector of mean values of Gaussian distributed parameters \(\vec{\theta}\) (we shall drop the vector). The corresponding parameter covariance matrix is \(G_{i,j}\). 
+	  Let \(\vec{\mu}\) be the vector of mean values of Gaussian distributed parameters \(\vec{\theta}\) (we shall drop the vector). The corresponding parameter covariance matrix is \(G_{i,j}\). 
 	 
-	 Therefore the corresponding loglilkelihood is 
+	  Therefore the corresponding loglilkelihood is 
 
-	 \[ 
-	 \ln {\cal L} = -N - (\theta - \mu)^{T} G^{-1} (\theta - \mu)
-	 \],
-	 where the normalisation constant is given by 
-	 \[
-	 N = \frac{\det \left| 2\pi G \right|}{2}
-	 \]. 
+	  \[ 
+	  \ln {\cal L} = -N - (\theta - \mu)^{T} G^{-1} (\theta - \mu)
+	  \],
+	  where the normalisation constant is given by 
+	  \[
+	  N = \frac{\det \left| 2\pi G \right|}{2}
+	  \]. 
 	 
 	 
 	 
-* Lent Term
+** Lent Term
 
-** Polychord <2020-01-10 Fri>
+*** Polychord <2020-01-10 Fri>
 
-   Polychord is a nested sampling program that uses directional slicing, which is not (citation needed) a form of rejection sampling. 
+	Polychord is a nested sampling program that uses directional slicing, which is not (citation needed) a form of rejection sampling. 
 
-   To run polychord one needs to do three things: 
+	To run polychord one needs to do three things: 
 
-** =settings= 
+*** =settings= 
 
-   which needs the number of dimesnions with which we're working, (very procedural, probably a consequence of fortran-centric implementation).
+	which needs the number of dimesnions with which we're working, (very procedural, probably a consequence of fortran-centric implementation).
 
-   The Settings have information about the verbosity of the system.
+	The Settings have information about the verbosity of the system.
 
-   #+begin_src ipython 
-	 settings.feedback = 0
-   #+end_src
-   seems to be a good default. 
+	#+begin_src ipython 
+	  settings.feedback = 0
+	#+end_src
+	seems to be a good default. 
 
-   Polychord can resume the older run, if instructed (rather by  default), so in order to have clean bench-marking do 
+	Polychord can resume the older run, if instructed (rather by  default), so in order to have clean bench-marking do 
 
-   #+begin_src python
-	 settings.read_resume=False
-   #+end_src
+	#+begin_src python
+	  settings.read_resume=False
+	#+end_src
 
-   To control running-time vs precision trade-off, use 
+	To control running-time vs precision trade-off, use 
 
-   #+begin_src python
-	 settings.nlive=175
-   #+end_src
+	#+begin_src python
+	  settings.nlive=175
+	#+end_src
    
-   Changing it to a lower value makes the program run faster. 
+	Changing it to a lower value makes the program run faster. 
 
-   Another way to control termination is the 
+	Another way to control termination is the 
 
-   #+begin_src python
-	 settings.precision_target=0.1
-   #+end_src
+	#+begin_src python
+	  settings.precision_target=0.1
+	#+end_src
 
-   But we should normally not tinker with it. 
+	But we should normally not tinker with it. 
 
-** logLikelihood
+*** logLikelihood
 
-   This is essentially a \( \chi^2\), which represents the probability of our data, given the model and the parameter values. 
+	This is essentially a \( \chi^2\), which represents the probability of our data, given the model and the parameter values. 
 
-   We need to define it for each model. Ideally what it needs to return is the normalised probability, but not giving it the proper normalisation doesn't seem to affect the run-time, only the result. 
+	We need to define it for each model. Ideally what it needs to return is the normalised probability, but not giving it the proper normalisation doesn't seem to affect the run-time, only the result. 
 
-** Prior
+*** Prior
 
-   This is a weird function. What this is called, probably has nothing to do with what it actually is: it's taking a point in a unit hypercube and maps it onto the real \( \theta\) values. 
+	This is a weird function. What this is called, probably has nothing to do with what it actually is: it's taking a point in a unit hypercube and maps it onto the real \( \theta\) values. 
 
-   This function is where we can get most of our performance uplift. 
+	This function is where we can get most of our performance uplift. 
 
-   Ideally assuming that the /real/ prior is the posterior the algorithm should converge the fastest. This should however affect the loglikelihood calls, because we're re-scaling the space. 
+	Ideally assuming that the /real/ prior is the posterior the algorithm should converge the fastest. This should however affect the loglikelihood calls, because we're re-scaling the space. 
 
-   I **think** that this simply means that the absolute value of the **loglikelihood** is **not a meaningful** number. 
+	I **think** that this simply means that the absolute value of the **loglikelihood** is **not a meaningful** number. 
 
+**** UPDATE: it is meaningful. Just not without the prior.  <2020-02-14 Fri>
+	 AutoPR relies on 
+	
    
-** Approaches to modelling systems. 
-<2020-01-17 Fri>
-   One way to model all of our systems is by looking at the \( \chi^2\) and dealing with generated data. While this is close to what the system might actually do, this is not itself a good solution, it's slow and it requires extra computations in generating the data with the properties that we need. 
+*** Approaches to modelling systems. 
+ <2020-01-17 Fri>
+	One way to model all of our systems is by looking at the \( \chi^2\) and dealing with generated data. While this is close to what the system might actually do, this is not itself a good solution, it's slow and it requires extra computations in generating the data with the properties that we need. 
 
-   Instead we might simply treat the system as if it was already diagonalised in the model parameter space. So if our model has 
+	Instead we might simply treat the system as if it was already diagonalised in the model parameter space. So if our model has 
 
-\begin{equation}
-  \mu =
-  \begin{pmatrix}
-    \mu_{0}\\
-    \mu_{1}\\
-    \vdots\\
-    \mu_{n}
-  \end{pmatrix}
-\end{equation}
+ \begin{equation}
+   \mu =
+   \begin{pmatrix}
+     \mu_{0}\\
+     \mu_{1}\\
+     \vdots\\
+     \mu_{n}
+   \end{pmatrix}
+ \end{equation}
  
-and 
+ and 
 
-\begin{equation}
-  G =
-  \begin{pmatrix}
-    \sigma_{1}^2 & \sigma_{12}^2 & \cdots & \sigma_{1n}^2\\
-    \vdots & \ddots &  \vdots & \vdots \\
-     \sigma_{n1}^2 & \sigma_{n2}^2 & \cdots & \sigma_{n}^2
-  \end{pmatrix}
-\end{equation}
+ \begin{equation}
+   G =
+   \begin{pmatrix}
+     \sigma_{1}^2 & \sigma_{12}^2 & \cdots & \sigma_{1n}^2\\
+     \vdots & \ddots &  \vdots & \vdots \\
+      \sigma_{n1}^2 & \sigma_{n2}^2 & \cdots & \sigma_{n}^2
+   \end{pmatrix}
+ \end{equation}
 
-which is itself a gaussian assumption, we get the following: as our loglikelihood
+ which is itself a gaussian assumption, we get the following: as our loglikelihood
 
-\begin{equation}
-  \ln {\cal {L}}  = - N - (\theta - \mu)^{T}G^{-1}(\theta-\mu)
-\end{equation}
+ \begin{equation}
+   \ln {\cal {L}}  = - N - (\theta - \mu)^{T}G^{-1}(\theta-\mu)
+ \end{equation}
 
-where \( N \) can be found by integrating a multivariate Gaussian. See handout for Phase Transitions: 
+ where \( N \) can be found by integrating a multivariate Gaussian. See handout for Phase Transitions: 
 
-\begin{equation}
-  N = \ln \det |2\pi G |
-\end{equation}
+ \begin{equation}
+   N = \ln \det |2\pi G |
+ \end{equation}
 
-this can be evaluated in one fell swoop using 
+ this can be evaluated in one fell swoop using 
 
-#+begin_src python
-numpy.linalg.slogdet(2*pi*G)
-#+end_src
+ #+begin_src python
+ numpy.linalg.slogdet(2*pi*G)
+ #+end_src
 
-This allows us to do calculations in a fraction of the time. 
-
-
-** Comparison of runs. <2020-01-24 Fri>
-
-   Planck data can be downloaded from (see references), and using the following constraints, we can compute the misfit between data. 
+ This allows us to do calculations in a fraction of the time. 
 
 
-   [[../LCDM-NS/toy-models/1/Comparison of run with uniform prior and paper.pdf]]
+*** Comparison of runs. <2020-01-24 Fri>
 
-   
-   This shows profound agreement, usingThe following constraints on the parameters. 
-
-   #+begin_src python
-	 planck_ranges = numpy.array(
-		 [[0.019, 0.025],
-		  [0.095, 0.145],
-		  [1.03, 1.05],
-		  [0.01, 0.4],
-		  [2.5, 3.7],
-		  [0.885, 1.04],
-		  [0.9, 1.1],
-		  [0, 200],
-		  [0, 1],
-		  [0, 10],
-		  [0, 400],
-		  [0, 400],
-		  [0, 400],
-		  [0, 400],
-		  [0, 10],
-		  [0, 50],
-		  [0, 50],
-		  [0, 100],
-		  [0, 400],
-		  [0, 10],
-		  [0, 10],
-		  [0, 10],
-		  [0, 10],
-		  [0, 10],
-		  [0, 10],
-		  [0, 3],
-		  [0, 3]])
+	Planck data can be downloaded from (see references), and using the following constraints, we can compute the misfit between data. 
 
 
-	 samples = anesthetic.NestedSamples(root='./data.1908.09139/lcdm/chains/planck')
-	 fig, ax = samples.plot_2d(['logA', 'ns'])
-	 # plt.show()
-
-
-	 # params = samples.columns[:27]
-	 params = samples.columns[:27]
-	 Sig = samples[params].cov().values
-	 mu = samples[params].mean().values
-	 nDims = len(mu)
-
-	 # Run of the original
-
-	 args = {
-		 'root_name': 'planck',
-		 'm': mu,
-		 's': Sig,
-		 'likelihood': lambda x: gaussian_likelihood(x, mu, Sig),
-		 # 'renew_plots': True,
-		 'renew_plots': False,
-		 'nLive': 2,
-		 'prior': lambda x: uniform_prior_with_ranges(x, planck_ranges),
-		 'ax': ax
-	 }
-	 exec_polychord(**args)
-
-     ... 
-	 newSamples = anesthetic.NestedSamples(root='./chains/planck')
-	 newSamples.plot_2d(ax)
-
-	 plt.show()
-	 fig = plt.figure()
-   #+end_src
-
-* Automated Power Posterior Repartitioning. <2020-01-24 Fri>
-
-  Looking at [[https://arxiv.org/pdf/1908.04655.pdf]] we can see that one can get better convergence if we use something called the Automated posterior repartitioning. 
-
-  We start with a Gaussian prior. 
-
-  \begin{equation}
-	\pi(\theta) = G(\mu, \sigma) (\theta)
-  \end{equation}
-
-  We then introduce an extra parameter into our system: 
-
-  \begin{equation}
-	\tilde{\theta} = \begin{pmatrix}
-	  \theta_{1}\\
-	  \downarrow\\
-	  \theta_{n}\\
-	  \beta
-	\end{pmatrix}
-  \end{equation}
-
-  We then use this parameter to rescale the prior that we originally had: 
-
-  \begin{equation}
-	\tilde{\pi}(\tilde{\theta}}) = \frac{{G(\mu, \sigma)(\theta)}^\beta}{Z_\pi(\beta)}
-  \end{equation}
-
-  And normalise it to one Having done that we need to keep the posterior the same, so we need to rescale (citation needed) the loglikelihood to account for this change. 
-
-** When, how and why do repartitioning. <2020-02-19 Wed>
-
-   After multiple experiments I arrived at the following. 
-
-   Running PolyChord with a Gaussian is **not the same** as what we want to accomplish. 
-
-   When we consider two different priors, a Uniform from \((a,b)^\otimes n\) and a Gaussian given by an \(n\times n\) matrix \( \sigma \).  
-
-   The histogram of the loglikelihood calls and their results will be different, it will differ due to the /effective volume/ which each of those will occupy. 
-
-   Naturally a Gaussian, even if it has the same effective volume cannot simultaneously give the same evidence and the same Posterior. 
-
-   So we can ask two kinds of questions:
-
-   a) What is the Posterior given the prior that has a different volume. 
-
-   In this case the loglikelihood calls will cluster around different values. This is a legitimate question to ask, but it requires more information. 
-
-   If we take a system where we don't have the extra information about the location of the posterior peaks and their shape, and plug in a prior that does, we're biasing the system, and effectively /fudging/ the answer. This can in some cases be useful, but it's not quite what the project aims to do. 
-
-   So instead of asking what would our answer be with a different prior, we ask a different question. What would our answer be if our system was biased to picke the values that /suspect/ are the correct posterior values, without that affecting the posterior distribution and injecting extra information that we don't have/ can't quantify. 
-
-   This is a philosophical issue. Intuitively, if we have the extra information it /must/ be reflected in the prior. It can't otherwise. In fact by biasing the system, even if we repartition the combination \( {\cal L } \pi \) we can still end up with a biased and therefore useless result. 
-
-   In fact, my experiments clearly show this; if the Prior corresponding to /a/ Gaussian which is not the same as the posterior (has a different value of the mean), it can result in the algorithm terminating and generating a completely false posterior. 
-
-   Buy doing repartitioning we allow our guess to be wrong, without that affecting the outcomes: posterior and evidence. 
+	[[../LCDM-NS/toy-models/1/Comparison of run with uniform prior and paper.pdf]]
 
    
-** Correlated and Uncorrelated Gaussian:<2020-02-03 Mon>
+	This shows profound agreement, usingThe following constraints on the parameters. 
+
+	#+begin_src python
+	  planck_ranges = numpy.array(
+		  [[0.019, 0.025],
+		   [0.095, 0.145],
+		   [1.03, 1.05],
+		   [0.01, 0.4],
+		   [2.5, 3.7],
+		   [0.885, 1.04],
+		   [0.9, 1.1],
+		   [0, 200],
+		   [0, 1],
+		   [0, 10],
+		   [0, 400],
+		   [0, 400],
+		   [0, 400],
+		   [0, 400],
+		   [0, 10],
+		   [0, 50],
+		   [0, 50],
+		   [0, 100],
+		   [0, 400],
+		   [0, 10],
+		   [0, 10],
+		   [0, 10],
+		   [0, 10],
+		   [0, 10],
+		   [0, 10],
+		   [0, 3],
+		   [0, 3]])
 
 
-   Knowing that the parameter covariance matrix, is usually positive defininte, one can argue that the question of whether or not the parameters in the model are correlated, or completely uncorrelated (i.e. each has a single standard deviation value) is moot. 
-
-   We can always perform a linear operation that diagonalises the parameter covariance matrix, and what the algorithm needs to do is only to work with the uncorrelated Gaussians. 
-
-   That of course is true, but some repartitioning schemes are more sensitive to this fact, and can only work after the coordinate transformation has been performed, which itself adds to the complexity. 
+	  samples = anesthetic.NestedSamples(root='./data.1908.09139/lcdm/chains/planck')
+	  fig, ax = samples.plot_2d(['logA', 'ns'])
+	  # plt.show()
 
 
-   Other algorithms are more capable of doing this properly. 
+	  # params = samples.columns[:27]
+	  params = samples.columns[:27]
+	  Sig = samples[params].cov().values
+	  mu = samples[params].mean().values
+	  nDims = len(mu)
+
+	  # Run of the original
+
+	  args = {
+		  'root_name': 'planck',
+		  'm': mu,
+		  's': Sig,
+		  'likelihood': lambda x: gaussian_likelihood(x, mu, Sig),
+		  # 'renew_plots': True,
+		  'renew_plots': False,
+		  'nLive': 2,
+		  'prior': lambda x: uniform_prior_with_ranges(x, planck_ranges),
+		  'ax': ax
+	  }
+	  exec_polychord(**args)
+
+      ... 
+	  newSamples = anesthetic.NestedSamples(root='./chains/planck')
+	  newSamples.plot_2d(ax)
+
+	  plt.show()
+	  fig = plt.figure()
+	#+end_src
+
+*** Automated Power Posterior Repartitioning. <2020-01-24 Fri>
+
+	Looking at [[https://arxiv.org/pdf/1908.04655.pdf]] we can see that one can get better convergence if we use something called the Automated posterior repartitioning. 
+
+	We start with a Gaussian prior. 
+
+	\begin{equation}
+	  \pi(\theta) = G(\mu, \sigma) (\theta)
+	\end{equation}
+
+	We then introduce an extra parameter into our system: 
+
+	\begin{equation}
+	  \tilde{\theta} = \begin{pmatrix}
+		\theta_{1}\\
+		\downarrow\\
+		\theta_{n}\\
+		\beta
+	  \end{pmatrix}
+	\end{equation}
+
+	We then use this parameter to rescale the prior that we originally had: 
+
+	\begin{equation}
+	  \tilde{\pi}(\tilde{\theta}}) = \frac{{G(\mu, \sigma)(\theta)}^\beta}{Z_\pi(\beta)}
+	\end{equation}
+
+	And normalise it to one Having done that we need to keep the posterior the same, so we need to rescale (citation needed) the loglikelihood to account for this change. 
+
+**** When, how and why do repartitioning. <2020-02-19 Wed>
+
+	 After multiple experiments I arrived at the following. 
+
+	 Running PolyChord with a Gaussian is **not the same** as what we want to accomplish. 
+
+	 When we consider two different priors, a Uniform from \((a,b)^\otimes n\) and a Gaussian given by an \(n\times n\) matrix \( \sigma \).  
+
+	 The histogram of the loglikelihood calls and their results will be different, it will differ due to the /effective volume/ which each of those will occupy. 
+
+	 Naturally a Gaussian, even if it has the same effective volume cannot simultaneously give the same evidence and the same Posterior. 
+
+	 So we can ask two kinds of questions:
+
+	 a) What is the Posterior given the prior that has a different volume. 
+
+	 In this case the loglikelihood calls will cluster around different values. This is a legitimate question to ask, but it requires more information. 
+
+	 If we take a system where we don't have the extra information about the location of the posterior peaks and their shape, and plug in a prior that does, we're biasing the system, and effectively /fudging/ the answer. This can in some cases be useful, but it's not quite what the project aims to do. 
+
+	 So instead of asking what would our answer be with a different prior, we ask a different question. What would our answer be if our system was biased to picke the values that /suspect/ are the correct posterior values, without that affecting the posterior distribution and injecting extra information that we don't have/ can't quantify. 
+
+	 This is a philosophical issue. Intuitively, if we have the extra information it /must/ be reflected in the prior. It can't otherwise. In fact by biasing the system, even if we repartition the combination \( {\cal L } \pi \) we can still end up with a biased and therefore useless result. 
+
+	 In fact, my experiments clearly show this; if the Prior corresponding to /a/ Gaussian which is not the same as the posterior (has a different value of the mean), it can result in the algorithm terminating and generating a completely false posterior. 
+
+	 See [[./toy-models/1/1.0 Example of parameter covariance.py/]]. 
+
+	 By doing repartitioning we allow our guess to be wrong, without that affecting the outcomes: posterior and evidence. 
+
+   
+
+   
+**** Correlated and Uncorrelated Gaussian:<2020-02-03 Mon>
+
+
+	 Knowing that the parameter covariance matrix, is usually positive defininte, one can argue that the question of whether or not the parameters in the model are correlated, or completely uncorrelated (i.e. each has a single standard deviation value) is moot. 
+
+	 We can always perform a linear operation that diagonalises the parameter covariance matrix, and what the algorithm needs to do is only to work with the uncorrelated Gaussians. 
+
+	 That of course is true, but some repartitioning schemes are more sensitive to this fact, and can only work after the coordinate transformation has been performed, which itself adds to the complexity. 
+
+
+	 Other algorithms are more capable of doing this properly. 
+
+
+
+**** 
+
+** Easter "vacation"
+
+   Notes at this stage already in the form of write-up. If detailed history is needed, just refer to the git history of the project-report.org. 
+
+bibliographystyle:unsrt
