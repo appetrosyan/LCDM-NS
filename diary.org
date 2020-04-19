@@ -132,7 +132,6 @@ timestamp on the notes is when the note was originally written.
 *** DONE Implement the Data generator
     SCHEDULED: <2020-01-20 Mon>
     :LOGBOOK:
-    CLOCK: [2020-01-22 Wed 19:20]--[2020-01-23 Thu 01:16] =>  5:56
     CLOCK: [2020-01-22 Sat 09:15]--[2020-01-22 Wed 13:15] =>  4:00
     CLOCK: [2020-01-21 Tue 09:03]--[2020-01-21 Tue 16:30] =>  7:27
     CLOCK: [2020-01-20 Mon 09:17]--[2020-01-20 Mon 12:20] =>  3:03
@@ -146,20 +145,175 @@ timestamp on the notes is when the note was originally written.
     chi-squared likelihood fit from 
     [[./toy-models/0/0.2 DataCovarianceWithGenerator/Polychord.py]]. 
     
-    Credit to 
+    Credit 
 
     [[http://jrmeyer.github.io/machinelearning/2017/08/18/mle.html]]
 
     update: ln_z is an exceedingly bad name for the loglikelihood. 
 ** Week 2
 *** DONE meet Dr Handley. 
-    SCHEDULED: <2020-01-24 Fri>
+    SCHEDULED: <2020-01-22 Wed>
     The data generator isn't necessary. I was using too many live
     points. $200$ live points is good-enough for publication quality
     results. Reduce that to 20. Try it with Planck chains. 
 
-    [[]]
+    [[https://doi.org/10.5281/zenodo.3371152]]
 
+	Try to see if the parameter covariance matrices yield the same
+	results as the Planck chains. 
+*** DONE Refactor the following script. Check that posteriors agree with paper
+	SCHEDULED: <2020-01-23 Thu>
+	:LOGBOOK:
+	CLOCK: [2020-01-29 Wed 21:30]--[2020-01-29 Wed 22:00] =>  0:30
+	CLOCK: [2020-01-23 Thu 15:27]--[2020-01-23 Thu 19:35] =>  4:08
+	CLOCK: [2020-01-23 Thu 21:27]--[2020-01-23 Thu 23:35] =>  2:08
+	:END:
+
+	#+BEGIN_SRC python
+	  import numpy
+	  import pypolychord
+	  from pypolychord.settings import PolyChordSettings
+	  from pypolychord.priors import UniformPrior
+
+	  nDims = 2
+	  nDerived = 0
+	  mu = numpy.array([0,0])
+	  Sig = numpy.array([[1,0.99],[0.99,1]])
+	  invSig = numpy.linalg.inv(Sig)
+	  norm = numpy.linalg.slogdet(2*numpy.pi*Sig)[1]/2
+
+
+	  def likelihood(theta):
+		  """ Simple Gaussian Likelihood"""
+		  logL = - norm  - (theta - mu) @ invSig @ (theta - mu) / 2
+		  return logL, []
+
+
+	  def prior(hypercube):
+		  """ Uniform prior from [-1,1]^D. """
+		  return UniformPrior(-20, 20)(hypercube)
+
+
+	  settings = PolyChordSettings(nDims, nDerived)
+	  settings.file_root = 'gaussian_2'
+	  settings.nlive = 200
+	  settings.do_clustering = True
+	  settings.read_resume = False
+
+	  output = pypolychord.run_polychord(likelihood, nDims, nDerived, settings, prior)
+	  from anesthetic import NestedSamples
+	  samples = NestedSamples(root='./chains/gaussian')
+	  fig, ax = samples.plot_2d([0,1])
+	  samples_1 = NestedSamples(root='./chains/gaussian_1')
+	  samples_1.plot_2d(ax)
+	  samples_2 = NestedSamples(root='./chains/gaussian_2')
+	  samples_2.plot_2d(ax)
+
+
+
+	  samples = NestedSamples(root='/data/will/tension/runs/lcdm/chains/planck')
+	  samples.plot_2d(['logA', 'ns'])
+
+	  params = samples.columns[:27]
+	  Sig = samples[params].cov().values
+	  mu = samples[params].mean().values
+	  invSig = numpy.linalg.inv(Sig)
+	  norm = numpy.linalg.slogdet(2*numpy.pi*Sig)[1]/2
+	  nDims = len(mu)
+
+	  ranges = numpy.array(
+				  [[0.019,0.025],
+				  [0.095,0.145],
+				  [1.03,1.05],
+				  [0.01,0.4],
+				  [2.5,3.7],
+				  [0.885,1.04],
+				  [0.9,1.1],
+				  [0,200],
+				  [0,1],
+				  [0,10],
+				  [0,400],
+				  [0,400],
+				  [0,400],
+				  [0,400],
+				  [0,10],
+				  [0,50],
+				  [0,50],
+				  [0,100],
+				  [0,400],
+				  [0,10],
+				  [0,10],
+				  [0,10],
+				  [0,10],
+				  [0,10],
+				  [0,10],
+				  [0,3],
+				  [0,3]])
+
+	  def prior(hypercube):
+		  """ Uniform prior from [-1,1]^D. """
+		  return ranges[:,0] + hypercube * (ranges[:,1]- ranges[:,0])
+
+
+	  settings = PolyChordSettings(nDims, nDerived)
+	  settings.file_root = 'gaussian_2'
+	  settings.nlive = 200
+	  settings.do_clustering = True
+	  settings.read_resume = False
+
+	  samples = NestedSamples(root='/data/will/tension/runs/lcdm/chains/planck')
+	  samples.plot_2d(['logA', 'ns'])
+
+	  output = pypolychord.run_polychord(likelihood, nDims, nDerived, settings, prior)
+
+	#+END_SRC
+
+	Produces weird misfit. 
+	[[./toy-models/1/Comparison of run with uniform prior and paper.pdf]]
+
+	update: EUREKA! Neither PolyChord nor anesthetic when loading the
+	samples from disk actually re-name the parameters. I was simply
+	comparing the runs of different parameters, no wonder their
+	posteriors had nothing in common. 
+
+	Need to use a =numpy.ndarray= as input. Convert into a pandas data
+	frame and convert it back in the output.
+
+	Updated code is 
+	[[./toy-models/1/1.0 Example of parameter covariance.py]] 
+*** DONE Implement Uncorrelated Gaussian
+	:LOGBOOK:
+	CLOCK: [2020-01-27 Mon 09:36]--[2020-04-19 Sun 00:42] => 1983:06
+	:END:
+	Be careful: \(erf\) maps \(R\) to \([-1,1]\) but we need a mapping
+	from \([0,1]\) back to \(R\). So use \(\erf^-1(2x - 1)\). 
+
+	See [[./toy-models/1/1.1 parameter-covariance - with Gaussians.py]]
+*** DONE Implement Correlated Gaussian
+	:LOGBOOK:
+	CLOCK: [2020-01-28 Tue 10:42]--[2020-01-28 Tue 17:43] =>  7:01
+	:END:
+	Chloesky decomposition makes the off-diagonal elements of the
+	\(\Sigma\) matrix more important. This is because the covariance
+	matrix has certain properties: it's positive definite,
+	invertible. So we can't just invent one. 
+
+	\begin{equation}
+	  \Sigma =
+	  \begin{pmatrix}
+		1 & 0.5 & 0.5\\
+		0.5 & 1 & 0.5\\
+		0.5 & 0.5 & 1
+	  \end{pmatrix}
+
+	\end{equation}
+	Has all of the aforementioned properties. This is an ellipsoid
+	stretched across the corners of a unit hyper-cube. This has all of
+	our needed properties. 
+
+	
+
+	
 * Easter ''Vacation''
 ** Week 1. 
 *** DONE Set up SSH access to CSD3. 
