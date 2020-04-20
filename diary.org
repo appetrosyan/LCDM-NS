@@ -323,7 +323,7 @@ calculations necessary to understand how the re-partitioning works.
 	Chloesky decomposition makes the off-diagonal elements of the
 	\(\Sigma\) matrix more important. This is because the covariance
 	matrix has certain properties: it's positive definite,
-	invertible. So we can't just invent one. 
+	invertible ---  we can't just invent one. 
 
 	\begin{equation}
 	  \Sigma =
@@ -345,10 +345,10 @@ calculations necessary to understand how the re-partitioning works.
 	  -1 & -1 & 2
 	  \end{pmatrix}
 	\end{equation}
-	Has all of the aforementioned properties. It is
-	diagonaliseable. This is an ellipsoid stretched across the corners
-	and the edge midpoints of a unit hyper-cube. This has all of our
-	needed properties.
+	Has all of the properties we need. It is diagonaliseable. This
+	is an ellipsoid stretched across the corners and the edge
+	midpoints of a unit hyper-cube. This has all of our needed
+	properties.
 
 	
 	
