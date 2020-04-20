@@ -1,0 +1,2033 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2020-04-20 Mon 12:23 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Project Diary for "Cosmological parameter estimation using Bayesian accelerated Machine learning"</title>
+<meta name="generator" content="Org mode" />
+<meta name="author" content="Aleksandr Petrosyan" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { width: 90%; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Project Diary for "Cosmological parameter estimation using Bayesian accelerated Machine learning"</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgcab16a4">1. Michaelmas</a>
+<ul>
+<li><a href="#org14008ea">1.1. Week 3</a>
+<ul>
+<li><a href="#orgdca1837">1.1.1. <span class="done DONE">DONE</span> Meet Dr Handley</a></li>
+</ul>
+</li>
+<li><a href="#orgde1d26d">1.2. Week 4</a>
+<ul>
+<li><a href="#orgc82f0a6">1.2.1. <span class="done DONE">DONE</span> Read the Abstract. ,</a></li>
+<li><a href="#orgaa6490b">1.2.2. <span class="done DONE">DONE</span> Install PolyChord, Cobaya, anesthetic, CosmoChord.</a></li>
+<li><a href="#orgfa6a46e">1.2.3. <span class="done DONE">DONE</span> EMail will and create a PR to fix Python version.</a></li>
+<li><a href="#orgaabce43">1.2.4. FAILED Reproduce plots.</a></li>
+</ul>
+</li>
+<li><a href="#orgae15456">1.3. Week 5</a>
+<ul>
+<li><a href="#org5a6b4e3">1.3.1. Talk on nested sampling <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-14 Thu&gt;</span></span></a></li>
+<li><a href="#org30e0263">1.3.2. <span class="done DONE">DONE</span> Start final report writeup <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-19 Tue&gt;</span></span></a></li>
+<li><a href="#org3177488">1.3.3. <span class="done DONE">DONE</span> Finish reading Skilling.</a></li>
+<li><a href="#orgc7822c2">1.3.4. <span class="done DONE">DONE</span> Implement Skilling's algorithm</a></li>
+<li><a href="#org5c92ac4">1.3.5. Note from meeting. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-15 Fri&gt;</span></span></a></li>
+<li><a href="#org2f684e9">1.3.6. Note from meeting. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-15 Fri&gt;</span></span></a></li>
+<li><a href="#org58ff79d">1.3.7. Note from meeting <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-15 Fri&gt;</span></span></a></li>
+</ul>
+</li>
+<li><a href="#org4cf4a33">1.4. Week 7</a>
+<ul>
+<li><a href="#orgada6392">1.4.1. <span class="done DONE">DONE</span> Implement Multivariate Gaussian Likelihood <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-17 Sun&gt;</span></span></a></li>
+<li><a href="#orgfaf29b3">1.4.2. <span class="done DONE">DONE</span> Investigate the C++ front-end. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-19 Tue&gt;</span></span></a></li>
+<li><a href="#org9967825">1.4.3. <span class="done DONE">DONE</span> Project report. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-21 Thu&gt;</span></span></a></li>
+</ul>
+</li>
+<li><a href="#org5e79d86">1.5. Week 8</a>
+<ul>
+<li><a href="#orgac2231c">1.5.1. <span class="done DONE">DONE</span> Finalise Project report. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-25 Mon&gt;</span></span></a></li>
+<li><a href="#org3cb9669">1.5.2. <span class="done DONE">DONE</span> Proof read the report <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-29 Fri&gt;</span></span></a></li>
+<li><a href="#org6769e70">1.5.3. <span class="done DONE">DONE</span> Submit the report. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-12-04 Wed&gt;</span></span></a></li>
+</ul>
+</li>
+<li><a href="#orgd792508">1.6. Vacation Weeks</a>
+<ul>
+<li><a href="#orga4bdf05">1.6.1. <span class="done DONE">DONE</span> Re-install software <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-12-04 Wed&gt;</span></span></a></li>
+<li><a href="#org52d77ea">1.6.2. <span class="done DONE">DONE</span> Line Fitting example. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-12-09 Mon&gt;</span></span></a></li>
+<li><a href="#orgb482a71">1.6.3. <span class="done DONE">DONE</span> Set up CSD3 login information. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-12-19 Thu&gt;</span></span></a></li>
+<li><a href="#orgd3640dc">1.6.4. <span class="done DONE">DONE</span> Read about Bayesian statistics. \(\Chi^2\) test.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orge9e0137">2. Lent</a>
+<ul>
+<li><a href="#org05aa4cc">2.1. Week 1.</a>
+<ul>
+<li><a href="#orgce80a5f">2.1.1. Meet Dr Handley <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-17 Fri&gt;</span></span></a></li>
+<li><a href="#org49b825b">2.1.2. <span class="done DONE">DONE</span> Re-factor the line-fitting examples</a></li>
+<li><a href="#org03104f8">2.1.3. <span class="done DONE">DONE</span> Implement the Data generator</a></li>
+</ul>
+</li>
+<li><a href="#org1120b08">2.2. Week 2</a>
+<ul>
+<li><a href="#org91aece0">2.2.1. <span class="done DONE">DONE</span> meet Dr Handley.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgef95f1d">3. Easter ''Vacation''</a>
+<ul>
+<li><a href="#orge687f2c">3.1. Week 1.</a>
+<ul>
+<li><a href="#orgb06b6dd">3.1.1. <span class="done DONE">DONE</span> Set up SSH access to CSD3.</a></li>
+<li><a href="#org7c046b7">3.1.2. <span class="done DONE">DONE</span> install Cobaya</a></li>
+<li><a href="#org3c5a5b1">3.1.3. <span class="done DONE">DONE</span> Modify cobaya</a></li>
+<li><a href="#org5d18442">3.1.4. <span class="done DONE">DONE</span> Meet Dr Handley</a></li>
+<li><a href="#orge85b72a">3.1.5. <span class="done DONE">DONE</span> Writeup</a></li>
+</ul>
+</li>
+<li><a href="#orgc9c62fd">3.2. Week 2</a>
+<ul>
+<li><a href="#org768e83f">3.2.1. <span class="done DONE">DONE</span> Get Home</a></li>
+<li><a href="#orgeaaff5b">3.2.2. <span class="done DONE">DONE</span> Set up home Computer</a></li>
+<li><a href="#org9fefcc5">3.2.3. <span class="done DONE">DONE</span> Migrate to Mnras</a></li>
+<li><a href="#org0cb9567">3.2.4. <span class="done DONE">DONE</span> Write an sbatch script to run Cobaya.</a></li>
+<li><a href="#org8cfcaf0">3.2.5. <span class="done DONE">DONE</span> Add figures</a></li>
+<li><a href="#org59fbd61">3.2.6. <span class="done DONE">DONE</span> Writeup</a></li>
+<li><a href="#org1ff2b6d">3.2.7. <span class="done DONE">DONE</span> Meet Dr Handley</a></li>
+<li><a href="#orga23f425">3.2.8. <span class="done DONE">DONE</span> incorporate</a></li>
+<li><a href="#org3877252">3.2.9. <span class="done DONE">DONE</span> Add Slurm warnings about failures</a></li>
+<li><a href="#orgc2e08da">3.2.10. FAILED Debug slurm failures</a></li>
+<li><a href="#org304f1ad">3.2.11. <span class="done DONE">DONE</span> Migrate sbatch script to one of the examples.</a></li>
+<li><a href="#org1c002a9">3.2.12. <span class="done DONE">DONE</span> Email Lukas Hergt to ask for help</a></li>
+<li><a href="#org4778c8c">3.2.13. <span class="done DONE">DONE</span> Refactor of framework</a></li>
+<li><a href="#orga964b47">3.2.14. <span class="done DONE">DONE</span> Test</a></li>
+<li><a href="#orgdc7dc5a">3.2.15. <span class="done DONE">DONE</span> Project presentations.</a></li>
+<li><a href="#org7fe1047">3.2.16. <span class="done DONE">DONE</span> e-mail Dr Handley about findings.</a></li>
+</ul>
+</li>
+<li><a href="#org22da98a">3.3. Week 3</a>
+<ul>
+<li><a href="#org8e57007">3.3.1. <span class="done DONE">DONE</span> Add Kullback-Leibler Divergence</a></li>
+<li><a href="#org09fea1e">3.3.2. <span class="done DONE">DONE</span> Install Cosmochord.</a></li>
+<li><a href="#orgc1d4525">3.3.3. <span class="done DONE">DONE</span> Install on Cluster</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#org9a6abde">4. Notes</a>
+<ul>
+<li><a href="#org3fc56c0">4.1. Michaelmas Term</a>
+<ul>
+<li><a href="#org60ecec9">4.1.1. Terminology</a></li>
+<li><a href="#org506ee18">4.1.2. How does nested sampling work</a></li>
+</ul>
+</li>
+<li><a href="#orgb3aeb75">4.2. Lent Term</a>
+<ul>
+<li><a href="#org44765b1">4.2.1. Polychord <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-10 Fri&gt;</span></span></a></li>
+<li><a href="#orge710a7a">4.2.2. <code>settings</code></a></li>
+<li><a href="#org8000ae1">4.2.3. logLikelihood</a></li>
+<li><a href="#orge32fc9e">4.2.4. Prior</a></li>
+<li><a href="#org3420d2f">4.2.5. Approaches to modelling systems.  <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-17 Fri&gt;</span></span></a></li>
+<li><a href="#orge8e9fca">4.2.6. Comparison of runs. <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-24 Fri&gt;</span></span></a></li>
+<li><a href="#org71d8582">4.2.7. Automated Power Posterior Repartitioning. <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-24 Fri&gt;</span></span></a></li>
+</ul>
+</li>
+<li><a href="#org79e4f15">4.3. Easter "vacation"</a>
+<ul>
+<li><a href="#org0ba6095">4.3.1. Cobaya settings <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-03-18 Wed&gt;</span></span></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<p>
+This file contains the notes and the project diary for the
+aforementioned project. The diary comes first. If specified, the
+timestamp on the notes is when the note was originally written.
+</p>
+
+
+<div id="outline-container-orgcab16a4" class="outline-2">
+<h2 id="orgcab16a4"><span class="section-number-2">1</span> Michaelmas</h2>
+<div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-org14008ea" class="outline-3">
+<h3 id="org14008ea"><span class="section-number-3">1.1</span> Week 3</h3>
+<div class="outline-text-3" id="text-1-1">
+</div>
+<div id="outline-container-orgdca1837" class="outline-4">
+<h4 id="orgdca1837"><span class="section-number-4">1.1.1</span> <span class="done DONE">DONE</span> Meet Dr Handley</h4>
+<div class="outline-text-4" id="text-1-1-1">
+<p>
+Discussed the project. Talked about Nested
+Sampling. Applications to Machine Learning.
+</p>
+
+<p>
+Primordial power spectrum, and discretisation. This causes the
+Fourier transform <i>multipole plot</i> of the CMB. Multipole
+moment related to size of blotches on the picture.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgde1d26d" class="outline-3">
+<h3 id="orgde1d26d"><span class="section-number-3">1.2</span> Week 4</h3>
+<div class="outline-text-3" id="text-1-2">
+</div>
+<div id="outline-container-orgc82f0a6" class="outline-4">
+<h4 id="orgc82f0a6"><span class="section-number-4">1.2.1</span> <span class="done DONE">DONE</span> Read the Abstract. ,</h4>
+<div class="outline-text-4" id="text-1-2-1">
+<p>
+Read <a href="https://arxiv.org/abs/0803.4089">Bayes in the sky</a> Read about Bayesian analysis. 
+\(\Omega_{k}\) more significant than thought. 
+</p>
+</div>
+</div>
+<div id="outline-container-orgaa6490b" class="outline-4">
+<h4 id="orgaa6490b"><span class="section-number-4">1.2.2</span> <span class="done DONE">DONE</span> Install PolyChord, Cobaya, anesthetic, CosmoChord.</h4>
+<div class="outline-text-4" id="text-1-2-2">
+<p>
+Issues with Mac OS X/XCode. 
+GFortran was installed but not on PATH. 
+PolyChord not Pip installable. 
+</p>
+<div class="org-src-container">
+<pre class="src src-bash"><span style="color: #daa520;">C</span>=cc <span style="color: #daa520;">CXX</span>=cxx python setup.py install &#8212;user
+</pre>
+</div>
+<p>
+doesn't work on OS X. 
+</p>
+
+<p>
+Use Python3. 
+</p>
+</div>
+</div>
+<div id="outline-container-orgfa6a46e" class="outline-4">
+<h4 id="orgfa6a46e"><span class="section-number-4">1.2.3</span> <span class="done DONE">DONE</span> EMail will and create a PR to fix Python version.</h4>
+<div class="outline-text-4" id="text-1-2-3">
+<p>
+Fixed. Merged. Working. 
+</p>
+</div>
+</div>
+<div id="outline-container-orgaabce43" class="outline-4">
+<h4 id="orgaabce43"><span class="section-number-4">1.2.4</span> FAILED Reproduce plots.</h4>
+<div class="outline-text-4" id="text-1-2-4">
+<p>
+Laptop inoperative due to Liquid damage. 
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgae15456" class="outline-3">
+<h3 id="orgae15456"><span class="section-number-3">1.3</span> Week 5</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+Laptop inoperative due to liquid damage.  Until week 2 of Vacation
+laptop remained under liquid damage. These entries filled
+retroactively from Todoist.
+</p>
+</div>
+<div id="outline-container-org5a6b4e3" class="outline-4">
+<h4 id="org5a6b4e3"><span class="section-number-4">1.3.1</span> Talk on nested sampling <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-14 Thu&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+It's a method of inference. Much the same as least squares
+fitting, except it's not assuming the central limit theorem and
+works for arbitrary distributions of error.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org30e0263" class="outline-4">
+<h4 id="org30e0263"><span class="section-number-4">1.3.2</span> <span class="done DONE">DONE</span> Start final report writeup <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-19 Tue&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+See git history. 
+</p>
+</div>
+</div>
+<div id="outline-container-org3177488" class="outline-4">
+<h4 id="org3177488"><span class="section-number-4">1.3.3</span> <span class="done DONE">DONE</span> Finish reading Skilling.</h4>
+<div class="outline-text-4" id="text-1-3-3">
+<p>
+See notes. 
+</p>
+</div>
+</div>
+<div id="outline-container-orgc7822c2" class="outline-4">
+<h4 id="orgc7822c2"><span class="section-number-4">1.3.4</span> <span class="done DONE">DONE</span> Implement Skilling's algorithm</h4>
+<div class="outline-text-4" id="text-1-3-4">
+<p>
+Tried to do on the PWF, using example code at the end of the paper. <a class='org-ref-reference' href="#skilling">skilling</a>. 
+Hard to do. Need laptop repaired. C code in the repository.
+</p>
+</div>
+</div>
+<div id="outline-container-org5c92ac4" class="outline-4">
+<h4 id="org5c92ac4"><span class="section-number-4">1.3.5</span> Note from meeting. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-15 Fri&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-3-5">
+<p>
+Implementing Skilling's algorithm wasn't necessary. 
+</p>
+</div>
+</div>
+<div id="outline-container-org2f684e9" class="outline-4">
+<h4 id="org2f684e9"><span class="section-number-4">1.3.6</span> Note from meeting. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-15 Fri&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-3-6">
+<p>
+The idea of re-partitioning. Read <a href="https://arxiv.org/pdf/1908.04655.pdf">Chen-Feroz-Hobson</a>. 
+</p>
+</div>
+</div>
+<div id="outline-container-org58ff79d" class="outline-4">
+<h4 id="org58ff79d"><span class="section-number-4">1.3.7</span> Note from meeting <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-15 Fri&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-3-7">
+<p>
+Project writeup
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org4cf4a33" class="outline-3">
+<h3 id="org4cf4a33"><span class="section-number-3">1.4</span> Week 7</h3>
+<div class="outline-text-3" id="text-1-4">
+</div>
+<div id="outline-container-orgada6392" class="outline-4">
+<h4 id="orgada6392"><span class="section-number-4">1.4.1</span> <span class="done DONE">DONE</span> Implement Multivariate Gaussian Likelihood <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-17 Sun&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-4-1">
+<p>
+Used example code as template. 
+See toy-models/multivariate-gaussian.py
+</p>
+</div>
+</div>
+<div id="outline-container-orgfaf29b3" class="outline-4">
+<h4 id="orgfaf29b3"><span class="section-number-4">1.4.2</span> <span class="done DONE">DONE</span> Investigate the C++ front-end. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-19 Tue&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-4-2">
+<p>
+PolyChord works as a framework. Unable to control many things
+including verbosity of output. 
+</p>
+</div>
+</div>
+<div id="outline-container-org9967825" class="outline-4">
+<h4 id="org9967825"><span class="section-number-4">1.4.3</span> <span class="done DONE">DONE</span> Project report. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-21 Thu&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-4-3">
+<p>
+<a href="http://www.mrao.cam.ac.uk/~wh260/Galileo/%20">Example writeups</a>.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org5e79d86" class="outline-3">
+<h3 id="org5e79d86"><span class="section-number-3">1.5</span> Week 8</h3>
+<div class="outline-text-3" id="text-1-5">
+</div>
+<div id="outline-container-orgac2231c" class="outline-4">
+<h4 id="orgac2231c"><span class="section-number-4">1.5.1</span> <span class="done DONE">DONE</span> Finalise Project report. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-25 Mon&gt;</span></span></h4>
+</div>
+<div id="outline-container-org3cb9669" class="outline-4">
+<h4 id="org3cb9669"><span class="section-number-4">1.5.2</span> <span class="done DONE">DONE</span> Proof read the report <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-11-29 Fri&gt;</span></span></h4>
+</div>
+<div id="outline-container-org6769e70" class="outline-4">
+<h4 id="org6769e70"><span class="section-number-4">1.5.3</span> <span class="done DONE">DONE</span> Submit the report. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-12-04 Wed&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-5-3">
+<p>
+Good staplers are not in Cavendish. Had to re-print and re-submit
+because the one in Kavli chewed up the paper and the one at
+Rayleigh library was not functional.
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd792508" class="outline-3">
+<h3 id="orgd792508"><span class="section-number-3">1.6</span> Vacation Weeks</h3>
+<div class="outline-text-3" id="text-1-6">
+</div>
+<div id="outline-container-orga4bdf05" class="outline-4">
+<h4 id="orga4bdf05"><span class="section-number-4">1.6.1</span> <span class="done DONE">DONE</span> Re-install software <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-12-04 Wed&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-6-1">
+<p>
+a) <code>polychord</code> (GitHub)
+b) <code>anesthetic</code> (<code>pip</code>)
+c) <code>fgivenx</code> (<code>pip</code>)
+</p>
+</div>
+</div>
+<div id="outline-container-org52d77ea" class="outline-4">
+<h4 id="org52d77ea"><span class="section-number-4">1.6.2</span> <span class="done DONE">DONE</span> Line Fitting example. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-12-09 Mon&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-6-2">
+<p>
+See <code>0/extended-example.py</code>. 
+</p>
+</div>
+</div>
+<div id="outline-container-orgb482a71" class="outline-4">
+<h4 id="orgb482a71"><span class="section-number-4">1.6.3</span> <span class="done DONE">DONE</span> Set up CSD3 login information. <span class="timestamp-wrapper"><span class="timestamp">&lt;2019-12-19 Thu&gt;</span></span></h4>
+<div class="outline-text-4" id="text-1-6-3">
+<p>
+PI Name: Will Handley
+PI Status: Research fellow
+PI Email: wh260@cam.ac.uk
+PI Phone: +44-(0)1223-764042
+PI Department: Cavendish Laboratory (Astrophysics)
+PI School: Physical Sciences
+</p>
+
+<p>
+Research Group: Astrophysics
+Department: Cavendish Laboratory
+School: Physical Sciences
+Service Level: Non-paying (SL3) only
+Project: (Leave blank)
+</p>
+
+<p>
+End Date: 01/01/2021 (To give us time to write up)
+Compute Platforms: (leave blank)
+Dedicated nodes: (None)
+PI Declaration: tick yes
+</p>
+</div>
+</div>
+<div id="outline-container-orgd3640dc" class="outline-4">
+<h4 id="orgd3640dc"><span class="section-number-4">1.6.4</span> <span class="done DONE">DONE</span> Read about Bayesian statistics. \(\Chi^2\) test.</h4>
+<div class="outline-text-4" id="text-1-6-4">
+<p>
+Notes. 
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-orge9e0137" class="outline-2">
+<h2 id="orge9e0137"><span class="section-number-2">2</span> Lent</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org05aa4cc" class="outline-3">
+<h3 id="org05aa4cc"><span class="section-number-3">2.1</span> Week 1.</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-orgce80a5f" class="outline-4">
+<h4 id="orgce80a5f"><span class="section-number-4">2.1.1</span> Meet Dr Handley <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-17 Fri&gt;</span></span></h4>
+<div class="outline-text-4" id="text-2-1-1">
+<p>
+Talked about the line fitting example. 
+</p>
+</div>
+</div>
+<div id="outline-container-org49b825b" class="outline-4">
+<h4 id="org49b825b"><span class="section-number-4">2.1.2</span> <span class="done DONE">DONE</span> Re-factor the line-fitting examples</h4>
+<div class="outline-text-4" id="text-2-1-2">
+<p>
+<a href="./toy-models/0/0.1 extended_example.py">./toy-models/0/0.1 extended_example.py</a>.  Do I need to generate the
+data? Can I use the parameter covariance matrix to emulate the
+data? 
+</p>
+
+<p>
+better to have a data generator and not use it than to not have it
+and need it.
+</p>
+</div>
+</div>
+<div id="outline-container-org03104f8" class="outline-4">
+<h4 id="org03104f8"><span class="section-number-4">2.1.3</span> <span class="done DONE">DONE</span> Implement the Data generator</h4>
+<div class="outline-text-4" id="text-2-1-3">
+<p>
+DEADLINE: <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-22 Wed&gt; </span></span> 
+Implemented! It works!
+<a href="./toy-models/0/0.2 DataCovarianceWithGenerator/DataGenerator.py">./toy-models/0/0.2 DataCovarianceWithGenerator/DataGenerator.py</a>
+Probably overengineered. 
+</p>
+
+<p>
+Simple noise overlayed on top of data predicted by model. Use
+chi-squared likelihood fit from 
+<a href="./toy-models/0/0.2 DataCovarianceWithGenerator/Polychord.py">./toy-models/0/0.2 DataCovarianceWithGenerator/Polychord.py</a>. 
+</p>
+
+<p>
+Credit to 
+</p>
+
+<p>
+<a href="http://jrmeyer.github.io/machinelearning/2017/08/18/mle.html">http://jrmeyer.github.io/machinelearning/2017/08/18/mle.html</a>
+</p>
+
+<p>
+update: ln<sub>z</sub> is an exceedingly bad name for the loglikelihood. 
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-org1120b08" class="outline-3">
+<h3 id="org1120b08"><span class="section-number-3">2.2</span> Week 2</h3>
+<div class="outline-text-3" id="text-2-2">
+</div>
+<div id="outline-container-org91aece0" class="outline-4">
+<h4 id="org91aece0"><span class="section-number-4">2.2.1</span> <span class="done DONE">DONE</span> meet Dr Handley.</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+The data generator isn't necessary. I was using too many live
+points. \(200\) live points is good-enough for publication quality
+results. Reduce that to 20. Try it with Planck chains. 
+</p>
+
+<p>
+[[]]
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgef95f1d" class="outline-2">
+<h2 id="orgef95f1d"><span class="section-number-2">3</span> Easter ''Vacation''</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-orge687f2c" class="outline-3">
+<h3 id="orge687f2c"><span class="section-number-3">3.1</span> Week 1.</h3>
+<div class="outline-text-3" id="text-3-1">
+</div>
+<div id="outline-container-orgb06b6dd" class="outline-4">
+<h4 id="orgb06b6dd"><span class="section-number-4">3.1.1</span> <span class="done DONE">DONE</span> Set up SSH access to CSD3.</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+Covid 19 caused a major disruption.  I was forced out of College,
+required to return to Armenia. Spent the entire week under
+quarantine.  Thankfully had some internet access. I'm sure no-one
+is going to account for the time/stress incurred losses. Why would
+they. That would be putting the Brits that only need to stay in
+their homes at an unfair disadvantage.
+</p>
+</div>
+<ol class="org-ol">
+<li><a id="org9c9ed7e"></a><span class="done DONE">DONE</span> Find out how to bypass restriction.<br />
+<div class="outline-text-5" id="text-3-1-1-1">
+<p>
+Can't <code>ssh</code>. Connection rejected. Cambridge VPN not helping. Can't
+connect to it either. 
+</p>
+</div>
+</li>
+<li><a id="orge9ca6d4"></a><span class="done DONE">DONE</span> Write a script to probe for forwarding ports<br />
+<div class="outline-text-5" id="text-3-1-1-2">
+<p>
+Found a forwarding port on the router. Use
+</p>
+<div class="org-src-container">
+<pre class="src src-bash">ssh -R 52.194.1.73:8080:localhost:80 ap886@login-hpc.cam.ac.uk
+</pre>
+</div>
+<p>
+to connect. 
+</p>
+</div>
+</li>
+</ol>
+</div>
+<div id="outline-container-org7c046b7" class="outline-4">
+<h4 id="org7c046b7"><span class="section-number-4">3.1.2</span> <span class="done DONE">DONE</span> install Cobaya</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+Did it very thoroughly. MKL not identified. Will need to
+debug. Later. <code>mpirun cobaya</code> works. It doesn't output, but at
+this stage it's not important.
+</p>
+</div>
+</div>
+<div id="outline-container-org3c5a5b1" class="outline-4">
+<h4 id="org3c5a5b1"><span class="section-number-4">3.1.3</span> <span class="done DONE">DONE</span> Modify cobaya</h4>
+<div class="outline-text-4" id="text-3-1-3">
+<p>
+Cobaya is mess. There's no notion of OOP design. Overridin a class
+should <b>not</b> have an <code>initialize</code> method. Instead it should have
+an <code>__init__</code> method. 
+</p>
+
+<p>
+Tried to extract commented blocks out into functions. This is hard
+work. I'm not even paid to do it. Implementing a proper channel in
+<code>.yaml</code> will be untenable. It will take more time than this entire
+project to figure out how to do it without breaking anything.
+</p>
+
+<p>
+I should speak to Dr Handley about this and discuss how Cobaya's
+sampler should be implemented.
+</p>
+
+<p>
+update: I should create a fork. Implement in situ and reference in
+the project writeup. As much as I'd like to clean it up, it's not
+really even my project to worry about.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org5d18442" class="outline-4">
+<h4 id="org5d18442"><span class="section-number-4">3.1.4</span> <span class="done DONE">DONE</span> Meet Dr Handley</h4>
+<div class="outline-text-4" id="text-3-1-4">
+<p>
+Minutes. Try to have a writeup. Mentioned that I already have
+one. Asked about using the cluster to run benchmarks. Given a
+go-ahead. This should save a lot of time, given that my laptop is
+nowhere near 64-cores. 
+</p>
+</div>
+</div>
+<div id="outline-container-orge85b72a" class="outline-4">
+<h4 id="orge85b72a"><span class="section-number-4">3.1.5</span> <span class="done DONE">DONE</span> Writeup</h4>
+<div class="outline-text-4" id="text-3-1-5">
+<p>
+Available on Github. Refined introduction. Added Bayes' theorem to
+writeup. Migrated to add mnras.
+</p>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orgc9c62fd" class="outline-3">
+<h3 id="orgc9c62fd"><span class="section-number-3">3.2</span> Week 2</h3>
+<div class="outline-text-3" id="text-3-2">
+</div>
+<div id="outline-container-org768e83f" class="outline-4">
+<h4 id="org768e83f"><span class="section-number-4">3.2.1</span> <span class="done DONE">DONE</span> Get Home</h4>
+<div class="outline-text-4" id="text-3-2-1">
+<p>
+SCHEDULED: <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-03-25 Wed&gt;</span></span>
+</p>
+</div>
+</div>
+<div id="outline-container-orgeaaff5b" class="outline-4">
+<h4 id="orgeaaff5b"><span class="section-number-4">3.2.2</span> <span class="done DONE">DONE</span> Set up home Computer</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+Fresh install of Arch. 
+</p>
+</div>
+<ol class="org-ol">
+<li><a id="org2e2f592"></a><span class="done DONE">DONE</span> install software<br />
+<div class="outline-text-5" id="text-3-2-2-1">
+</div>
+<ol class="org-ol">
+<li><a id="org1963bc6"></a><span class="done DONE">DONE</span> numpy<br /></li>
+<li><a id="org3ff6fff"></a><span class="done DONE">DONE</span> MPI<br /></li>
+<li><a id="org9b4921a"></a><span class="done DONE">DONE</span> anesthetic<br /></li>
+<li><a id="orgd3d73a8"></a><span class="done DONE">DONE</span> Cobaya<br /></li>
+<li><a id="org5378ac4"></a><span class="done DONE">DONE</span> PolyChord<br />
+<div class="outline-text-6" id="text-3-2-2-1-5">
+<p>
+gfortran in the repos not the required version. Used AUR. Created venv. 
+</p>
+</div>
+</li>
+</ol>
+</li>
+<li><a id="org408794e"></a><span class="done DONE">DONE</span> Add home computer's ssh key to CSD3<br /></li>
+</ol>
+</div>
+<div id="outline-container-org9fefcc5" class="outline-4">
+<h4 id="org9fefcc5"><span class="section-number-4">3.2.3</span> <span class="done DONE">DONE</span> Migrate to Mnras</h4>
+<div class="outline-text-4" id="text-3-2-3">
+<p>
+Add everything needed to conform to the <a href="https://academic.oup.com/mnras/pages/general_instructions">mnras style guide</a>. 
+</p>
+</div>
+</div>
+<div id="outline-container-org0cb9567" class="outline-4">
+<h4 id="org0cb9567"><span class="section-number-4">3.2.4</span> <span class="done DONE">DONE</span> Write an sbatch script to run Cobaya.</h4>
+<div class="outline-text-4" id="text-3-2-4">
+<p>
+Completely unsure about the memory and number of clusters. Need to
+ask Lukas Hergt about the values. 
+</p>
+
+<p>
+Cobaya's generated <code>.yaml</code> file is not working. Needs a few updates. 
+</p>
+</div>
+</div>
+<div id="outline-container-org8cfcaf0" class="outline-4">
+<h4 id="org8cfcaf0"><span class="section-number-4">3.2.5</span> <span class="done DONE">DONE</span> Add figures</h4>
+<div class="outline-text-4" id="text-3-2-5">
+<p>
+Used <code>tikzplotlib</code>. Plots in illustrations. Added illustrations of
+repartitioining functions.
+</p>
+</div>
+</div>
+
+
+
+<div id="outline-container-org59fbd61" class="outline-4">
+<h4 id="org59fbd61"><span class="section-number-4">3.2.6</span> <span class="done DONE">DONE</span> Writeup</h4>
+<div class="outline-text-4" id="text-3-2-6">
+<p>
+Added clairifcation. Bayes' theorem paper. Moved defs into table. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org1ff2b6d" class="outline-4">
+<h4 id="org1ff2b6d"><span class="section-number-4">3.2.7</span> <span class="done DONE">DONE</span> Meet Dr Handley</h4>
+<div class="outline-text-4" id="text-3-2-7">
+<p>
+Received comments/compliments. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-orga23f425" class="outline-4">
+<h4 id="orga23f425"><span class="section-number-4">3.2.8</span> <span class="done DONE">DONE</span> incorporate</h4>
+</div>
+<div id="outline-container-org3877252" class="outline-4">
+<h4 id="org3877252"><span class="section-number-4">3.2.9</span> <span class="done DONE">DONE</span> Add Slurm warnings about failures</h4>
+<div class="outline-text-4" id="text-3-2-9">
+</div>
+</div>
+
+<div id="outline-container-orgc2e08da" class="outline-4">
+<h4 id="orgc2e08da"><span class="section-number-4">3.2.10</span> FAILED Debug slurm failures</h4>
+<div class="outline-text-4" id="text-3-2-10">
+<p>
+DEADLINE: <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-03-29 Sun&gt; </span></span> 
+Weird tracebacks in output. 
+MKL not recognised. 
+Yaml doesnt recognise tabs. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org304f1ad" class="outline-4">
+<h4 id="org304f1ad"><span class="section-number-4">3.2.11</span> <span class="done DONE">DONE</span> Migrate sbatch script to one of the examples.</h4>
+<div class="outline-text-4" id="text-3-2-11">
+</div>
+</div>
+
+<div id="outline-container-org1c002a9" class="outline-4">
+<h4 id="org1c002a9"><span class="section-number-4">3.2.12</span> <span class="done DONE">DONE</span> Email Lukas Hergt to ask for help</h4>
+<div class="outline-text-4" id="text-3-2-12">
+</div>
+</div>
+
+<div id="outline-container-org4778c8c" class="outline-4">
+<h4 id="org4778c8c"><span class="section-number-4">3.2.13</span> <span class="done DONE">DONE</span> Refactor of framework</h4>
+<div class="outline-text-4" id="text-3-2-13">
+<p>
+DEADLINE: <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-04-02 Thu&gt; </span></span> 
+Used PyCharm. Fixed a bug. Reference
+Python hash is not random, but linear in regions. For small values
+of \(\theta\) this may and does cause issues. 
+</p>
+
+<p>
+fixed with 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #daa520;">h</span> = <span style="color: #f5f5f5; text-decoration: underline;">hash</span><span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">(</span><span style="color: #f5f5f5; text-decoration: underline;">tuple</span><span style="color: #93a8c6; font-size: 170%;">(</span>t<span style="color: #93a8c6; font-size: 170%;">)</span><span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">)</span>
+seed<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">(</span>h<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">)</span>
+<span style="color: #daa520;">r</span> = random<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">()</span>
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-orga964b47" class="outline-4">
+<h4 id="orga964b47"><span class="section-number-4">3.2.14</span> <span class="done DONE">DONE</span> Test</h4>
+<div class="outline-text-4" id="text-3-2-14">
+<p>
+DEADLINE: <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-04-04 Sat&gt; </span></span> 
+All tests clear. Performance improved. Significantly. No bugs. 
+</p>
+
+<p>
+Also a discovery! Under some circumstances PPR can
+break. <a href="./illustrations/convergence.pdf">./illustrations/convergence.pdf</a>. In the same environment,
+Gaussian under SSPR finishes faster and gets the right
+answer. Under the same circumstances PPR inside SSPR also finishes
+faster.
+</p>
+
+<p>
+Choosing which one to include is like choosing your favourite
+child. I could make the case that SSPR makes the simulation more
+robust if wrapped inside PPR. On the other hand SSPR doesn't need
+PPR. Maybe give Hobson and Feroz some credit here. I'm already
+being overly negative about their discovery, even though my
+discovery is based on theirs. PPR it is then. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdc7dc5a" class="outline-4">
+<h4 id="orgdc7dc5a"><span class="section-number-4">3.2.15</span> <span class="done DONE">DONE</span> Project presentations.</h4>
+<div class="outline-text-4" id="text-3-2-15">
+<p>
+According to Charles Smith we need to present our findings. 
+</p>
+
+<p>
+update: Meeting is scheduled. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org7fe1047" class="outline-4">
+<h4 id="org7fe1047"><span class="section-number-4">3.2.16</span> <span class="done DONE">DONE</span> e-mail Dr Handley about findings.</h4>
+</div>
+</div>
+
+<div id="outline-container-org22da98a" class="outline-3">
+<h3 id="org22da98a"><span class="section-number-3">3.3</span> Week 3</h3>
+<div class="outline-text-3" id="text-3-3">
+</div>
+<div id="outline-container-org8e57007" class="outline-4">
+<h4 id="org8e57007"><span class="section-number-4">3.3.1</span> <span class="done DONE">DONE</span> Add Kullback-Leibler Divergence</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+Kullbakc leibler divergence is useful but only marginally
+so. Kullback Leibler from prior to posterior indicates performance
+up to a point. 
+</p>
+
+<p>
+PolyChord may converge faster for a stronger bias: e.g. if the
+prior is sharply peaked at the origin. In that case
+\(\mathcal{D}\) is larger but run-time is smaller.
+</p>
+</div>
+</div>
+
+
+
+
+
+<div id="outline-container-org09fea1e" class="outline-4">
+<h4 id="org09fea1e"><span class="section-number-4">3.3.2</span> <span class="done DONE">DONE</span> Install Cosmochord.</h4>
+<div class="outline-text-4" id="text-3-3-2">
+<p>
+Need <a href="https://cosmologist.info/cosmomc/readme_planck.html">external Planck likelihood</a>. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgc1d4525" class="outline-4">
+<h4 id="orgc1d4525"><span class="section-number-4">3.3.3</span> <span class="done DONE">DONE</span> Install on Cluster</h4>
+<div class="outline-text-4" id="text-3-3-3">
+<p>
+Planck is typical academic abandonware. They have a ``python''
+script that installs the dependencies called <code>waf</code>. In their
+wizdom, they decided that they can do a better job than either
+pypi, or conda. They wrote their own package manager that
+downloads an outdated dependency if it can't find it (which it
+can't because if you think and it can't. Because if you think
+that writing your own package manager is a good idea, you're
+really too stupid to do it properly.  find it, because people who
+do pip and conda, don't abandon their software and move on.
+</p>
+
+<p>
+As this may be read by someone who's writing academic code; the
+proper procedure is telling the end-user that they need packages
+x, y and z. If you're writing a package and it needs a package
+manager, and you're not thinking of maintaining it &#x2013; Don't write
+a package manager! Mainly because I don't think you'd bother to
+check the venv, and update the download links. Also, you're
+probably thinking that either pip or conda can't do what you need
+them to do&#x2026; So you don't ask. 
+</p>
+
+<p>
+This is at least six hours of wasted time, that could have been
+avoided if people were not in the sweet-spot of writing difficult
+to replicate, but at the same time completely unmaintained and
+under-developed code. This is why I insist on <b><b>proper</b></b> software
+engineering techniques! 
+</p>
+
+<p>
+Also! Keep Science away from Python. It's design philosophy 'we're
+all consenting adults', basically means that people do however,
+whatever and there's no responsibility. Python is a unique
+language: it has a few surface-level good ideas, a bunch of
+terrible ones, and is moderated by people that clearly have no
+idea what they're doing. That latter point is especially painful,
+as for some reason they thought that creating a breaking change to
+Python 3 was a good idea, yet they were unable to phase out
+python2, and after all of that, they thought that keeping the
+names of packages the same was not going to backfire.
+</p>
+
+<p>
+The bigger problem is that people are seduced by the mild
+syntactic sugar of python. Big projects are dragged down by the
+cesspool of moronic design. It's giving me nightmares at this
+point.
+</p>
+
+<p>
+The project report guideline asks us to think of ways that could
+make this easier. My suggestions. Don't use python. Don't! All the
+time you save by avoiding the curly braces is being paid for in
+sleep-deprived tortured people that just want to get their degree
+done with. I'm fed up with Cobaya's overengineered nonsense. I
+wanted to use CosmoChord to avoid Python at all costs. It doesn't
+work. Because Python is used there as well. It's 2am. I'm trying
+to figure out why pip swears that astropy is installed. While at
+the same time no version of python seems to detect it. If that
+wasn't enough; there's 17 version of pip on the cluster. I don't
+know which one to use to install that damn thing! I shouldn't have
+to know!
+</p>
+
+<p>
+ANd the worst part is, people assume that writing python code is
+easy, because of all the light-weight stuff. If I told someone
+that I was stuck for an entire 24 hours trying to fix a build on a
+cluster people would say "how hard can it be". Just pip install?
+Right? 
+</p>
+
+<p>
+Eventual workaround
+</p>
+<div class="org-src-container">
+<pre class="src src-python">module load python@3.8
+sudo /usr/local/software/master/python/3.8/<span style="color: #f5f5f5; text-decoration: underline;">bin</span>/python -m ensurepip 
+module purge
+module load python
+/usr/local/<span style="color: #f5f5f5; text-decoration: underline;">bin</span>/python -m ensurepip 
+/usr/local/<span style="color: #f5f5f5; text-decoration: underline;">bin</span>/python -m pip install astropy cython 
+</pre>
+</div>
+<p>
+Notice that I had to use a python3 pip to install a python2
+pip. Naturally this is just stupidity.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9a6abde" class="outline-2">
+<h2 id="org9a6abde"><span class="section-number-2">4</span> Notes</h2>
+<div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org3fc56c0" class="outline-3">
+<h3 id="org3fc56c0"><span class="section-number-3">4.1</span> Michaelmas Term</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Doing some research about the subject. 
+</p>
+</div>
+
+
+<div id="outline-container-org60ecec9" class="outline-4">
+<h4 id="org60ecec9"><span class="section-number-4">4.1.1</span> Terminology</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<p>
+Prior - \(P(\theta | M)\)
+Likelihood - \(P(M, \theta | Data)\)
+</p>
+
+<p>
+Posterior - \(P(\theta | \text{Data})\)
+Evidence - \(P(Model | Data)\)
+</p>
+
+<p>
+Bayes' theorem says that 
+</p>
+
+<p>
+\[Likelihood \times Prior = Posterior \times Evidence\]
+</p>
+
+<p>
+So can use this to find the parameter values of a model, + the
+likelihood that the model fits the data at all.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-org506ee18" class="outline-4">
+<h4 id="org506ee18"><span class="section-number-4">4.1.2</span> How does nested sampling work</h4>
+<div class="outline-text-4" id="text-4-1-2">
+</div>
+<ol class="org-ol">
+<li><a id="org47721c6"></a>Skilling's paper<br />
+<div class="outline-text-5" id="text-4-1-2-1">
+<p>
+\cite{skilling2006}
+</p>
+
+<p>
+Nested Sampling is a machine learning technique that allows to do Bayesian parameter estimation. 
+</p>
+
+<p>
+Fitting a line to data is an example of a parameter fitting model. 
+</p>
+
+<p>
+Set \( 
+	 \chi^{2} \triangleq \sum_{i} \left(\frac{y_{i} - f(x_{i}, \theta)}{\sigma_{i}} \right)
+	 \). We need to ask a question, how likely is the data observed, given that the model is true, and the Model parameters have the given values. The probability is usually given by a Gaussian (or normal distribution). 
+</p>
+
+<p>
+\[ 
+	 L = \frac{1}{N} \exp{\left[ - \chi^{2}\right]}
+	 \]
+</p>
+
+<p>
+So what we need to do for Nested Sampling to work, is to
+provide a model for estimating the fit to the hypothesis -
+likelihood, and a prior.
+</p>
+
+<p>
+The likelihood, or how likely is the value of data given the
+model and the parameters, reflects how we expect the
+fluctuations to develop. Many distributions are possible, but
+due to the Central Limit theorem, best choice would be a
+Normal (Gaussian) distribution.
+</p>
+
+<p>
+The prior represents our prior knowledge of the original
+parameters. For example, if we know nothing about the
+possible model parameters, we can expect a uniform
+distribution within constraints. These constraints may be
+artificial (for example, we may only be interested in model
+parameters that are within machine-representable floating
+point numbers), or natural (the Hubble parameter is
+positive).
+</p>
+
+<p>
+If we know more about the model parameters, that information
+can also be presented as a guideline for parameter
+inference. For example if we have done parameter estimation
+of the same model, using a different set of data; the
+posterior of the aforementioned investigation can be used
+directly as the prior for this run.
+</p>
+
+<p>
+Nested sampling exploits that extra data to converge upon the
+so-called typical set; which represents the data that has
+statistically significant phase volume. The latter point can
+be understood intuitively.
+</p>
+
+<p>
+More accurate or tight constraints on the true data should
+lead to better convergence time. Ideally the convergence to
+the posterior of a distribution is the fastest, as this
+minimises the number of errors, and given a suitable sampling
+algorithm should lead to few wasted computations.
+</p>
+</div>
+
+
+<ol class="org-ol">
+<li><a id="orgda7a7f5"></a><span class="todo TODO">TODO</span> Phase volume example.<br /></li>
+</ol>
+</li>
+
+
+
+
+
+<li><a id="org16ccbc2"></a>Notes on the Algorithm itself:<br />
+<div class="outline-text-5" id="text-4-1-2-2">
+<p>
+Rasterising the phase space is too computationally
+ineffective, as for a model with 27 parameters, the space
+would be 27 dimensional. This leads to many quirks of
+geometry and counter-intuitive outcomes, that will be touched
+on later.
+</p>
+
+<p>
+We must first select a number of live points randomly from
+the phase space, usually taken to a be a hypercube with edge
+length normalised to 1.
+</p>
+
+<p>
+For each point one expects there to be a locus of points with
+the exact same likelihood. This locus is often connected, and
+so in analogy with isotherms it is often referred to as the
+iso-likelihood contour.
+</p>
+
+<p>
+Then one selects the least likely point and picks according
+to some algorithm, a point of higher likelihood. The original
+point is now referred to as dead, while the new point is
+added to the set of live points.
+</p>
+
+<p>
+This process is then repeated until we have reached a typical
+set. This is often determined by estimating the <i>evidence</i>
+contained outside each contour (since the points are picked
+at random, if we have n<sub>\text</sub>{live} points, each contour will
+statistically include \frac{1}{n<sub>\text</sub>{live}} of the total
+phase volume).
+</p>
+</div>
+</li>
+
+
+<li><a id="org79b0af6"></a>Piecewise power repartitioning notes.<br />
+<div class="outline-text-5" id="text-4-1-2-3">
+<p>
+Are these issues you're encountering for the mixture model, or the
+temperature-dependent gaussian? (in the posterior repartitioning
+paper, the pi^&beta; prior is terms 'power posterior repartitioning', so
+we should refer to it as that).
+</p>
+
+<p>
+For the power posterior repartitioning, remember we're doing it with a
+diagonal prior covariance, so everything is separable and Z(beta)
+should be derived as described in the posterior repartitioning paper,
+namely:
+</p>
+
+<p>
+\(\tilde{\pi} = G[\mu,\sigma](\theta)^\beta / Z(\beta)\)
+</p>
+
+<p>
+\[Z(\beta) = \int_a^b G[\mu,\sigma](\theta)^\beta d\theta\].  where \(G\) denotes a gaussian,
+and a and b are the limits of the uniform distribution. This is
+expressible using erf:
+</p>
+
+\begin{equation}
+  Z(\beta) = \frac{erf(\frac{(b-\mu)}{\sqrt{2}} \sigma) - erf(\frac{(a-\mu)}{\sqrt{2}} \sigma)}{2}
+\end{equation}
+
+
+
+<p>
+I've spent a bit of time thinking this morning, and have realised that
+the mixture model is not quite as trivial as I had imagined.
+</p>
+
+<p>
+To be clear, working in 1d for now, our normalised modified prior is
+of the form:
+</p>
+
+<p>
+\[\tilde{\pi}(\theta) = \beta U[a,b](\theta) + (1-\beta)G[mu,sigma](\theta)\]
+</p>
+
+<p>
+where there will be a,b,&mu;,&sigma; for each dimension. To compute the prior
+transformation which maps x&isin;[0,1] onto &theta;, nominally we should do this
+via the inverse of the cdf:
+</p>
+\begin{equation}
+      F(\theta) = \frac{\beta (\theta-a)}{(b-a)} +
+      (1-\beta) \frac{1}{2}\frac{1+erf(\theta-\mu)}{\sqrt{2}\sigma}
+\end{equation}
+
+<p>
+Unfortunately \(x = F(\theta)\) is not invertible. There is another way
+around mapping \(x\in[0,1]\).
+</p>
+
+<p>
+In general, if you have a mixture of normalised priors: \[ \pi(\theta) = \sum_i
+ A_i f_i(\theta)\]
+</p>
+
+<p>
+\[\sum_i A_i = 1 \] where each \(f_i\) has an inverse CDF of \(\theta = F^{-1}_i(x)\)
+</p>
+
+<p>
+one can define a piecewise mapping from \(x\in[0,1]\) thus:
+</p>
+
+<p>
+\(\theta = F^{-1}_{i}\left(\frac{x-\alpha_{i-1}}{A_i}\right) : \alpha_{i-1} < x < \alpha_i\)
+</p>
+
+<p>
+\[\alpha_i = \sum_j^{i} A_j\]
+</p>
+
+<p>
+Basically this uses x to first choose which component of the mixture
+is active (via the piecewise bit), and then rescales the portion of x
+within that mixture to [0,1].
+</p>
+
+<p>
+This method seems a little hacky at first, but the more I think about
+it the more reasonable it seems. I would be interested to hear your
+opinion, and we can discuss on Wednesday morning. Until then,
+practically you should focus on the diagonal PPR approach, as that is
+much more straightforward, and captures the essence of the method.
+</p>
+</div>
+</li>
+
+
+<li><a id="orgb314756"></a>Data and Parameter covariance matrices.<br />
+<div class="outline-text-5" id="text-4-1-2-4">
+<p>
+To avoid having to generate data with a given distribution,
+we can simply and directly use the Parameter covariance
+matrix, for our toy models.
+</p>
+
+<p>
+This basically means that instead of using the model's
+functional form, we directly assume that the distribution is
+of Gaussian nature. This we simply plug into the log
+likelihood, and the rest of the algorithm proceeds as if we
+had data and the functional form, and the \(chi^2\)
+computation was done for free.
+</p>
+</div>
+
+
+<ol class="org-ol">
+<li><a id="org3d08616"></a>Correlated vs Uncorrelated Gaussian log likelihoods<br />
+<div class="outline-text-6" id="text-4-1-2-4-1">
+<p>
+If the parameter covariance matrix is completely diagonal,
+then the parameters are each individually Gaussian
+distributed, with a standard deviation being the diagonal
+element.
+</p>
+
+<p>
+An arbitrary coupling can lead to covariance on the
+off-diagonal. These mixtures can be unmixed by using either
+Singular Value or eigenvalue decomposition of the covariance
+matrix. This can be simply regarded as a coordinate
+transform, a passive one at that. Consequently, a Gaussian
+distribution in Loglikelihood takes the following form.
+</p>
+
+<p>
+Let \(\vec{\mu}\) be the vector of mean values of Gaussian
+distributed parameters \(\vec{\theta}\) (we shall drop the
+vector). The corresponding parameter covariance matrix is
+\(G_{i,j}\).
+</p>
+
+<p>
+Therefore the corresponding loglilkelihood is
+</p>
+
+<p>
+\[ 
+	  \ln {\cal L} = -N - (\theta - \mu)^{T} G^{-1} (\theta - \mu)
+	  \],
+where the normalisation constant is given by 
+\[
+	  N = \frac{\det \left| 2\pi G \right|}{2}
+	  \]. 
+</p>
+</div>
+</li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+
+
+
+<div id="outline-container-orgb3aeb75" class="outline-3">
+<h3 id="orgb3aeb75"><span class="section-number-3">4.2</span> Lent Term</h3>
+<div class="outline-text-3" id="text-4-2">
+</div>
+<div id="outline-container-org44765b1" class="outline-4">
+<h4 id="org44765b1"><span class="section-number-4">4.2.1</span> Polychord <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-10 Fri&gt;</span></span></h4>
+<div class="outline-text-4" id="text-4-2-1">
+<p>
+Polychord is a nested sampling program that uses directional
+slicing, which is not (citation needed) a form of rejection
+sampling.
+</p>
+
+<p>
+To run polychord one needs to do three things:
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge710a7a" class="outline-4">
+<h4 id="orge710a7a"><span class="section-number-4">4.2.2</span> <code>settings</code></h4>
+<div class="outline-text-4" id="text-4-2-2">
+<p>
+which needs the number of dimesnions with which we're working,
+(very procedural, probably a consequence of fortran-centric
+implementation).
+</p>
+
+<p>
+The Settings have information about the verbosity of the
+system.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-ipython">settings.feedback = 0
+</pre>
+</div>
+<p>
+seems to be a good default. 
+</p>
+
+<p>
+Polychord can resume the older run, if instructed (rather by
+default), so in order to have clean bench-marking do
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #daa520;">settings.read_resume</span>=<span style="color: #dcdcdc;">False</span>
+</pre>
+</div>
+
+<p>
+To control running-time vs precision trade-off, use 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #daa520;">settings.nlive</span>=175
+</pre>
+</div>
+
+<p>
+Changing it to a lower value makes the program run faster. 
+</p>
+
+<p>
+Another way to control termination is the 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python"><span style="color: #daa520;">settings.precision_target</span>=0.1
+</pre>
+</div>
+
+<p>
+But we should normally not tinker with it. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-org8000ae1" class="outline-4">
+<h4 id="org8000ae1"><span class="section-number-4">4.2.3</span> logLikelihood</h4>
+<div class="outline-text-4" id="text-4-2-3">
+<p>
+This is essentially a \( \chi^2\), which represents the
+probability of our data, given the model and the parameter
+values.
+</p>
+
+<p>
+We need to define it for each model. Ideally what it needs to
+return is the normalised probability, but not giving it the
+proper normalisation doesn't seem to affect the run-time, only
+the result.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orge32fc9e" class="outline-4">
+<h4 id="orge32fc9e"><span class="section-number-4">4.2.4</span> Prior</h4>
+<div class="outline-text-4" id="text-4-2-4">
+<p>
+This is a weird function. What this is called, probably has
+nothing to do with what it actually is: it's taking a point in
+a unit hypercube and maps it onto the real \( \theta\) values.
+</p>
+
+<p>
+This function is where we can get most of our performance
+uplift.
+</p>
+
+<p>
+Ideally assuming that the <i>real</i> prior is the posterior the
+algorithm should converge the fastest. This should however
+affect the loglikelihood calls, because we're re-scaling the
+space.
+</p>
+
+<p>
+I <b><b>think</b></b> that this simply means that the absolute value of
+the <b><b>loglikelihood</b></b> is <b><b>not a meaningful</b></b> number.
+</p>
+</div>
+
+<ol class="org-ol">
+<li><a id="orgadf8f0d"></a>UPDATE: it is meaningful. Just not without the prior.  <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-02-14 Fri&gt;</span></span><br />
+<div class="outline-text-5" id="text-4-2-4-1">
+<p>
+AutoPR relies on 
+</p>
+</div>
+</li>
+</ol>
+</div>
+
+
+<div id="outline-container-org3420d2f" class="outline-4">
+<h4 id="org3420d2f"><span class="section-number-4">4.2.5</span> Approaches to modelling systems.  <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-17 Fri&gt;</span></span></h4>
+<div class="outline-text-4" id="text-4-2-5">
+<p>
+One way to model all of our systems is by looking at the \(
+	\chi^2\) and dealing with generated data. While this is close
+to what the system might actually do, this is not itself a
+good solution, it's slow and it requires extra computations in
+generating the data with the properties that we need.
+</p>
+
+<p>
+Instead we might simply treat the system as if it was already
+diagonalised in the model parameter space. So if our model has
+</p>
+
+\begin{equation}
+  \mu =
+  \begin{pmatrix}
+    \mu_{0}\\
+    \mu_{1}\\
+    \vdots\\
+    \mu_{n}
+  \end{pmatrix}
+\end{equation}
+
+<p>
+and 
+</p>
+
+\begin{equation}
+  G =
+  \begin{pmatrix}
+    \sigma_{1}^2 & \sigma_{12}^2 & \cdots & \sigma_{1n}^2\\
+    \vdots & \ddots &  \vdots & \vdots \\
+     \sigma_{n1}^2 & \sigma_{n2}^2 & \cdots & \sigma_{n}^2
+  \end{pmatrix}
+\end{equation}
+
+<p>
+which is itself a gaussian assumption, we get the following: as our loglikelihood
+</p>
+
+\begin{equation}
+  \ln {\cal {L}}  = - N - (\theta - \mu)^{T}G^{-1}(\theta-\mu)
+\end{equation}
+
+<p>
+where \( N \) can be found by integrating a multivariate Gaussian. See handout for Phase Transitions: 
+</p>
+
+\begin{equation}
+  N = \ln \det |2\pi G |
+\end{equation}
+
+<p>
+this can be evaluated in one fell swoop using 
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">numpy.linalg.slogdet<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">(</span>2*pi*G<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">)</span>
+</pre>
+</div>
+
+<p>
+This allows us to do calculations in a fraction of the time. 
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orge8e9fca" class="outline-4">
+<h4 id="orge8e9fca"><span class="section-number-4">4.2.6</span> Comparison of runs. <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-24 Fri&gt;</span></span></h4>
+<div class="outline-text-4" id="text-4-2-6">
+<p>
+Planck data can be downloaded from (see references), and using
+the following constraints, we can compute the misfit between
+data.
+</p>
+
+
+<p>
+<a href="../LCDM-NS/toy-models/1/Comparison of run with uniform prior and paper.pdf">../LCDM-NS/toy-models/1/Comparison of run with uniform prior and paper.pdf</a>
+</p>
+
+
+<p>
+This shows profound agreement, usingThe following constraints
+on the parameters.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-python">    <span style="color: #daa520;">planck_ranges</span> = numpy.array<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">(</span>
+            <span style="color: #93a8c6; font-size: 170%;">[</span><span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0.019, 0.025<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0.095, 0.145<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>1.03, 1.05<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0.01, 0.4<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>2.5, 3.7<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0.885, 1.04<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0.9, 1.1<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 200<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 1<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 10<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 400<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 400<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 400<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 400<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 10<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 50<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 50<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 100<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 400<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 10<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 10<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 10<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 10<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 10<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 10<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 3<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span>,
+             <span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">[</span>0, 3<span style="color: #b0b1a3; font-size: 140%; font-weight: bold;">]</span><span style="color: #93a8c6; font-size: 170%;">]</span><span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">)</span>
+
+
+    <span style="color: #daa520;">samples</span> = anesthetic.NestedSamples<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">(</span>root=<span style="color: #dcdcdc;">'./data.1908.09139/lcdm/chains/planck'</span><span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">)</span>
+    <span style="color: #daa520;">fig</span>, <span style="color: #daa520;">ax</span> = samples.plot_2d<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">(</span><span style="color: #93a8c6; font-size: 170%;">[</span><span style="color: #dcdcdc;">'logA'</span>, <span style="color: #dcdcdc;">'ns'</span><span style="color: #93a8c6; font-size: 170%;">]</span><span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">)</span>
+    <span style="color: #a9a9a9;"># </span><span style="color: #a9a9a9;">plt.show()</span>
+
+
+    <span style="color: #a9a9a9;"># </span><span style="color: #a9a9a9;">params = samples.columns[:27]</span>
+    <span style="color: #daa520;">params</span> = samples.columns<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">[</span>:27<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">]</span>
+    <span style="color: #daa520;">Sig</span> = samples<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">[</span>params<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">]</span>.cov<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">()</span>.values
+    <span style="color: #daa520;">mu</span> = samples<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">[</span>params<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">]</span>.mean<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">()</span>.values
+    <span style="color: #daa520;">nDims</span> = <span style="color: #f5f5f5; text-decoration: underline;">len</span><span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">(</span>mu<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">)</span>
+
+    <span style="color: #a9a9a9;"># </span><span style="color: #a9a9a9;">Run of the original</span>
+
+    <span style="color: #daa520;">args</span> = <span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">{</span>
+            <span style="color: #dcdcdc;">'root_name'</span>: <span style="color: #dcdcdc;">'planck'</span>,
+            <span style="color: #dcdcdc;">'m'</span>: mu,
+            <span style="color: #dcdcdc;">'s'</span>: Sig,
+            <span style="color: #dcdcdc;">'likelihood'</span>: <span style="color: #ff6347;">lambda</span> x: gaussian_likelihood<span style="color: #93a8c6; font-size: 170%;">(</span>x, mu, Sig<span style="color: #93a8c6; font-size: 170%;">)</span>,
+            <span style="color: #a9a9a9;"># </span><span style="color: #a9a9a9;">'renew_plots': True,</span>
+            <span style="color: #dcdcdc;">'renew_plots'</span>: <span style="color: #dcdcdc;">False</span>,
+            <span style="color: #dcdcdc;">'nLive'</span>: 2,
+            <span style="color: #dcdcdc;">'prior'</span>: <span style="color: #ff6347;">lambda</span> x: uniform_prior_with_ranges<span style="color: #93a8c6; font-size: 170%;">(</span>x, planck_ranges<span style="color: #93a8c6; font-size: 170%;">)</span>,
+            <span style="color: #dcdcdc;">'ax'</span>: ax
+    <span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">}</span>
+    exec_polychord<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">(</span>**args<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">)</span>
+
+... 
+    <span style="color: #daa520;">newSamples</span> = anesthetic.NestedSamples<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">(</span>root=<span style="color: #dcdcdc;">'./chains/planck'</span><span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">)</span>
+    newSamples.plot_2d<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">(</span>ax<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">)</span>
+
+    plt.show<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">()</span>
+    <span style="color: #daa520;">fig</span> = plt.figure<span style="color: #8c8c8c; font-size: 170%; font-weight: bold;">()</span>
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org71d8582" class="outline-4">
+<h4 id="org71d8582"><span class="section-number-4">4.2.7</span> Automated Power Posterior Repartitioning. <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-01-24 Fri&gt;</span></span></h4>
+<div class="outline-text-4" id="text-4-2-7">
+<p>
+Looking at <a href="https://arxiv.org/pdf/1908.04655.pdf">https://arxiv.org/pdf/1908.04655.pdf</a> we can see
+that one can get better convergence if we use something called
+the Automated posterior repartitioning.
+</p>
+
+<p>
+We start with a Gaussian prior. 
+</p>
+
+\begin{equation}
+  \pi(\theta) = G(\mu, \sigma) (\theta)
+\end{equation}
+
+<p>
+We then introduce an extra parameter into our system: 
+</p>
+
+\begin{equation}
+  \tilde{\theta} = \begin{pmatrix}
+	\theta_{1}\\
+	\downarrow\\
+	\theta_{n}\\
+	\beta
+  \end{pmatrix}
+\end{equation}
+
+<p>
+We then use this parameter to rescale the prior that we
+originally had:
+</p>
+
+\begin{equation}
+  \tilde{\pi}(\tilde{\theta}}) = \frac{{G(\mu, \sigma)(\theta)}^\beta}{Z_\pi(\beta)}
+\end{equation}
+
+<p>
+And normalise it to one Having done that we need to keep the
+posterior the same, so we need to rescale (citation needed)
+the loglikelihood to account for this change.
+</p>
+</div>
+
+<ol class="org-ol">
+<li><a id="org5ae2c71"></a>When, how and why do repartitioning. <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-02-19 Wed&gt;</span></span><br />
+<div class="outline-text-5" id="text-4-2-7-1">
+<p>
+After multiple experiments I arrived at the following.
+</p>
+
+<p>
+Running PolyChord with a Gaussian is <b><b>not the same</b></b> as what
+we want to accomplish.
+</p>
+
+<p>
+When we consider two different priors, a Uniform from
+\((a,b)^\otimes n\) and a Gaussian given by an \(n\times n\)
+matrix \( \sigma \).
+</p>
+
+<p>
+The histogram of the loglikelihood calls and their results
+will be different, it will differ due to the <i>effective
+volume</i> which each of those will occupy.
+</p>
+
+<p>
+Naturally a Gaussian, even if it has the same effective
+volume cannot simultaneously give the same evidence and the
+same Posterior.
+</p>
+
+<p>
+So we can ask two kinds of questions:
+</p>
+
+<p>
+a) What is the Posterior given the prior that has a different
+volume.
+</p>
+
+<p>
+In this case the loglikelihood calls will cluster around
+different values. This is a legitimate question to ask, but
+it requires more information.
+</p>
+
+<p>
+If we take a system where we don't have the extra information
+about the location of the posterior peaks and their shape,
+and plug in a prior that does, we're biasing the system, and
+effectively <i>fudging</i> the answer. This can in some cases be
+useful, but it's not quite what the project aims to do.
+</p>
+
+<p>
+So instead of asking what would our answer be with a
+different prior, we ask a different question. What would our
+answer be if our system was biased to picke the values that
+<i>suspect</i> are the correct posterior values, without that
+affecting the posterior distribution and injecting extra
+information that we don't have/ can't quantify.
+</p>
+
+<p>
+This is a philosophical issue. Intuitively, if we have the
+extra information it <i>must</i> be reflected in the prior. It
+can't otherwise. In fact by biasing the system, even if we
+repartition the combination \( {\cal L } \pi \) we can still
+end up with a biased and therefore useless result.
+</p>
+
+<p>
+In fact, my experiments clearly show this; if the Prior
+corresponding to <i>a</i> Gaussian which is not the same as the
+posterior (has a different value of the mean), it can result
+in the algorithm terminating and generating a completely
+false posterior.
+</p>
+
+<p>
+See <a href="./toy-models/1/1.0 Example of parameter covariance.py/">./toy-models/1/1.0 Example of parameter covariance.py/</a>. 
+</p>
+
+<p>
+By doing repartitioning we allow our guess to be wrong,
+without that affecting the outcomes: posterior and evidence.
+</p>
+</div>
+</li>
+
+
+
+
+<li><a id="orgc85367d"></a>Correlated and Uncorrelated Gaussian:<span class="timestamp-wrapper"><span class="timestamp">&lt;2020-02-03 Mon&gt;</span></span><br />
+<div class="outline-text-5" id="text-4-2-7-2">
+<p>
+Knowing that the parameter covariance matrix, is usually
+positive defininte, one can argue that the question of
+whether or not the parameters in the model are correlated, or
+completely uncorrelated (i.e. each has a single standard
+deviation value) is moot.
+</p>
+
+<p>
+We can always perform a linear operation that diagonalises
+the parameter covariance matrix, and what the algorithm needs
+to do is only to work with the uncorrelated Gaussians.
+</p>
+
+<p>
+That of course is true, but some repartitioning schemes are
+more sensitive to this fact, and can only work after the
+coordinate transformation has been performed, which itself
+adds to the complexity.
+</p>
+
+
+<p>
+Other algorithms are more capable of doing this properly. 
+</p>
+</div>
+</li>
+
+
+
+<li><a id="org03f8fde"></a><br /></li>
+</ol>
+</div>
+</div>
+
+<div id="outline-container-org79e4f15" class="outline-3">
+<h3 id="org79e4f15"><span class="section-number-3">4.3</span> Easter "vacation"</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Notes at this stage already in the form of write-up. If detailed
+history is needed, just refer to the git history of the
+project-report.org.
+</p>
+</div>
+
+
+<div id="outline-container-org0ba6095" class="outline-4">
+<h4 id="org0ba6095"><span class="section-number-4">4.3.1</span> Cobaya settings <span class="timestamp-wrapper"><span class="timestamp">&lt;2020-03-18 Wed&gt;</span></span></h4>
+<div class="outline-text-4" id="text-4-3-1">
+<p>
+Hi all, I've cc'd Aleksandr who&#x2026;.
+</p>
+
+<div class="org-src-container">
+<pre class="src src-yaml">sampler:
+  polychord:
+   num_repeats: 2d
+   blocking:
+    - [1, [omega_b, omega_cdm, theta_s_1e2, tau_reio, logA, ns]]
+    - [20, [A_planck, A_cib_217, xi_sz_cib, A_sz, ps_A_100_100, 
+       ps_A_143_143, ps_A_143_217, ps_A_217_217, ksz_norm, gal545_A_100, 
+       gal545_A_143, gal545_A_143_217, gal545_A_217, calib_100T, calib_217T, 
+       galf_TE_A_100_143, galf_TE_A_143_217, galf_TE_A_100_217, 
+       galf_TE_A_100, galf_TE_A_143, galf_TE_A_217]]
+</pre>
+</div>
+
+<p>
+
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Aleksandr Petrosyan</p>
+<p class="date">Created: 2020-04-20 Mon 12:23</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
