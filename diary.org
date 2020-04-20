@@ -1,10 +1,37 @@
 #+TITLE: Project Diary for "Cosmological parameter estimation using Bayesian accelerated Machine learning"
 #+AUTHOR: Aleksandr Petrosyan
 #+BIBLIOGRAPHY: bibliography.bib
+#+OPTIONS: <, prop
+
+This is a GNU emacs Org file. It's a sophisticated formate used mainly
+for literate programming, and for creating outlines, time management,
+project management and importantly for the purposes of the present
+project: Facilities to track and timestamp every aspect of the
+aforementioned features.
 
 This file contains the notes and the project diary for the
-aforementioned project. The diary comes first. If specified, the
-timestamp on the notes is when the note was originally written.
+``Cosmological Parameter estimation using accelerated Bayesian machine
+learning'' project. The diary is a time-stamped list of activities
+with links to their results. 
+
+The descriptions of activities are terse.
+
+The reason is, that the entire point of keeping a diary is to be able
+to tell if I had a *plan*, and have enough information to *reproduce*
+the research. For the first, the timestamps as well as the scheduled
+and deadline keywords are enough to tell when and how much time was
+spent on each topic. For the latter, this diary's notes should provide
+the minimum theoretical knowledge to make sense of the code. Since the
+code itself is timestamped (it's a git repository), is based on simpe
+intuitive concepts that do not normally require explanation. The few
+cases that do, are covered in the [[*Notes][notes]].
+
+Any theoretical findings are found and *properly* explained in the
+[[file:paper.org][paper.]] Code is self-documenting, where explanations are needed, they
+are provided in the docstrings. 
+
+Surveyed literature is compressed into the [[*Notes][Notes]] section. So are any
+calculations necessary to understand how the re-partitioning works.
 
 
 * Michaelmas
@@ -114,7 +141,7 @@ timestamp on the notes is when the note was originally written.
 *** DONE Read about Bayesian statistics. $\Chi^2$ test. 
     Notes. 
 * Lent
-** Week 1. 
+** Week 1
 *** Meet Dr Handley <2020-01-17 Fri>
     Talked about the line fitting example. 
 *** DONE Re-factor the line-fitting examples
@@ -132,7 +159,6 @@ timestamp on the notes is when the note was originally written.
 *** DONE Implement the Data generator
     SCHEDULED: <2020-01-20 Mon>
     :LOGBOOK:
-    CLOCK: [2020-01-22 Wed 19:20]--[2020-01-23 Thu 01:16] =>  5:56
     CLOCK: [2020-01-22 Sat 09:15]--[2020-01-22 Wed 13:15] =>  4:00
     CLOCK: [2020-01-21 Tue 09:03]--[2020-01-21 Tue 16:30] =>  7:27
     CLOCK: [2020-01-20 Mon 09:17]--[2020-01-20 Mon 12:20] =>  3:03
@@ -146,20 +172,186 @@ timestamp on the notes is when the note was originally written.
     chi-squared likelihood fit from 
     [[./toy-models/0/0.2 DataCovarianceWithGenerator/Polychord.py]]. 
     
-    Credit to 
+    Credit 
 
     [[http://jrmeyer.github.io/machinelearning/2017/08/18/mle.html]]
 
     update: ln_z is an exceedingly bad name for the loglikelihood. 
 ** Week 2
 *** DONE meet Dr Handley. 
-    SCHEDULED: <2020-01-24 Fri>
+    SCHEDULED: <2020-01-22 Wed>
     The data generator isn't necessary. I was using too many live
     points. $200$ live points is good-enough for publication quality
     results. Reduce that to 20. Try it with Planck chains. 
 
-    [[]]
+    [[https://doi.org/10.5281/zenodo.3371152]]
 
+	Try to see if the parameter covariance matrices yield the same
+	results as the Planck chains. 
+*** DONE Refactor the following script. Check that posteriors agree with paper
+	SCHEDULED: <2020-01-23 Thu>
+	:LOGBOOK:
+	CLOCK: [2020-01-29 Wed 21:30]--[2020-01-29 Wed 22:00] =>  0:30
+	CLOCK: [2020-01-23 Thu 15:27]--[2020-01-23 Thu 19:35] =>  4:08
+	CLOCK: [2020-01-23 Thu 21:27]--[2020-01-23 Thu 23:35] =>  2:08
+	:END:
+
+	#+BEGIN_SRC python
+	  import numpy
+	  import pypolychord
+	  from pypolychord.settings import PolyChordSettings
+	  from pypolychord.priors import UniformPrior
+
+	  nDims = 2
+	  nDerived = 0
+	  mu = numpy.array([0,0])
+	  Sig = numpy.array([[1,0.99],[0.99,1]])
+	  invSig = numpy.linalg.inv(Sig)
+	  norm = numpy.linalg.slogdet(2*numpy.pi*Sig)[1]/2
+
+
+	  def likelihood(theta):
+		  """ Simple Gaussian Likelihood"""
+		  logL = - norm  - (theta - mu) @ invSig @ (theta - mu) / 2
+		  return logL, []
+
+
+	  def prior(hypercube):
+		  """ Uniform prior from [-1,1]^D. """
+		  return UniformPrior(-20, 20)(hypercube)
+
+
+	  settings = PolyChordSettings(nDims, nDerived)
+	  settings.file_root = 'gaussian_2'
+	  settings.nlive = 200
+	  settings.do_clustering = True
+	  settings.read_resume = False
+
+	  output = pypolychord.run_polychord(likelihood, nDims, nDerived, settings, prior)
+	  from anesthetic import NestedSamples
+	  samples = NestedSamples(root='./chains/gaussian')
+	  fig, ax = samples.plot_2d([0,1])
+	  samples_1 = NestedSamples(root='./chains/gaussian_1')
+	  samples_1.plot_2d(ax)
+	  samples_2 = NestedSamples(root='./chains/gaussian_2')
+	  samples_2.plot_2d(ax)
+
+
+
+	  samples = NestedSamples(root='/data/will/tension/runs/lcdm/chains/planck')
+	  samples.plot_2d(['logA', 'ns'])
+
+	  params = samples.columns[:27]
+	  Sig = samples[params].cov().values
+	  mu = samples[params].mean().values
+	  invSig = numpy.linalg.inv(Sig)
+	  norm = numpy.linalg.slogdet(2*numpy.pi*Sig)[1]/2
+	  nDims = len(mu)
+
+	  ranges = numpy.array(
+				  [[0.019,0.025],
+				  [0.095,0.145],
+				  [1.03,1.05],
+				  [0.01,0.4],
+				  [2.5,3.7],
+				  [0.885,1.04],
+				  [0.9,1.1],
+				  [0,200],
+				  [0,1],
+				  [0,10],
+				  [0,400],
+				  [0,400],
+				  [0,400],
+				  [0,400],
+				  [0,10],
+				  [0,50],
+				  [0,50],
+				  [0,100],
+				  [0,400],
+				  [0,10],
+				  [0,10],
+				  [0,10],
+				  [0,10],
+				  [0,10],
+				  [0,10],
+				  [0,3],
+				  [0,3]])
+
+	  def prior(hypercube):
+		  """ Uniform prior from [-1,1]^D. """
+		  return ranges[:,0] + hypercube * (ranges[:,1]- ranges[:,0])
+
+
+	  settings = PolyChordSettings(nDims, nDerived)
+	  settings.file_root = 'gaussian_2'
+	  settings.nlive = 200
+	  settings.do_clustering = True
+	  settings.read_resume = False
+
+	  samples = NestedSamples(root='/data/will/tension/runs/lcdm/chains/planck')
+	  samples.plot_2d(['logA', 'ns'])
+
+	  output = pypolychord.run_polychord(likelihood, nDims, nDerived, settings, prior)
+
+	#+END_SRC
+
+	Produces weird misfit. 
+	[[./toy-models/1/Comparison of run with uniform prior and paper.pdf]]
+
+	update: EUREKA! Neither PolyChord nor anesthetic when loading the
+	samples from disk actually re-name the parameters. I was simply
+	comparing the runs of different parameters, no wonder their
+	posteriors had nothing in common. 
+
+	Need to use a =numpy.ndarray= as input. Convert into a pandas data
+	frame and convert it back in the output.
+
+	Updated code is 
+	[[./toy-models/1/1.0 Example of parameter covariance.py]] 
+*** DONE Implement Uncorrelated Gaussian
+	:LOGBOOK:
+	CLOCK: [2020-01-27 Mon 09:36]--[2020-04-19 Sun 00:42] => 1983:06
+	:END:
+	Be careful: \(erf\) maps \(R\) to \([-1,1]\) but we need a mapping
+	from \([0,1]\) back to \(R\). So use \(\erf^-1(2x - 1)\). 
+
+	See [[./toy-models/1/1.1 parameter-covariance - with Gaussians.py]]
+*** DONE Implement Correlated Gaussian
+	:LOGBOOK:
+	CLOCK: [2020-01-28 Tue 10:42]--[2020-01-28 Tue 17:43] =>  7:01
+	:END:
+	Chloesky decomposition makes the off-diagonal elements of the
+	\(\Sigma\) matrix more important. This is because the covariance
+	matrix has certain properties: it's positive definite,
+	invertible. So we can't just invent one. 
+
+	\begin{equation}
+	  \Sigma =
+	  \begin{pmatrix}
+		1 & 0.5 & 0.5\\
+		0.5 & 1 & 0.5\\
+		0.5 & 0.5 & 1
+	  \end{pmatrix}
+	  = 
+	  begin{pmatrix}
+	  1 & -1 & -1 \\
+	  1 & 1 & 0 \\
+	  1 & 0 &1 
+	  \end{pmatrix}
+	  \frac{\diag (2, 0.5, 0.5)}{3}
+	  \begin{pmatrix}
+	  1 & 1 & 1 \\
+	  -1 & 2 & -1 \\
+	  -1 & -1 & 2
+	  \end{pmatrix}
+	\end{equation}
+	Has all of the aforementioned properties. It is
+	diagonaliseable. This is an ellipsoid stretched across the corners
+	and the edge midpoints of a unit hyper-cube. This has all of our
+	needed properties.
+
+	
+	
 * Easter ''Vacation''
 ** Week 1. 
 *** DONE Set up SSH access to CSD3. 
@@ -288,9 +480,78 @@ timestamp on the notes is when the note was originally written.
     :LOGBOOK:
     CLOCK: [2020-03-27 Fri 14:00]--[2020-03-27 Fri 14:55] =>  0:55
     :END:
-    Received comments/compliments. 
+    Received comments/compliments. More plots. Use the home computer
+    and cluster to accelerate calculations.
 
-*** DONE incorporate 
+	
+
+*** DONE Implement offset. 
+	SCHEDULED: <2020-04-05 Sun>
+	:LOGBOOK:
+	CLOCK: [2020-04-05 Sun 17:00]--[2020-04-05 Sun 18:00] =>  1:00
+	:END:
+	Very easy to do. Just implement an intermediate class that
+	takes a model and overrides the methods to offset the arguments of
+	log-likelihood. 
+	[[./framework/offset_model.py]]
+	
+*** DONE Benchmark.
+	:LOGBOOK:
+	CLOCK: [2020-03-24 Tue 09:32]--[2020-03-24 Tue 15:33] =>  6:01
+	CLOCK: [2020-04-07 Tue 11:10]--[2020-04-07 Tue 15:10] =>  4:00
+	CLOCK: [2020-04-05 Sun 09:08]--[2020-04-05 Sun 17:09] =>  8:01
+	:END:
+	Use nLike to estimate the time it took. Investigate the use of
+	Kullback-leibler.
+
+**** DONE Figure out why MPI is causing crashes if more than one instance of PolyChord is run. 
+	 :LOGBOOK:
+	 CLOCK: [2020-04-05 Sun 19:28]--[2020-04-06 Mon 02:30] =>  4:32
+	 :END:
+
+	 #+begin_src python
+	 from mpi4py import MPI
+	 #+end_src
+	 This is an example of why non-functional side-effect-y code is
+	 bad. importing a module should have *no* bearing on the code
+	 that's being run, except for making code available to the
+	 interpreter. This can cause Undefined behaviour if the module is
+	 being imported more than once. This can lead to many bugs like
+	 this one.
+	 
+	 DITTO, remove all global code from the modules and put the tests in their own 
+	 functions:
+	 #+begin_src python
+	   if __name__ == '__main__':
+		   test()
+	 #+end_src
+
+**** DONE Plot the results. 
+	
+	 Benchmark PPR, SSPR mixture of Uniform and Gaussian. 
+	  ./framework/benchmarks.py]]. 
+
+	 If the mixture contains a Gaussian, and/or is a Gaussian itself
+	 with re-partitioning done properly, i.e. the Log-likelihood is
+	 coorrected, the PolyChord terminates with empty files which
+	 anesthetic cannot load. 
+	
+	 This is weird. Need to ask Will about this.
+
+*** DONE Investigate usefullenss of Kullback-leibler
+	:LOGBOOK:
+	CLOCK: [2020-04-11 Sat 11:13]--[2020-04-11 Sat 13:13] =>  2:00
+	CLOCK: [2020-04-07 Tue 17:11]--[2020-04-07 Tue 22:00] =>  4:49
+	:END:
+	Not a good metric. This is smaller if the posterior is wrong. It
+	also doesn't correlate with performance. 
+
+	It does correlate with perofmrnace, but not as much as one would
+	hope. 
+
+	[[./illustrations/kullback-leibler.tex]]
+
+	nLike is the dominant cost. Class takes 12 seconds to evaluate it, CAMB takes 3. 
 *** DONE Add Slurm warnings about failures 
     SCHEDULED: <2020-03-28 Sat>
 
@@ -304,9 +565,155 @@ timestamp on the notes is when the note was originally written.
 *** DONE Migrate sbatch script to one of the examples. 
     SCHEDULED: <2020-03-28 Sat>
 
-*** DONE Email Lukas Hergt to ask for help
-    SCHEDULED: <2020-03-31 Tue>
+*** DONE Obtain posterior from Cobaya
+    SCHEDULED: <2020-03-20 Fri>
+	Takes too long. Many repeats of 
+	
+	#+BEGIN_SRC 
+	[polychord] Calling PolyChord with arguments:
+	[polychord]   base_dir: ./raw_polychord_output
+	[polychord]   boost_posterior: 0
+	[polychord]   cluster_dir: ./raw_polychord_output/clusters
+	[polychord]   cluster_posteriors: True
+	[polychord]   compression_factor: 0.36787944117144233
+	[polychord]   do_clustering: True
+	[polychord]   equals: True
+	[polychord]   feedback: 1
+	[polychord]   file_root: run
+	[polychord]   grade_dims: [6, 21]
+	[polychord]   grade_frac: [12, 840]
+	[polychord]   logzero: -1e+300
+	[polychord]   max_ndead: -1
+	[polychord]   maximise: False
+	[polychord]   nfail: -1
+	[polychord]   nlive: 675
+	[polychord]   nlives: {}
+	[polychord]   nprior: -1
+	[polychord]   num_repeats: 135
+	[polychord]   posteriors: True
+	[polychord]   precision_criterion: 0.001
+	[polychord]   read_resume: True
+	[polychord]   seed: -1
+	[polychord]   write_dead: True
+	[polychord]   write_live: True
+	[polychord]   write_paramnames: False
+	[polychord]   write_prior: True
+	[polychord]   write_resume: True
+	[polychord]   write_stats: True
+	[polychord] Sampling!
+	#+END_SRC
 
+	May be that it doesn't terminate correctly.  edit: Lukas mentioned
+	that the number of live poitns is too large. May be
+	related. 
+
+	Will need to edit [[./cobaya/old/run.yaml]]. 
+	
+**** DONE Fix priors
+	 The priors are too broad. Ie already written an essay on
+	 why you can't just pick a prior out of thin air, so I'm very iffy
+	 about this decision.
+
+**** DONE Reduce nLive
+	 Reduced the number of live points: [[./cobaya/run.yaml ]]
+	
+	 #+BEGIN_SRC yaml
+	 nlive: 126
+	 #+END_SRC
+
+**** DONE Re-install Cobaya. 
+	 :LOGBOOK:
+	 CLOCK: [2020-03-27 Fri 16:44]--[2020-03-27 Fri 23:05] =>  6:21
+	 :END:
+	 #+begin_src bash
+	 pip3 install cobaya --upgrade --user
+	 #+end_src
+	 It doesn't respect the venv. 
+
+	 It doesn't pull in PolyChord correctly. So much for ``just works''. 
+	 
+	 Compile from source. 
+**** DONE Re-re-install Cobaya. 
+	 :LOGBOOK:
+	 CLOCK: [2020-03-30 Mon 16:15]--[2020-03-31 Tue 02:51] => 10:36
+	 :END:
+	 It works only partially. 
+***** DONE Make sure that OpenBlas is loaded. 
+	  :LOGBOOK:
+	  CLOCK: [2020-03-30 Mon 20:01]--[2020-03-30 Mon 23:02] =>  3:01
+	  :END:
+	  #+begin_src bash
+	  python -c "from numpy import show_config; show_config()" \
+	  | grep 'mkl\|openblas_info' -A 1
+	  #+end_src
+	  Produces 
+	  #+BEGIN_SRC bash
+	  blas_mkl_info:
+	  NOT AVAILABLE
+	  --
+	  openblas_info:
+      libraries = ['openblas', 'openblas']
+	  --
+	  lapack_mkl_info:
+	  NOT AVAILABLE
+	  #+END_SRC
+	  
+	  #+BEGIN_SRC bash
+	  module load openblas
+	  #+END_SRC
+	  doesn't work. Need to re-install =numpy=. 
+
+	  #+BEGIN_SRC bash
+	  pip3 install numpy 
+	  #+END_SRC
+	  is not changing the output. Try installing from source. 
+
+	  Installing from source doesn't work. 
+
+	  EUREKA!  Cobaya defaults to =icc=, meaning that the =openblas= is
+	  not the kind of linear algebra library it's even looking for. 
+	  
+	  SOLUTION: 
+	  #+BEGIN_SRC bash
+	  module load openblas
+	  module load intel/impi/2017.4/intel
+	  module load intel/mkl/2017.4
+	  module load intel/compilers/2017.4
+	  module load intel/libs/idb/2017.4
+	  module load intel/libs/tbb/2017.4
+	  module load intel/libs/ipp/2017.4
+	  module load intel/libs/daal/2017.4
+	  module load intel/bundles/complib/2017.4
+	  #+END_SRC
+***** DONE add fix to =sbatch= script.
+	  :LOGBOOK:
+	  CLOCK: [2020-03-30 Mon 23:02]--[2020-03-30 Mon 23:30] =>  0:28
+	  :END:
+**** FAILED Run Cobaya
+	 :LOGBOOK:
+	 CLOCK: [2020-03-30 Mon 20:03]
+	 :END:
+	 Times out after 6 hours. relevant piece of sbatch script. 
+
+	 #+BEGIN_SRC bash
+	   #SBATCH -J cobaya
+	   #SBATCH --nodes=3
+	   #SBATCH --ntasks=96
+	   #SBATCH --time=06:00:00
+	   #SBATCH --mail-type=FAIL
+	   #SBATCH --mail-type=BEGIN
+	   #SBATCH --mail-type=TIME_LIMIT_80
+		
+	   ##SBATCH --qos INTR 
+	   ## What's the deal? I keep being told by Dr Handley
+	   ## to do this, and it keeps failing.
+
+	   #SBATCH --output latest_%j.out
+	 #+END_SRC
+**** FAILED Re-run Cobaya
+	 Timing out. Need to ask Lukas
+***** DONE Ask Lukas. 
+	  Too many live points.
 *** DONE Refactor of framework
     SCHEDULED: <2020-03-29 Sun>
     DEADLINE: <2020-04-02 Thu> 
@@ -322,7 +729,7 @@ timestamp on the notes is when the note was originally written.
     r = random()
     #+END_SRC
 
-    
+** Week 3
 *** DONE Test
     SCHEDULED: <2020-04-02 Thu>
     DEADLINE: <2020-04-04 Sat> 
@@ -347,23 +754,33 @@ timestamp on the notes is when the note was originally written.
 
     update: Meeting is scheduled. 
 
+*** DONE Document findings. 
+	[[./illustrations/benchmark.tex]]
+	[[./illustrations/convergence.pdf]] discussed [[*Stochastic supepositional re-partitioning.][here]].
+	[[./illustrations/higson.png]]
+	[[./illustrations/scaling-kld.tex]]
+	documented in the write-up: [[file:paper.org::*Results%20and%20Discussion.][Results and Discussion.]]
 *** DONE e-mail Dr Handley about findings.
-
-** Week 3
-
-*** DONE Add Kullback-Leibler Divergence
+	Says he's impressed. I thought I was behind schedule. Need to add
+	[[*Add Kullback-Leibler Divergence plots][more Kullback-Leibler stuff]]. Maybe see how offsets affect the
+	[[*Add Kullback-Leibler Divergence plots][Kullback Leibler divergence]]. 
+** Week 4
+*** DONE Add Kullback-Leibler Divergence plots
     :LOGBOOK:
     CLOCK: [2020-04-13 Mon 18:26]--[2020-04-18 Sat 22:47] => 124:21
     :END:
-    Kullbakc leibler divergence is useful but only marginally
+    Kullback Leibler divergence is useful but only marginally
     so. Kullback Leibler from prior to posterior indicates performance
     up to a point. 
-
+	
+	[[./illustrations/scaling-kld.tex]]
+	
     PolyChord may converge faster for a stronger bias: e.g. if the
     prior is sharply peaked at the origin. In that case
     \(\mathcal{D}\) is larger but run-time is smaller.
-
-    
+	
+	[[./illustrations/triangle-fit.pdf]]. 
+	   
     
     
 
@@ -449,6 +866,24 @@ timestamp on the notes is when the note was originally written.
     Notice that I had to use a python3 pip to install a python2
     pip. Naturally this is just stupidity.
 
+*** TODO Have a more thorough discussion of the potential next-gen sampler. 
+*** TODO prepare for the presentation
+
+*** TODO Give presentation. 
+
+*** TODO Rename all references to SSPR to SSPM
+	Posterior re-partitioning implies that it has something in common
+	with Hobson-Feroz-CHen algorithm. It does *not*. 
+
+	It's /much/ more general, in that it can deal with multiple
+	models! It can mix the priors completely, and choose the more
+	representative model!
+
+	This is not posterior re-partitioning, this is superpositional
+	prior mixing. It just so happens that we're re-partitioning the
+	posterior in every model.
+
+*** TODO describe model chaining!
 * Notes
 ** Michaelmas Term
 
@@ -457,11 +892,11 @@ timestamp on the notes is when the note was originally written.
   
 *** Terminology
 
-	Prior - \(P(\theta | M)\)
-	Likelihood - \(P(M, \theta | Data)\)
+	Prior - \(\pi (\theta) = P(\theta | M)\)
+	Likelihood - \({\cal L}(\theta) = P(M, \theta | Data)\)
    
-	Posterior - \(P(\theta | \text{Data})\)
-	Evidence - \(P(Model | Data)\)
+	Posterior - \({\cal P}(\theta) = P(\theta | \text{Data})\)
+	Evidence - \({\cal Z} = P(Model | Data)\)
 
 	Bayes' theorem says that 
 
@@ -475,15 +910,17 @@ timestamp on the notes is when the note was originally written.
 
 **** Skilling's paper
 
-	 \cite{skilling2006}
+	 cite:skilling2006
 	
 	 Nested Sampling is a machine learning technique that allows to do Bayesian parameter estimation. 
 
 	 Fitting a line to data is an example of a parameter fitting model. 
 
-	 Set \( 
-	 \chi^{2} \triangleq \sum_{i} \left(\frac{y_{i} - f(x_{i}, \theta)}{\sigma_{i}} \right)
-	 \). We need to ask a question, how likely is the data observed, given that the model is true, and the Model parameters have the given values. The probability is usually given by a Gaussian (or normal distribution). 
+	 Set \[ \chi^{2} \triangleq \sum_{i} \left(\frac{y_{i} - f(x_{i},
+	 \theta)}{\sigma_{i}} \right).  \] We need to ask a question, how
+	 likely is the data observed, given that the model is true, and
+	 the Model parameters have the given values. The probability is
+	 usually given by a Gaussian (or normal distribution).
 	
 	 \[ 
 	 L = \frac{1}{N} \exp{\left[ - \chi^{2}\right]}
@@ -558,8 +995,8 @@ timestamp on the notes is when the note was originally written.
 	 This process is then repeated until we have reached a typical
 	 set. This is often determined by estimating the /evidence/
 	 contained outside each contour (since the points are picked
-	 at random, if we have n_\text{live} points, each contour will
-	 statistically include \frac{1}{n_\text{live}} of the total
+	 at random, if we have \(n_\text{live}\) points, each contour will
+	 statistically include \(\frac{1}{n_\text{live}}\) of the total
 	 phase volume).
 
 	
@@ -752,6 +1189,56 @@ timestamp on the notes is when the note was originally written.
 	 AutoPR relies on 
 	
    
+*** Why PolyChord converges faster for more informative priors. 
+
+	Polychord stops as soon as the evidence remainig is a
+	predetermined fraction of the original. 
+
+	It's working in a unit hypercube, so we can assume that the
+	evidence is normalised. 
+
+	So the value oF 
+	#+begin_src python
+	settings.precision_criterion=0.01
+	#+end_src
+	means stop when the evidence is less than one percent.
+
+	So if we give a more informative prior the algorithm is more
+	efficient at finding all the evidence that it needs. 
+
+	The prior basically says, draw from the region of higher
+	likelihood more frequently. So you are more likely to draw more
+	evidence in a shorter time. 
+
+	It's not guaranteed to converge the fastest if the prior is the
+	posterior, hence why [[*Kullback Leibler divergence.][Kullback Leibler]] divergence is not that
+	important. 
+	
+	
+
+	
+*** Kullback Leibler divergence. 
+	KL-D is explained in the [[https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained][blog]]. It basically is the [[https://en.wikipedia.org/wiki/Entropy_(information_theory)][Shannon entropy]]
+	between two distributions. It's 
+
+	\begin{equation}
+	D = \log \langle \frac{P_{1}}{ P_{2}} \rangle
+	\end{equation}
+	so if the two distributions coincide \(D=0\), if they don't it's
+	going to be slightly positive. And if the distribution is defined
+	somewhere where the other one is zero it can be very negative. 
+
+	As a result of this, I can come up with examples where the
+	Kullback Leibler divergence is the same, byut the speed of
+	convergence is different.
+
+	This is why it can't be used as the only performance metric.
+
+	Another issue is that it assumes that everything goes well. What
+	if re-partitioning casues many fasle positives to be drawn from
+	the distribution and get rejected. This will cause a slowdown but
+	will not affect \(D\). 
+	
 *** Approaches to modelling systems.  <2020-01-17 Fri>
 	One way to model all of our systems is by looking at the \(
 	\chi^2\) and dealing with generated data. While this is close
@@ -916,92 +1403,344 @@ timestamp on the notes is when the note was originally written.
 	posterior the same, so we need to rescale (citation needed)
 	the loglikelihood to account for this change.
 
-**** When, how and why do repartitioning. <2020-02-19 Wed>
+*** Calculations neeeded for doing PPR. 
 
-	 After multiple experiments I arrived at the following.
+	As a result, to use [[*Automated Power Posterior Repartitioning. <2020-01-24 Fri>][it]] with PolyChord we need to do the following
+	three things. 
 
-	 Running PolyChord with a Gaussian is **not the same** as what
-	 we want to accomplish.
+	1) Estimate the quantile (called prior in PC). 
 
-	 When we consider two different priors, a Uniform from
-	 \((a,b)^\otimes n\) and a Gaussian given by an \(n\times n\)
-	 matrix \( \sigma \).
+	2) Estimate the correction needed to the Gaussian likelihood. 
 
-	 The histogram of the loglikelihood calls and their results
-	 will be different, it will differ due to the /effective
-	 volume/ which each of those will occupy.
+	3) Make sure that the correct dimesnionality is used.
 
-	 Naturally a Gaussian, even if it has the same effective
-	 volume cannot simultaneously give the same evidence and the
-	 same Posterior.
+	4) Maybe think of the prior on $\beta$. 
 
-	 So we can ask two kinds of questions:
+	To estimate the quantile we need to know the CDF: 
+	\begin{equation}
+	 \int_{-\inf}^{\theta} \pi(\theta') d\theta' = \Pi(\theta)
+	\end{equation}
+	Then we need to invert it. 
 
-	 a) What is the Posterior given the prior that has a different
-	 volume.
+	\begin{equation}
+	 quantile(x) = \Pi^{-1}(x) 
+	\end{equation}
 
-	 In this case the loglikelihood calls will cluster around
-	 different values. This is a legitimate question to ask, but
-	 it requires more information.
+	So if it's a truncated uniform distribution: 
+	\begin{equation}
+	\Pi(\theta) = m \theta + b
+	\end{equation}
 
-	 If we take a system where we don't have the extra information
-	 about the location of the posterior peaks and their shape,
-	 and plug in a prior that does, we're biasing the system, and
-	 effectively /fudging/ the answer. This can in some cases be
-	 useful, but it's not quite what the project aims to do.
+	Where 
+	\begin{equation}
+	m = \theta^{m} - \theta_{m}
+	\end{equation} 
+	and 
+	\begin{equation}
+	b = \theta_{m}
+	\end{equation}
+	
 
-	 So instead of asking what would our answer be with a
-	 different prior, we ask a different question. What would our
-	 answer be if our system was biased to picke the values that
-	 /suspect/ are the correct posterior values, without that
-	 affecting the posterior distribution and injecting extra
-	 information that we don't have/ can't quantify.
+	if it's a truncated Gaussian$^{\beta}$, then 
+	\begin{equation}
+	quantile = \mu + \frac{\sqrt{2} \sigma}{\sqrt{\beta}}  erf^{-1}\left(x erf \left[\sqrt{\frac{\beta}{2}}\frac{b-\mu}{\sigma}\right] +(1-x)  erf\left[\sqrt{\frac{\beta}{2}}\frac{a-\mu}{\sigma}\right] \right)
+ 	\end{equation}
+	(Dr Handley missed the prefactor of \sqrt{2}/\beta, which caused
+	headaches). 
 
-	 This is a philosophical issue. Intuitively, if we have the
-	 extra information it /must/ be reflected in the prior. It
-	 can't otherwise. In fact by biasing the system, even if we
-	 repartition the combination \( {\cal L } \pi \) we can still
-	 end up with a biased and therefore useless result.
+	Sanity check: as $a\rightarrow -\infty$ $b\rightarrow \infty$, 
+	\begin{equation}
+	  quantile \rightarrow \mu + \frac{1}{2\pi \sigma}^{\beta}
+	\end{equation}
+	Which is what we expect from Poisson integrals.
+   
 
-	 In fact, my experiments clearly show this; if the Prior
-	 corresponding to /a/ Gaussian which is not the same as the
-	 posterior (has a different value of the mean), it can result
-	 in the algorithm terminating and generating a completely
-	 false posterior.
+*** When and why do repartitioning. <2020-02-19 Wed>
 
-	 See [[./toy-models/1/1.0 Example of parameter covariance.py/]]. 
+	After multiple experiments I arrived at the following.
 
-	 By doing repartitioning we allow our guess to be wrong,
-	 without that affecting the outcomes: posterior and evidence.
+	Running PolyChord with a Gaussian is **not the same** as what
+	we want to accomplish.
+
+	When we consider two different priors, a Uniform from
+	\((a,b)^\otimes n\) and a Gaussian given by an \(n\times n\)
+	matrix \( \sigma \).
+
+	The histogram of the loglikelihood calls and their results
+	will be different, it will differ due to the /effective
+	volume/ which each of those will occupy.
+
+	Naturally a Gaussian, even if it has the same effective
+	volume cannot simultaneously give the same evidence and the
+	same Posterior.
+
+	So we can ask two kinds of questions:
+
+	a) What is the Posterior given the prior that has a different
+	volume.
+
+	In this case the loglikelihood calls will cluster around
+	different values. This is a legitimate question to ask, but
+	it requires more information.
+
+	If we take a system where we don't have the extra information
+	about the location of the posterior peaks and their shape,
+	and plug in a prior that does, we're biasing the system, and
+	effectively /fudging/ the answer. This can in some cases be
+	useful, but it's not quite what the project aims to do.
+
+	So instead of asking what would our answer be with a
+	different prior, we ask a different question. What would our
+	answer be if our system was biased to picke the values that
+	/suspect/ are the correct posterior values, without that
+	affecting the posterior distribution and injecting extra
+	information that we don't have/ can't quantify.
+
+	This is a philosophical issue. Intuitively, if we have the
+	extra information it /must/ be reflected in the prior. It
+	can't otherwise. In fact by biasing the system, even if we
+	repartition the combination \( {\cal L } \pi \) we can still
+	end up with a biased and therefore useless result.
+
+	In fact, my experiments clearly show this; if the Prior
+	corresponding to /a/ Gaussian which is not the same as the
+	posterior (has a different value of the mean), it can result
+	in the algorithm terminating and generating a completely
+	false posterior.
+
+	See [[./toy-models/1/1.0 Example of parameter covariance.py/]]. 
+
+	By doing repartitioning we allow our guess to be wrong,
+	without that affecting the outcomes: posterior and evidence.
 
    
 
-   
-**** Correlated and Uncorrelated Gaussian:<2020-02-03 Mon>
+	 
+*** Correlated and Uncorrelated Gaussian:<2020-02-03 Mon>
 
 
-	 Knowing that the parameter covariance matrix, is usually
-	 positive defininte, one can argue that the question of
-	 whether or not the parameters in the model are correlated, or
-	 completely uncorrelated (i.e. each has a single standard
-	 deviation value) is moot.
+	Knowing that the parameter covariance matrix, is usually
+	positive defininte, one can argue that the question of
+	whether or not the parameters in the model are correlated, or
+	completely uncorrelated (i.e. each has a single standard
+	deviation value) is moot.
 
-	 We can always perform a linear operation that diagonalises
-	 the parameter covariance matrix, and what the algorithm needs
-	 to do is only to work with the uncorrelated Gaussians.
+	We can always perform a linear operation that diagonalises
+	the parameter covariance matrix, and what the algorithm needs
+	to do is only to work with the uncorrelated Gaussians.
 
-	 That of course is true, but some repartitioning schemes are
-	 more sensitive to this fact, and can only work after the
-	 coordinate transformation has been performed, which itself
-	 adds to the complexity.
+	That of course is true, but some repartitioning schemes are
+	more sensitive to this fact, and can only work after the
+	coordinate transformation has been performed, which itself
+	adds to the complexity.
+
+	Other algorithms are more capable of doing this properly. SSPR,
+	what we've developed doesn't require any knowledge of the
+	underlying distribution. So we don't really care if it's
+	correlated or uncorrelated.
 
 
-	 Other algorithms are more capable of doing this properly. 
 
 
+*** Stochastic supepositional re-partitioning. 
 
-**** 
+	We take a mixture of re-partitioning schemes. Instead of saying we
+	invert the sum of them partially, like Dr Handley suggested (call
+	it additive re-partitioning), we may try to do everything
+	stochastically. 
 
+	That is, we point wise set $\tilde{\pi} \tilde{\cal L}$ to be
+	constant. But at each point $\tilde{\pi}(\theta)$ may be
+	different. This needs to be done deterministically, because
+	PolyChord re-visits the same points and complains about the
+	non-determinism. 
+
+	We can achieve the determininsm by usgin a [[https://docs.python.org/3/library/random.html][PRNG]] with a
+	deterministic seed. I would think that this is just a Hash
+	function? (edit: no it's not enough, because Python's hash
+	function is linearly distributed. This *can* work, but it will
+	only mix in one half of the domain. It's going to converge, but
+	may cause errors if we have doubled peaks etc). 
+
+	The relevant code for this is in the
+	[[./framework/general_mixture_model.py]]. This uses my implementation
+	of the broken stick probabity to choose which bin to
+	deterministically put a point with coordinates $\vec{\theta}$
+	in. The probability of being put in each bin is *not* $\beta$, but
+	is related to it. Why? Because $\beta$ vary from \(0\) to \(1\)
+	independently. So if $\beta = (1, 1, \ldots, 1)$ then the
+	probability is simply $\frac{1}{m}$ where $m$ is the number of
+	models in the mixture.
+
+	This is much faster: [[./toy-models/Run-time-for-comparison.pdf]]. I
+	don't know why yet, but it is. 
+
+	edit: it's because the bias is either full, or non-extant. With
+	PPR or an additive mixtue the bias is proportional to the value of
+	$\beta$. In SSPR, for each point, the bias is either the same is
+	it would have been for a gaussian (in which case values of
+	$\beta$, favouring the representative prior, making it skyrocket)
+	or is basically flat. This may suggest that it's also more robust. 
+
+	edit: it is more robust. [[./illustrations/convergence.pdf]]. It can
+	make PPR more robust too. If it's not a panacaea, it's pretty damn
+	close to being perfect based on being both faster, and more
+	reliable. 
+
+	edit: =[[https://github.com/ejhigson/nestcheck][nestcheck]]= [[./illustrations/higson.png/][shows]] that it's more precise, there's a lot less
+	variance in evidence, in each of the parameters. It does
+	occasionally produce =inf= s and =nan= s. I need to figure out
+	why.
+	 
+	edit: It can also mitigate the miscalculaterd evidence.
+
+*** Mixing non-repartitionned priors. 
+
+	What would happen if we mixed prios that didn't have the same
+	posterior? What if we genuinely had a prior starting with a
+	uniform, and another one that was genuinely Gaussian? 
+
+	I think that Stochastic Superpositional mixtures can deal with
+	both. They can retroactively adjust the conclusions we reached
+	earlier, and produce a better result in that case. It can compare
+	two datasets. 
+
+	This is not an optimisation to nested sampling. This is a new
+	algorithm! This is Bayesian metainferece. It can look at the
+	entire pre-history of the data. We can dynamically adjust the
+	priors!
+
+	
+*** Purpose built sampler to facilitate stochastic mixing. 
+
+**** Quantum computers. 
+	 Surprisingly, this algorithm maps onto quantum computers quite
+	 easily (ask Prof Mike Payne, and Prof. Crispin Barnes). The thing
+	 is, we need to explore both branches simultaneously, and use a
+	 qubit to represent the probability of belonging to one sub-space
+	 or the other. So if mixing \(m\) models, need \(m\) qubits. This
+	 superposition is why this is so powerful. We can make this
+	 algorithm even faster, because then there would be no extra
+	 parameter, and we're exploring the entire space. 
+
+**** Modifying PolyChord. 
+
+	 May be the easiest. I've built the new API front-end in the
+	 ./framework/ folder. You just need to provide an implementation
+	 of the prior inversion function (edit quantile), and the
+	 log-likelihood. Then set the dimensionality (parameter covariance
+	 models do it automagically). 
+
+	 So as a result, you can provide building blocks: models related
+	 by inheritance. (surprisingly, there are cases where inheritance
+	 is better than composition, since we're using Python, we might as
+	 well write it object-oriented).
+
+	 These models can be mixed. Arbitrarily. I can mix as many as I
+	 wish, and I can build them up using the provided corrections:
+	 i.e. if I have a Gaussian likelihood, that's related to data in a
+	 complicated way, I can just add the necessary corrections and it
+	 will work: e.g. 
+
+	 #+begin_src python
+	   def loglike(self, data, beta):
+			   ll = self.complicated_log_like(data)
+			   ll += gaussian_models.ppr_correction(ll, beta)
+			   return ll
+	 #+end_src
+
+	 Meaning, that very little adjustment to existing workflows is
+	 needed.
+
+	 
+**** Better API for PolyChord. 
+
+	 Currently PolyChord has the following problems.
+	 - The settings variable can be written to but not read. 
+	   #+begin_src python
+	   settings.file_root
+	   #+end_src
+	   gives no such attribute error.
+	 - The settings are non-trivial. Can't run PolyChord without
+       settings, so need to make the settings part of either a
+       PolyChord object or a model object.
+	 - MPI. It caused about seven bugs in my code. Because module
+       loading should not have side-effects.
+	 - The code may be functional. There are many cases where Currying
+       would have saved *lots* of typing.
+	 - Maybe re-write in Haskell? Rust?
+
+**** Next generation sampler. 
+	 Motivation: mixture re-partitioning can hugely benefit from
+	 having low-level access to the sampler's internal state. For example:
+	 
+	 - We may want to chain posteriors from different models as priors
+       to others.
+	 - This may allow us to gain the speed-ups up to and beyond what
+       we've shown! We can, as a person would, do a crude estimate,
+       and use that to do finer adjustments. 
+	 - We can do *Bayesian meta-analysis*. Imagine that you can re-run
+       all of the inferences that were run up to date, and you can
+       also require that the data are consistent? This *can* be done!
+	 - Sampling in $\vec{\beta}$ and the branch index need not use the
+       same technique. In fact, Metropolis Hastings for $\beta$, and
+       slice sampling for all other parameters, may lead to better
+       convergence.
+	 - Want to eliminate cross-talk between re-partitioning parameters
+       for things in the mixture. For example, if I'm mixing two PPR's
+       I don't want for both of their powers to be the same and
+       sampled the same way.
+	 - The branch index is an integer and not a nuisance parameter. It
+       was chosen so that the hashing doesn't cause undefined
+       behaviour if Python's "smart" numerical routines and
+       duck-typing decides to duck with SSPR. Ideally we want for the
+       chosen branch to be global to both the prior and likelihood
+       scope.
+	 - The slice sampler needs to be aware which branch do points
+       belong to. Ideally, it can estimate the likelihood in both
+       branches by evaluating the common likelihood, and then
+       comparing the corrections.
+	 We can also learn from =PolyChord= 's mistakes. As of now, it only
+	 supports bounded priors and even then, only on spaces that can be
+	 mapped onto from a unit hypercube. It has confusing
+	 nomenclature. The prior is not a prior: it's not a PDF, but a
+	 specification of the prior via its quantile.
+	 
+	 The bridge between Python and Fortran is unreliable. You can pass
+	 a python callable, that's not being compiled to machine code into
+	 Fortran. This is wrong. This is why the exception handling
+	 facilities of Python and the static type checking of Fortran are
+	 both made toothless. 
+
+	 The Fortran code (for performance reasons) always does unchecked
+	 assignments, while =Python= inherently assumes that all
+	 assignments are checked. A lot of the optimisations come in at
+	 compile time. In fact, almost all of the functions are pure. Yet
+	 Python doesn't support functional optimisations. Fortran does
+	 support them, but only if all routines have no side-effects,
+	 which current logging forbids.
+
+	 Polychord is very obtuse about logging. Its messages cannot be
+	 switched off. Control over verbosity and location of the produced
+	 data needs to be made more transparent. I understand that the
+	 copyright notice is the wish of the authors. That said, the
+	 program reproduces these not on module load, but every time its
+	 run! Making several runs pollute the interpreter =stdout=.
+
+	 PolyChord cannot be used in-memory. A couple of my benchmarks,
+	 since they deal with low-dimensional models were held back by the
+	 file-system input output latency. Moving them into a =ramdisk= is
+	 a solution, but not an idiomatic one. Since PolyChord has easily
+	 definable inputs it should be functional. 
+
+	 As a result I suggest the following improvements: 
+	 - Proper error handling.
+	 - An interface that *requires* a compiled likelihood and
+       dynamically links against it.
+	 - A memory-safe language with functional tendencies (Julia, Rust, C)
+
+	 
+	 
 ** Easter "vacation"
 
    Notes at this stage already in the form of write-up. If detailed
