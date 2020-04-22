@@ -351,7 +351,6 @@ calculations necessary to understand how the re-partitioning works.
 	needed properties.
 
 	
-	
 * Easter ''Vacation''
 ** Week 1. 
 *** DONE Set up SSH access to CSD3. 
