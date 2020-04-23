@@ -1,0 +1,136 @@
+#+TITLE: Cosmological Parameter estimation using Bayesian accelerated Machine learning. 
+#+AUTHOR: Aleksandr Petrosyan
+#+startup: beamer
+#+LATEX_CLASS: beamer
+#+LATEX_CLASS_OPTIONS: [bigger]
+#+LATEX_HEADER: \usepackage{natbib}
+#+LATEX_HEADER: \usepackage{bm}
+#+LATEX_HEADER: \usepackage{pgfplots}
+#+LATEX_HEADER: \usepgfplotslibrary{groupplots,dateplot}
+#+LATEX_HEADER: \usetikzlibrary{patterns,shapes.arrows}
+#+LATEX_HEADER: \pgfplotsset{compat=newest}
+#+LATEX_HEADER: \usepackage{dsfont}
+#+LATEX_HEADER: \usepackage{xcolor}
+#+LATEX_header: \usepackage{listings}
+#+LAtex_header: \DeclareMathOperator{\TopHat}{TH}
+#+LAtex_header: \DeclareMathOperator{\CDF}{CDF}
+#+OPTIONS: H:1 toc:t num:t
+#+BEAMER_THEME: Madrid
+* What is \(\Lambda\)CDM. 
+  It's the accepted standard model of Cosmology. 
+  Has the following main parameters:
+  - $\Omega_{b}h^{2}$ --- Physical baryon density.
+  - $\Omega_{c}h^{2}$ --- Physical dark matter density.
+  - $\tau_{0}$ --- Age of the universe.
+  - $n_{s}$ --- Scalar spectral index.
+  - $\tau_\text{reio}$ --- Re-ionization optical depth.
+  - $\Delta_{R}^{2}$ --- Curvature fluctuation amplitude.
+
+* How do we measure it?
+   
+  Have Planck, WMap and many other sources of data.
+   
+  Do Bayesian inference. Long discussion what this actually means. 
+
+  The gist: 
+  - Data using \(\chi^{2}\)defines ${\cal L}$ --- likelihood. 
+  - Prior information (other experiments) give us $\pi$ --- the prior. 
+  - From Bayes' theorem, compute /evidence/ ${\cal Z}$ and /posterior/ ${\cal P}$.
+  - From posterior, /marginalise/ the /calibration parameters/.
+
+* Example of posterior. 
+  Started with a *Gaussian*. Then Gave an *offset*.  \(\ln {\cal Z} =
+  -62 \pm 1\) exactly what we expect. Except for *one* case.
+
+  [[./illustrations/convergence.pdf]] 
+   
+  We'll come back to this. 
+* How do we do it? 
+  We are spoiled for choice. But can only use Monte-Carlo in many
+  dimensions (lots of parameters).
+
+  The fastest methods given below in order of stability/speed. 
+** Monte-Carlo methods
+   - Nested sampling.
+   - Hamiltonian Monte-Carlo.
+   - Metropolis-Hastings.
+
+   
+* Can we make it go fast?
+  Yes and no. 
+
+  If we give the prior as the posterior, we will converge the
+  fastest. But the evidence is all wrong. The posterior is also wrong. 
+
+  We can mitigate this, by using an /intuitive Gaussian/. But it gets
+  the wrong answer if we were wrong about either the place or the size
+  of the Posterior.
+** My Intuitive Gaussian. 
+   Take $\tilde{\pi}(\theta) = {\cal P}(\theta)$, change ${\cal L}$, such that. 
+   \begin{equation*}
+   \tilde{\cal L}(\theta)\tilde{\pi}(\theta) = {\cal L}(\theta)\pi(\theta)
+   \end{equation*}
+
+   
+
+* Can we safely make it go fast? Posterior re-partitioning.
+
+
+This can mitigate the issues of size, but not place.
+   
+** Chen-Ferroz-Hobson PPR.    
+	\begin{equation*}
+  	\tilde{\pi}(\bm{\bm{\theta}};\beta) = \cfrac{\pi(\bm{\theta})^{\beta}}{Z(\beta)\{\pi\}},
+	\end{equation*}
+	  \begin{equation*}
+ 	   Z(\beta)\{\pi\} = \int_{\bm{\theta} \in \Psi}		\pi(\bm{\bm{\theta}})^{\beta}d\bm{\bm{\theta}}.
+  	   \end{equation*}
+	  \begin{equation*}
+  	  \tilde{\cal L}(\bm{\theta}) = {\cal L}(\bm{\theta}) Z(\beta)\{\pi\} \cdot		\pi^{1-\beta}(\bm{\theta}).
+	  \end{equation*}
+
+
+  
+* Works well, but not if we have an offset. 
+  [[./illustrations/convergence.pdf]]
+
+* My discovery. 
+
+** My Stochastic superpositional isometric model mixture. 
+   
+\begin{equation*}
+  \tilde{\pi}(\bm{\theta}; \beta)  \triangleq \begin{cases}
+	\tilde{\pi}_{1}(\bm{\theta}) & \text{with probability } \beta_{1},\\
+	& \vdots,\\
+	\tilde{\pi}_{n}(\bm{\theta}) & \text{with probability } (1- \sum_{i}^{m}\beta_{i}),
+	\end{cases}
+\end{equation*}
+\begin{equation*}
+  \tilde{\cal L}(\bm{\theta}; \bm{\beta})  \triangleq
+  \begin{cases}
+	\tilde{\cal L}_{1}(\bm{\theta}) &  \text{with probability } \beta_{1},\\
+		    &\vdots,\\
+	\tilde{\cal L}_{m}(\bm{\theta}) & \text{with probability} (1- \sum_{i}^{m}\beta_{i}).
+\end{cases}
+\end{equation*}
+\begin{equation*}
+  \tilde{\pi}(\bm{\theta}; \bm{\beta}) = \tilde{\pi}(\bm{\theta})_{i} \Leftrightarrow \tilde{\cal L}(\bm{\theta}; \bm{\beta}) = \tilde{\cal L}_{m}(\bm{\theta}; \bm{\beta}), 
+\end{equation*}
+
+* This is really FAST. 
+\begin{figure}
+\input{./illustrations/benchmark.tex}
+\end{figure}
+
+* And Accurate. 
+\begin{figure}
+\input{./illustrations/evidence-drift.tex}
+\end{figure}
+
+* What this can do?
+  Examples: 
+  - Can accelerate if you know *roughly* what to expect.
+  - Can make more robust if you are wrong about the where.
+  - Can make more robust if you are unsure about biases.
+  - This can allow you to chain models.
+  - You can run a =CosmoChord= on a laptop, =Cobaya= on a desktop.
