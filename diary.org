@@ -322,7 +322,7 @@ calculations necessary to understand how the re-partitioning works.
 	Chloesky decomposition makes the off-diagonal elements of the
 	\(\Sigma\) matrix more important. This is because the covariance
 	matrix has certain properties: it's positive definite,
-	invertible. So we can't just invent one. 
+	invertible ---  we can't just invent one. 
 
 	\begin{equation}
 	  \Sigma =
@@ -344,6 +344,7 @@ calculations necessary to understand how the re-partitioning works.
 	  -1 & -1 & 2
 	  \end{pmatrix}
 	\end{equation}
+<<<<<<< HEAD
 	Has all of the aforementioned properties. It is
 	diagonaliseable. This is an ellipsoid stretched across the corners
 	and the edge midpoints of a unit hyper-cube. This has all of our
@@ -408,6 +409,12 @@ calculations necessary to understand how the re-partitioning works.
 	[[./toy-models/2/run_time - repart vs uniform.pdf]]
 
 	[[./toy-models/2/2.0 Comparison of runtime with Lasenby parameter.py]]
+=======
+	Has all of the properties we need. It is diagonaliseable. This
+	is an ellipsoid stretched across the corners and the edge
+	midpoints of a unit hyper-cube. This has all of our needed
+	properties.
+>>>>>>> ba1532299e618c6a70ce63a5537005eb1ec14a86
 
 	
 *** DONE Investigate why the Lasenby parameter speeds up the calculation. 
