@@ -67,3 +67,25 @@
 cobaya/*.out
 /cobaya/latest.out 
 *.blg
+*.targ.xz
+/project-report-figure5.pdf
+/project-report-figure*.pdf
+*.aux
+*.nav
+/project-report.txt
+*.toc
+*.vrb
+*.snm
+/toy-models/convergence - repartitioned vs uniform.pdf
+/tikz/
+/cobaya/raw_polychord_output/
+/cobaya/old/
+/cobaya/latest.out 
+/cobaya/latest.out 
+/cobaya/cobaya_output/
+/cobaya/.pdf.png
+/cobaya/cobaya_output.tar.xz
+/cobaya/latest.out 
+/cobaya/latest.out 
+/cobaya/latest*
+/presentation.pdf
