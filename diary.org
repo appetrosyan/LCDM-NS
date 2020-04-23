@@ -1,8 +1,12 @@
 #+TITLE: Project Diary for "Cosmological parameter estimation using Bayesian accelerated Machine learning"
 #+AUTHOR: Aleksandr Petrosyan
 #+BIBLIOGRAPHY: bibliography.bib
+<<<<<<< HEAD
 #+OPTIONS: <, prop
 
+=======
+#+OPTIONS: <:t broken-links:mark c:t d:t date:t p:t todo:t
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 This is a GNU emacs Org file. It's a sophisticated formate used mainly
 for literate programming, and for creating outlines, time management,
 project management and importantly for the purposes of the present
@@ -138,7 +142,11 @@ calculations necessary to understand how the re-partitioning works.
     Compute Platforms: (leave blank)
     Dedicated nodes: (None)
     PI Declaration: tick yes
+<<<<<<< HEAD
 *** DONE Read about Bayesian statistics. $\Chi^2$ test. 
+=======
+*** DONE Read about Bayesian statistics. \(\chi^{2}\) test. 
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
     Notes. 
 * Lent
 ** Week 1
@@ -313,10 +321,17 @@ calculations necessary to understand how the re-partitioning works.
 	CLOCK: [2020-01-27 Mon 09:36]--[2020-04-19 Sun 00:42] => 1983:06
 	:END:
 	Be careful: \(erf\) maps \(R\) to \([-1,1]\) but we need a mapping
+<<<<<<< HEAD
 	from \([0,1]\) back to \(R\). So use \(\erf^-1(2x - 1)\). 
 
 	See [[./toy-models/1/1.1 parameter-covariance - with Gaussians.py]]
 *** DONE Implement Correlated Gaussian
+=======
+	from \([0,1]\) back to \(R\). So use \(\text{erf}^{-1}(2x - 1)\). 
+
+	See [[./toy-models/1/1.1 parameter-covariance - with Gaussians.py]]
+*** DONE Implement Correlated Gaussian <2020-01-28>
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 	:LOGBOOK:
 	CLOCK: [2020-01-28 Tue 10:42]--[2020-01-28 Tue 17:43] =>  7:01
 	:END:
@@ -333,25 +348,392 @@ calculations necessary to understand how the re-partitioning works.
 		0.5 & 0.5 & 1
 	  \end{pmatrix}
 	  = 
+<<<<<<< HEAD
 	  begin{pmatrix}
+=======
+	  \begin{pmatrix}
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 	  1 & -1 & -1 \\
 	  1 & 1 & 0 \\
 	  1 & 0 &1 
 	  \end{pmatrix}
+<<<<<<< HEAD
 	  \frac{\diag (2, 0.5, 0.5)}{3}
+=======
+	  \frac{\text{diag} (2, 0.5, 0.5)}{3}
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 	  \begin{pmatrix}
 	  1 & 1 & 1 \\
 	  -1 & 2 & -1 \\
 	  -1 & -1 & 2
 	  \end{pmatrix}
 	\end{equation}
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+	Has all of the aforementioned properties. It is
+	diagonaliseable. This is an ellipsoid stretched across the corners
+	and the edge midpoints of a unit hyper-cube. This has all of our
+	needed properties.
+** Week 3
+   This week was highly unproductive. Not my fault. If you're
+   interested to know, I passed out from exhaustion and malnutrition,
+   and decided to let it go easy for one week.
+
+   IF you're also interested in *why* I passed out, and *why* I was malnourished, I suggest reading :
+*** DONE Implement PPR. <2020-02-03 Mon>
+	DEADLINE: <2020-02-07 Fri> 
+	SCHEDULED: <2020-02-03 Mon> [[*Calculations neeeded for doing PPR.][Calculations neeeded for doing PPR.]]
+	I've done this by hadn as well. Originally made the mistake of
+	assuming that the Gaussian is unbounded. I then realised that it
+	wasn't even in the ordinary cases that I've considered previously.
+
+	The correction was of the form containing \(\text{erf}^{-1}(\ldots)\) while I assumed it was the intergral over all of space \(\sigma/\beta\).
+** Week 4
+*** DONE implement Additive mixtures.  
+	DEADLINE: <2020-02-20 Thu> 
+	SCHEDULED: <2020-02-05 Wed>
+	Additive mixtures are not invertible. I can try and do it
+	numerically, the functions are monotonic, but this is unstable. It
+	always results in 
+	
+	#+BEGIN_SRC bash
+	PolyChord Warning: non-deterministic log-likelihood. 
+	#+END_SRC
+
+	UPDATE: Needed to use 
+
+	#+BEGIN_SRC python
+	from scipy.optimize import root
+
+	 ....
+	pdf_tilde = lambda x : pdf1(x) + pdf2(x)
+	quantile = lambda cube: root(pdf_tilde, pdf1inv(cube) + pdf2inv(cube), method='linearmixing')
+	#+END_SRC
+
+	for additive mixtures. It still occasionally causes
+	non-deterministic issues. This is really no different to PPR.
+
+	Maybe there's a better way? 
+
+	Update: Dr Handley says that I should try to piece-wise
+	invert. This is terrible! This gives me nothing like the original
+	distribution. 
+
+	[[[[./toy-models/2/convergence - repartitioned vs uniform.pdf]]]]
+
+	This is terrible. 
+** Week 5
+*** DONE Test the Lasenby parameter. 
+	SCHEDULED: <2020-02-10 Mon>
+	The `Lasenby' parameter is the procedure described by
+	Chen-Ferroz-Hobson to do re-partitioning, except we don't re-scale
+	the log-likelihood. 
+
+	This should not run faster. But it does. 
+
+	[[./toy-models/2/run_time - repart vs uniform.pdf]]
+
+	[[./toy-models/2/2.0 Comparison of runtime with Lasenby parameter.py]]
+=======
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 	Has all of the properties we need. It is diagonaliseable. This
 	is an ellipsoid stretched across the corners and the edge
 	midpoints of a unit hyper-cube. This has all of our needed
 	properties.
+<<<<<<< HEAD
 
 	
 	
+=======
+>>>>>>> ba1532299e618c6a70ce63a5537005eb1ec14a86
+
+	
+*** DONE Investigate why the Lasenby parameter speeds up the calculation. 
+	DEADLINE: <2020-02-16 Sun> 
+	SCHEDULED: <2020-02-12 Wed>
+	See [[*Why PolyChord converges faster for more informative priors.][Why PolyChord converges faster for more informative priors.]]
+	This is weird. it should not happen. Or should it? 
+
+	Maybe we are changing the prior? See, we don't have to change
+	\({\cal L}\), it would happen as if we had the more informative
+	prior.
+*** DONE Convince Dr Handley that we don't need to change the Likelihood. 
+	SCHEDULED: <2020-02-15 Sat>
+	Give the example of $\beta\rightarrow 1$ not giving us the same
+	Gaussian. 
+
+	The evidence is different, but so is our prior. Why should we keep
+	${\cal P}$ constant instead of insisting that ${\cal L}$ is
+	constant? 
+
+	Why can't we assume that the prior is narrower? Why do we have to
+	insist that our likelihood changes not the posterior? The
+	likelihood is what we are given from nature, neither the data, nor
+	the model change. Why when changing the prior do we need to change
+	${\cal L}$?
+
+	UPDATE: see [[*When and why do repartitioning. <2020-02-19 Wed>][When and why do repartitioning.]]
+*** TODO Prove or disprove the following snippet
+	 Dr Handley seems to think that the re-partitioning is necessary. 
+	#+BEGIN_SRC python
+	from numpy import pi, log, sqrt, exp
+from scipy.special import erfinv, erf
+import numpy
+import pypolychord
+from pypolychord.settings import PolyChordSettings
+from anesthetic import NestedSamples
+import matplotlib.pyplot as plt
+
+#| Define a four-dimensional spherical gaussian likelihood,
+#| width sigma=0.1, centered on the 0 with one derived parameter.
+#| The derived parameter is the squared radius
+
+nDims = 4
+nDerived = 0
+sigma = 0.1
+mu = 0
+
+def loglikelihood(theta):
+    """ Simple Gaussian Likelihood """
+    return -(theta-mu) @ (theta-mu)/2/sigma**2 , []
+
+#| Define a box uniform prior
+thetamin, thetamax = -1e3, 1e3
+def prior(hypercube):
+    return thetamin + hypercube*(thetamax-thetamin)
+
+#| The true logZ should take this value
+def true_logZ():
+    return nDims*(log(2*pi*sigma**2)/2.0 - numpy.log(thetamax-thetamin))
+
+#| Run polychord
+settings = PolyChordSettings(nDims, nDerived)
+settings.file_root = 'gaussian'
+settings.read_resume = False
+output = pypolychord.run_polychord(loglikelihood, nDims, nDerived, settings, prior)
+samples = NestedSamples(root='./chains/gaussian')
+
+#| Check that the log-evidence is similar to the true
+plt.subplots()
+plt.hist(samples.logZ(1000))
+plt.axvline(true_logZ(),color='k')
+plt.show()
+
+
+#| Define a transformation for a gaussian prior
+def power_gaussian_prior(hypercube, beta, mu, sigma, a, b):
+    return mu + sqrt(2/beta)*sigma*erfinv((1-hypercube)*erf((a-mu)*sqrt(beta/2)/sigma) + hypercube*erf((b-mu)*sqrt(beta/2)/sigma))
+
+
+#| The prior density of the power gaussian prior
+def log_repartitioned_prior_density(theta, beta, mu, sigma, a, b): 
+    return -beta * (theta-mu)**2/2/sigma**2 - log(pi*sigma**2/2/beta)/2 - log(erf((b-mu)*sqrt(beta/2)/sigma)- erf((a-mu)*sqrt(beta/2)/sigma))
+
+
+#| Repartitioned prior
+betamin, betamax = 0, 1
+def repartitioned_prior(hypercube):
+    x = hypercube[:nDims]
+    b = hypercube[-1]
+    beta = betamin + (betamax-betamin)*b
+    theta = power_gaussian_prior(x, beta, mu, sigma, thetamin,thetamax)
+    return numpy.concatenate([theta ,[beta]])
+
+
+#| Repartitioned loglikelihood
+def repartitioned_loglikelihood(theta):
+    t = theta[:nDims]
+    beta = theta[-1]
+    logl, phi = loglikelihood(t) 
+    logl += len(t) * -numpy.log(thetamax-thetamin)
+    logl -= log_repartitioned_prior_density(t, beta, mu, sigma, thetamin, thetamax).sum()
+    return logl, phi
+
+
+settings = PolyChordSettings(nDims+1, nDerived)
+settings.file_root = 'repartitioned_gaussian'
+settings.read_resume = False
+output = pypolychord.run_polychord(repartitioned_loglikelihood, nDims+1, nDerived, settings, repartitioned_prior)
+repartitioned_samples = NestedSamples(root='./chains/repartitioned_gaussian')
+
+#| Check evidences. The repartitioned evidence is correct and much more accurate
+plt.hist(repartitioned_samples.logZ(1000))
+plt.axvline(true_logZ(),color='k')
+plt.show()
+
+#| Check parameters. These look right
+fig, axes = samples.plot_2d([0,1])
+repartitioned_samples.plot_2d(axes)
+plt.show()
+
+#| Examine run. This looks typical
+samples.gui()
+
+#| Examine repartitioned run. 
+#| This is very unusual. The tail is huge, which is why the runtime (equivalent to ndead, nlike, or logX in the plot) is not faster. If you examine the slider with parameter 4 (i.e. beta) set, then you can see as nested sampling progresses past the posterior bulk, the live points have a lower and lower beta.
+repartitioned_samples.gui()
+
+	#+END_SRC
+
+	This is a reference implementation of PPR. It evaluates the
+	correct eviendece. It plots the correct histogram.
+
+	Well, for one the likelihood is not normalised. This script just
+	fudges evidence.
+
+	This can't be correct. 
+
+	UPDATE: it's not. There are mistakes in the implementation of
+	PPR. The corrected version is given in 
+
+	[[./toy-models/lnZ-histograms.pdf]]
+
+	This doesn't give you the same evidence as the Gaussian and the
+	Gaussian has nothing to do with the evidence that we obtain the
+	calculation is wrong.
+** Week 6
+*** DONE Meet Dr Handley
+	:LOGBOOK:
+	CLOCK: [2020-02-19 Wed 19:20]--[2020-02-19 Wed 20:20] =>  1:00
+	:END:
+	The Gaussian isn't the prior we start with. This is the way it is
+	in Chen-Ferroz-Hobson, but our premise is that we start with a
+	uniform prior and cheat. This is not guaranteed to give us the
+	correct posterior, and this will give us a biased posterior if
+	there's an offset between the prior and the likelihood. 
+
+	This is wrong, but that's what we want to do. Maybe SSPR does that
+	better.
+  
+*** DONE implement SSPR.
+	:LOGBOOK:
+	CLOCK: [2020-02-23 Sun 11:55]--[2020-04-23 Thu 19:29] => 1447:34
+	:END:
+	It works. 
+**** DONE Refactor everything into models.
+	 see =./framework/=. 
+**** DONE Create a new interface for PolyChord 
+	 :LOGBOOK:
+	 CLOCK: [2020-02-23 Sun 12:29]--[2020-02-23 Sun 19:30] =>  7:01
+	 :END:
+	 See [[./framework/polychord_model.py]]
+**** DONE Implement  PPR as a model. 
+	 :LOGBOOK:
+	 CLOCK: [2020-02-23 Sun 19:34]--[2020-02-23 Sun 22:00] =>  2:26
+	 :END:
+	 see [[./framework/ppr_model.py]]
+**** DONE implement Re-sizeable box uniform. 
+	 :LOGBOOK:
+	 CLOCK: [2020-02-25 Tue 13:35]--[2020-02-25 Tue 19:00] =>  5:25
+	 :END:
+	 see [[./framework/resize_box_uniform.py]]
+**** DONE implement Stochastic mixing
+	 :LOGBOOK:
+	 CLOCK: [2020-02-27 Thu 11:36]--[2020-04-23 Thu 19:38] => 1352:02
+	 :END:
+	 Implementations using =hash()= are fragile. Need to think of
+	 alternatives. Maybe =rand()= with a seed? Too much work? 
+**** DONE implement stochastic mixing of more than one model 
+	 :LOGBOOK:
+	 CLOCK: [2020-02-29 Sat 19:38]--[2020-04-23 Thu 20:04] => 1296:26
+	 :END:
+	 The $\beta_{i}$ parameters are not probabilities of each branch, but
+	 they are related to them, but collectively, not individually. 
+
+	 Instead of assuming that they are, do the following
+
+	 #+BEGIN_SRC python
+	 index = 0
+        r = abs(hash(tuple(t)))
+        for p in ps:
+            if r > p:
+                break
+            index += 1
+        _nDims = self.models[index].eff_nDims
+	 #+END_SRC
+
+	 EDIT: there's a bug. Python's hash function isn't what it
+	 seems. It's pseudo random for integers, but for floats in (0,1)
+	 this is not so. Of course it only affects floats if and only if
+	 the nDims=1, because the hash(tuples) are xors of the constituent
+	 coordinate vectors' hashes and nearby vectors hash to different
+	 values depending on their bit representation. The more elements
+	 in the vector the more likeliy this is not to be a problem.
+
+	 UPDATE: This is a problem. Neraby vectors hash to the same
+	 representation, so instead of having a chequerboard like-pattern
+	 we essentially get A Gaussian in the lower half, and a uniform in
+	 the upper half determined by $\beta_{0}$.
+
+	 I didn't pick up on this, because the Gaussian is also piecewise
+	 superpositional. The probability is correct. In instead of a
+	 chequerboard pattern I painted half the board black. FIxed by
+	 moving to a Mersenne Twister based random. See 
+	 [[./framework/general_mixture_model.py]]. 
+** Week 7
+*** DONE start writeup. 
+	:LOGBOOK:
+	CLOCK: [2020-03-02 Mon 20:04]--[2020-03-02 Mon 23:30]
+	:END:
+	Created the Latex template, written a stub for introduction. 
+*** DONE Talk to Lukas Hergt about Cosmological inference machines.
+	SCHEDULED: <2020-03-09 Mon 16:00>
+	Four possible choices. 
+	- CosmoChord -- Fortran -- Written by Dr Handley
+	- Monte Python -- Python -- Good name. Probably well-written.
+	- Cobaya -- Python -- Really well-written and is the successor of
+      the old code.
+	- Writing one from scratch. 
+	It's not as crucial to get the stuff done right, as it is to get
+	it done quickly. So maybe go with the library with the most
+	support: Cobaya.
+
+	It's input is arranged into a Yaml file (edit: it also is a python module). 
+	
+	What I need to worry about is that the {lowl-EE likelihood,
+	curvature, PolyChord} setting. This causes segfaults. 
+	
+	Why? 
+
+	plik = Planck Likelihood
+	clik = Camspec likelihoods
+	[[https://arxiv.org/pdf/2002.06892.pdf]]
+
+	[[https://cobaya.readthedocs.io]]
+	low/high l - low/high multipole moment. 
+	TT - temperature
+	EE - polarisation
+
+*** TODO debug the segfault. 
+
+	This is caused by an extra nuisance parameter being passed. Need
+	to figure out which parameter is extraneous get rid of it, and
+	create a pull request to fix the code. 
+
+**** TODO Figure out which parameter is extraneous. 
+
+**** TODO prevent it from being passed
+
+**** TODO Create a PR. 
+
+**** TODO Merge the PR.
+
+** Week 8
+   This week was when I was told that I need to pack my bags and
+   leave. 
+
+   Yeah Sure. And what if I get stuck in quarantine for two weeks and
+   can't work? What about the exams? What if I'm not able to return
+   during term time? So what if I get sick? There's nobody to care for
+   me anywhere in the world! I can handle being sick. 
+
+   I'm going to fail. There are no questions about it. I'm going to
+   fail. They're going to fail me. Isn't it obvious? As if the
+   brittish kids didn't have enough of an advantage. 
+	 
+
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 * Easter ''Vacation''
 ** Week 1. 
 *** DONE Set up SSH access to CSD3. 
@@ -529,7 +911,11 @@ calculations necessary to understand how the re-partitioning works.
 **** DONE Plot the results. 
 	
 	 Benchmark PPR, SSPR mixture of Uniform and Gaussian. 
+<<<<<<< HEAD
 	  ./framework/benchmarks.py]]. 
+=======
+	  [[./framework/benchmarks.py]]. 
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 
 	 If the mixture contains a Gaussian, and/or is a Gaussian itself
 	 with re-partitioning done properly, i.e. the Log-likelihood is
@@ -569,7 +955,11 @@ calculations necessary to understand how the re-partitioning works.
     SCHEDULED: <2020-03-20 Fri>
 	Takes too long. Many repeats of 
 	
+<<<<<<< HEAD
 	#+BEGIN_SRC 
+=======
+	#+BEGIN_SRC python
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 	[polychord] Calling PolyChord with arguments:
 	[polychord]   base_dir: ./raw_polychord_output
 	[polychord]   boost_posterior: 0
@@ -604,7 +994,11 @@ calculations necessary to understand how the re-partitioning works.
 	#+END_SRC
 
 	May be that it doesn't terminate correctly.  edit: Lukas mentioned
+<<<<<<< HEAD
 	that the number of live poitns is too large. May be
+=======
+	that the number of live points is too large. May be
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 	related. 
 
 	Will need to edit [[./cobaya/old/run.yaml]]. 
@@ -617,7 +1011,11 @@ calculations necessary to understand how the re-partitioning works.
 **** DONE Reduce nLive
 	 Reduced the number of live points: [[./cobaya/run.yaml ]]
 	
+<<<<<<< HEAD
 	 #+BEGIN_SRC yaml
+=======
+	 #+BEGIN_SRC python
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 	 nlive: 126
 	 #+END_SRC
 
@@ -691,7 +1089,11 @@ calculations necessary to understand how the re-partitioning works.
 	  :END:
 **** FAILED Run Cobaya
 	 :LOGBOOK:
+<<<<<<< HEAD
 	 CLOCK: [2020-03-30 Mon 20:03]
+=======
+	 CLOCK: [2020-03-30 Mon 20:03]--[2020-04-23 Thu 09:50] => 565:47
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 	 :END:
 	 Times out after 6 hours. relevant piece of sbatch script. 
 
@@ -714,6 +1116,25 @@ calculations necessary to understand how the re-partitioning works.
 	 Timing out. Need to ask Lukas
 ***** DONE Ask Lukas. 
 	  Too many live points.
+<<<<<<< HEAD
+=======
+
+	  FINALLY!!!! IT finished. 
+	  
+	  I only needed to reduce nLive to 100, from 25d (\(approx 700\)),
+	  this reduces the run-time sevenfold from a week down to one day! 
+
+	  Since I've had many hurdles due to many versions of =pip=, maN y
+	  versions of python, and cobaya stubbornly choosing to ignore the
+	  virtual environmeN t it's in, I'd say that these difficulties
+	  have no academic relevance.
+
+	  If they do, they are a lesson to Anthony Lewis, that programming
+	  conventions exist for a reason. People like him, should probably
+	  not ignore the conventions of their language, mainly because as
+	  an academic, they cannot dedicate as much time as needed to
+	  maintaining their "I did it my way" versions of the program.
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 *** DONE Refactor of framework
     SCHEDULED: <2020-03-29 Sun>
     DEADLINE: <2020-04-02 Thu> 
@@ -866,12 +1287,27 @@ calculations necessary to understand how the re-partitioning works.
     Notice that I had to use a python3 pip to install a python2
     pip. Naturally this is just stupidity.
 
+<<<<<<< HEAD
 *** TODO Have a more thorough discussion of the potential next-gen sampler. 
 *** TODO prepare for the presentation
 
 *** TODO Give presentation. 
 
 *** TODO Rename all references to SSPR to SSPM
+=======
+*** DONE Have a more thorough discussion of the potential next-gen sampler. 
+	:LOGBOOK:
+	CLOCK: [2020-04-20 Mon 11:12]--[2020-04-20 Mon 12:12] =>  1:00
+	:END:
+	Use dynamic linking, refactor current code to allow multiple prior
+	specifications. Fix the current overloading. Re-use as much of
+	PolyChord's fortran code as possible. Everyone tries to do
+	unbounded priors; but you can always do that using a bounded
+	uniform. 
+
+	
+*** DONE Rename all references to SSPR to SSPM <2020-04-20>
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 	Posterior re-partitioning implies that it has something in common
 	with Hobson-Feroz-CHen algorithm. It does *not*. 
 
@@ -882,8 +1318,43 @@ calculations necessary to understand how the re-partitioning works.
 	This is not posterior re-partitioning, this is superpositional
 	prior mixing. It just so happens that we're re-partitioning the
 	posterior in every model.
+<<<<<<< HEAD
 
 *** TODO describe model chaining!
+=======
+	
+	A more appropriate name for this is Stochastic Superpositional
+	prior mixing. More accurately model mixing, but this is with the
+	intent to mix different priors. 
+*** DONE describe model chaining! <2020-04-21>
+	See [[./project-report.tex]]. 
+*** TODO Produce CosmoChord output
+	:LOGBOOK:
+	CLOCK: [2020-04-22 Wed 09:34]--[2020-04-23 Thu 15:34] => 30:00
+	:END:
+	CosmoChord works well as soon as you replace =action=5= with
+	=action=1=, in =test_planck.ini=.
+	
+* Easter Term. 
+*** TODO prepare for the presentation. 
+	:LOGBOOK:
+	CLOCK: [2020-04-23 Thu 15:43]--[2020-04-23 Thu 17:00] =>  1:17
+	:END:
+	[[./presentation.tex]]
+*** TODO Give presentation. 
+*** DONE extract parameter covariances. 
+	:LOGBOOK:
+	CLOCK: [2020-04-23 Thu 13:42]--[2020-04-23 Thu 15:42] =>  2:00
+	:END:
+
+	Coabaya's native output is not suitable for =anesthetic=. Use
+	GetDist instead.
+
+	Outputs generated and saved in plain text for later use.
+**** DONE e-mail Dr Handley about using HDF. 
+	 This could reduce the memory usage significantly.
+*** TODO Implement SSPM in Cobaya. 
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 * Notes
 ** Michaelmas Term
 
@@ -1001,6 +1472,7 @@ calculations necessary to understand how the re-partitioning works.
 
 	
 **** Piecewise power repartitioning notes.
+<<<<<<< HEAD
  Are these issues you're encountering for the mixture model, or the
  temperature-dependent gaussian? (in the posterior repartitioning
  paper, the pi^\beta prior is terms 'power posterior repartitioning', so
@@ -1008,6 +1480,10 @@ calculations necessary to understand how the re-partitioning works.
 
  For the power posterior repartitioning, remember we're doing it with a
  diagonal prior covariance, so everything is separable and Z(beta)
+=======
+ For the power posterior repartitioning, remember we're doing it with a
+ diagonal prior covariance, so everything is separable and \(Z(\beta)\)
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
  should be derived as described in the posterior repartitioning paper,
  namely:
 
@@ -1029,10 +1505,17 @@ calculations necessary to understand how the re-partitioning works.
  To be clear, working in 1d for now, our normalised modified prior is
  of the form:
 
+<<<<<<< HEAD
  \[\tilde{\pi}(\theta) = \beta U[a,b](\theta) + (1-\beta)G[mu,sigma](\theta)\]
 
  where there will be a,b,\mu,\sigma for each dimension. To compute the prior
  transformation which maps x\in[0,1] onto \theta, nominally we should do this
+=======
+ \[\tilde{\pi}(\theta) = \beta U[a,b](\theta) + (1-\beta)G[\mu,\sigma](\theta)\]
+
+ where there will be a,b,\mu,\sigma for each dimension. To compute the prior
+ transformation which maps \(x\in[0,1]\) onto \(\theta\), nominally we should do this
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
  via the inverse of the cdf:
   \begin{equation}
 	F(\theta) = \frac{\beta (\theta-a)}{(b-a)} +
@@ -1129,7 +1612,11 @@ calculations necessary to understand how the re-partitioning works.
 	The Settings have information about the verbosity of the
 	system.
 
+<<<<<<< HEAD
 	#+begin_src ipython 
+=======
+	#+begin_src python 
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 	  settings.feedback = 0
 	#+end_src
 	seems to be a good default. 
@@ -1186,9 +1673,16 @@ calculations necessary to understand how the re-partitioning works.
 	the **loglikelihood** is **not a meaningful** number.
 
 **** UPDATE: it is meaningful. Just not without the prior.  <2020-02-14 Fri>
+<<<<<<< HEAD
 	 AutoPR relies on 
 	
    
+=======
+	 AutoPR relies on the posterior to be preserved if we change the
+	 value of the prior, we *need to* change the posterior. The
+	 assumption is that the prior didn't really change.
+	
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 *** Why PolyChord converges faster for more informative priors. 
 
 	Polychord stops as soon as the evidence remainig is a
@@ -1216,7 +1710,10 @@ calculations necessary to understand how the re-partitioning works.
 	
 	
 
+<<<<<<< HEAD
 	
+=======
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 *** Kullback Leibler divergence. 
 	KL-D is explained in the [[https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained][blog]]. It basically is the [[https://en.wikipedia.org/wiki/Entropy_(information_theory)][Shannon entropy]]
 	between two distributions. It's 
@@ -1290,7 +1787,10 @@ calculations necessary to understand how the re-partitioning works.
 
  This allows us to do calculations in a fraction of the time. 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 *** Comparison of runs. <2020-01-24 Fri>
 
 	Planck data can be downloaded from (see references), and using
@@ -1403,7 +1903,11 @@ calculations necessary to understand how the re-partitioning works.
 	posterior the same, so we need to rescale (citation needed)
 	the loglikelihood to account for this change.
 
+<<<<<<< HEAD
 *** Calculations neeeded for doing PPR. 
+=======
+*** Calculations needed for doing PPR. 
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 
 	As a result, to use [[*Automated Power Posterior Repartitioning. <2020-01-24 Fri>][it]] with PolyChord we need to do the following
 	three things. 
@@ -1454,7 +1958,10 @@ calculations necessary to understand how the re-partitioning works.
 	\end{equation}
 	Which is what we expect from Poisson integrals.
    
+<<<<<<< HEAD
 
+=======
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 *** When and why do repartitioning. <2020-02-19 Wed>
 
 	After multiple experiments I arrived at the following.
@@ -1515,7 +2022,10 @@ calculations necessary to understand how the re-partitioning works.
 
    
 
+<<<<<<< HEAD
 	 
+=======
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 *** Correlated and Uncorrelated Gaussian:<2020-02-03 Mon>
 
 
@@ -1541,7 +2051,10 @@ calculations necessary to understand how the re-partitioning works.
 
 
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 *** Stochastic supepositional re-partitioning. 
 
 	We take a mixture of re-partitioning schemes. Instead of saying we
@@ -1741,6 +2254,7 @@ calculations necessary to understand how the re-partitioning works.
 
 	 
 	 
+<<<<<<< HEAD
 ** Easter "vacation"
 
    Notes at this stage already in the form of write-up. If detailed
@@ -1765,3 +2279,104 @@ calculations necessary to understand how the re-partitioning works.
     #+END_SRC
 
  bibliographystyle:unsrt
+=======
+*** Financial situation, equal opportunities and inflexibility.  :ARCHIVE:
+	
+	My experience at Cambridge wasn't good. Not your fault. You have
+	to deal with people of various backgrounds, maintain traditions
+	and keep everything in status quo, otherwise you'll lose the
+	prestige of being one of the top universities in the world.
+
+	That said, I must admit that my personal experience wasn't
+	great. I had to work. Not as in study. I didn't have enough money
+	to remain in Cambridge. Most of it was paid for by a scholarship
+	from my country a year ago. What happened then? Well, inflation,
+	price indexation and the fact that my money didn't grow after it
+	was assigned. As a result my maintenance provisions were short by
+	about £1200. Not a lot. Not for you. I don't earn as much as you
+	do. An hour of my work is worth 200 roubles about £2. Far below
+	minimum wage. I can't afford to spend all of my time working, in
+	fact I had spent about 20 hours a week trying to make a dent in
+	the shortfall. 
+
+	Of course, that wasn't enough. You see, the amount that the
+	scholarship had accounted for, and the amount that the university
+	specifies is considering only termly scheme, in an average
+	college. My case wasn't that, mainly because I have nowhere to
+	return to. I can't work at home: I have two unemployed parents
+	that are deadset on making my life miserable, a wife that I can't
+	live with due to our extreme poverty and the fact that my parents
+	are deadset on making my life miserable and a sister that needs
+	about £500 a year in tuition fees.
+
+	I lived for about a year give or take by living on £2 a day. Yeah,
+	four coffees from the vending machine. It takes cooking, which
+	takes time. I have work. Supervision work. I have to prepare and
+	revise for exams. All in the same day as needing to wake up early
+	and conduct lessons in the morning. 
+	
+	Of course there's a solution. Maybe I don't need to starve, maybe
+	I could borrow money from well-endowed friends. Of course, I need
+	to have a job, in order to return that money within a lifetime. So
+	what do I do? I look for one. This is also a bit unfair. Why?
+	Because a job in software engineering requires you to jump through
+	hoops and bounds. I don't just go to an interview. I have to
+	prepare for one. And it's usually good, if the interview is just
+	the thing on the day. And not, say, do the work we do in a month,
+	within a week, submit it following our extremely demanding format
+	requirements and within the time frame. And the worst part of it,
+	is that all of that work is not compensated. 
+
+	I don't get a job. Why? Not because I'm stupid. Because your home
+	office has decided that people like me are untermenschen. I have
+	to register with the police. I have to update them about every
+	single move I make, including, as I found out the hard way, any
+	travel to London. Apparently, a job interview after lectures is a
+	violation of the codex. I was fined: £600. And I didn't get the
+	job. I can't get it anywhere: it has to be a corporation that is
+	listed on www.gov.uk, it needs to go through tons of extra
+	paperwork, and it has to pay. Why hire me, when they can hire
+	someone almost the same level as me from Europe or the UK? They
+	usually don't. 
+
+	Get a tutoring job? It's either under-paid, or inaccessible. DBS
+	checks and no experience from the UK.
+
+	So you see, I'm stuck between a rock and a hard place. It's not
+	just that, this is something that I have had to deal over my
+	entire lifetime, and Cambridge's claim that all students are put
+	into equal opportunity situations is, well, for lack of a better
+	word Bovine Fecal matter. 
+
+	I've had these issues ever since I came to Cambridge. Not your
+	fault. It's been the way it's been. It's just that everyone
+	immediately assumes that a degree from Cambridge is a ticket into
+	a better world. For you it is! For me, well, it doesn't even count
+	for my home country's academy of sciences. 
+
+	But what's that you say? Allowances? Special circumstances?
+	No. These things don't work. I can't get a PhD based on
+	allowances. People stop listening at the "but...". Ask Dr
+	Castelnovo. He didn't care if I had extenuating circumstances, he
+	didn't care if my life was misearble, he didn't care that I've
+	spent weeks without sleep. He couldn't be bothered to write me a
+	reference, depsite me getting the highest score on his research
+	review. And he's right. This is a meritocracy, and you should not
+	help the weak. Except I'd be a jackass if I told my parents and my
+	wife, that they're weak and that I was going to do the rational
+	thing.  
+
+	Your allowances should stop existing! If someone deserves a higher
+	mark, and was affected by illness, get them another chance to take
+	the exam. I would have aced mine, if you had. But now I can't
+	reference anything. Your allowances are a patch for a dysfunction;
+	it's a not a solution, but it takes the place of one.
+
+	I know that you're going to pedantically look through this diary
+	to find a way to remove marks as much as possible. Not your
+	fault. This is what you *have to do*. I'm sure that knowing what
+	hell I went through, you're going to take extra pride in noting
+	that my diary wasn't detailed enough. I'm sure that all of the
+	lecture courses were done from scratch, perfectly proof-read, and
+	never contain any mistakes or typos. 
+>>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
