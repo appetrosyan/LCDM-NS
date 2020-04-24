@@ -1,3 +1,6 @@
 [submodule "CosmoChord"]
 	path = CosmoChord
 	url = https://github.com/appetrosyan/CosmoChord.git
+[submodule "LCDM-NS.wiki"]
+	path = LCDM-NS.wiki
+	url = ./LCDM-NS.wiki/
