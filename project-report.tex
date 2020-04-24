@@ -31,18 +31,14 @@
 \DeclareMathOperator{\TopHat}{TH}
 \DeclareMathOperator{\CDF}{CDF}
 
-\author[A. Petrosyan and W. J. Handley]{
-  Aleksandr Petrosyan,$^{1}$
-  William James Handley$^{2}$
-  \\
-  $^{1}$ University of Cambridge, Queens' College, Silver st., Cambridge, CB3 9ET, UK\\
-  $^{2}$ University of Cambridge, Kavli Institute of Astronomy, Madingley Road, Cambridge, CB3 0HA, UK 
+\author[TODO exam number]{
+  EXAM NUMBER
 }
 \date{\today}
-\title[Accelerated Bayesian inference]{Bayesian Machine learning in context of cosmological parameter estimation}
+\title[Accelerated Nested Sampling]{Accelerated nested sampling in context of cosmological parameter estimation}
 \hypersetup{
- pdfauthor={Aleksandr Petrosyan, William James Handley},
- pdftitle={Bayesian Machine learning in context of cosmological parameter estimation},
+ pdfauthor={},
+ pdftitle={Accelerated nested sampling in context of cosmological parameter estimation},
  pdfkeywords={},
  pdfsubject={},
  pdfcreator={Emacs 26.3 (Org mode 9.1.9)}, 
@@ -54,31 +50,25 @@
 
 \maketitle
 \begin{abstract}
-  Bayesian inference the most robust framework for scientific
-  hypothesis testing, used in multiple areas of physics. Cosmological
-  hypotheses are remarkably complex, making inference computationally
-  expensive even with state of the art Bayesian inference software:
-  e.g.~nested sampling packages like \texttt{PolyChord}.
-
-  In this paper, we present a methodology that allows one to
-  simultaneously improve the robustness and expediency of Bayesian
-  inference that utilises nested sampling. We developed three
-  re-partitioning scheme families: intuitive guess re-partitioning,
-  argument scaling (represented by power posterior re-partitioning)
-  and variable bounds (re-sizeable box uniform), as well as the
-  mathematical framework describing what a repartitioning scheme must
-  constitute. We have shown that each family is capable of
-  accelerating convergence of nested sampling, but is also prone to
-  error. If the re-partitioning scheme includes an unrepresentative
-  prior, it produces an incorrect marginalised posterior, and
-  misestimates the evidence.
-
-  We have also developed isometric model mixing methods, that allow
-  one to extract useful information from re-partitioning schemes, but
-  also ensuring the correctness of the results obtained from the
-  mixture.
-
-  Finally, we have desmonstrated that 
+  Bayesian inference is a robust framework for testing of scientific
+  hypotheses and is used in multiple areas of physics. In cosmology
+  said hypotheses are remarkably complex, necessitating the use of
+  sophisticated Monte-Carlo tecnhiques such as nested sampling. Even
+  so the computations are expensive: typically requiring resources
+  outside the realm of one's personal electronics, and even on
+  supercomputer clusters take weeks to complete. We have found a
+  methodology that allows one to incorporate intuitive guesses into
+  nested sampling to improve performance. This we call posterior
+  repartitioning. We have also discovered a methodology of mixing
+  several intuitive guesses into a single consistent model. Our
+  isometric model mixing scheme allows one to extract the useful
+  information out of multiple intuitive guesses without fear of
+  obtaining a biased result. We demonstrate a significant uplift in
+  precision, accuracy and performance of a full cosmological inference
+  done both with Cobaya and CosmoChord. As an illustration of the
+  latter, we have conducted a full cosmological inference using
+  CosmoChord on a personal computer, completing on a time-scale
+  comparable to the supercomputer.
 \end{abstract}
 
 \begin{keywords}
@@ -89,236 +79,151 @@ Bayesian inference -- automated posterior repartitioning -- nested sampling -- c
 
 The standard model of the universe and its evolution in modern
 cosmology is the \(\Lambda\)CDM model \citep{Condon2018}, so named
-after the main components of the universe: the \emph{cosmological constant} \(\Lambda\)
-and \emph{cold dark matter}. It has six major independent parameters:
-physical baryon density \(\Omega_{b}h^{2}\); physical dark matter
-density \(\Omega_{c}h^{2}\); the age of the universe \(t_{0}\); scalar
-spectral index \(n_{s}\); curvature fluctuation amplitude
-<<<<<<< HEAD
-\(\Delta_{R}^{2}\); and re-ionization optical depth \(\tau\). It is the
-=======
-\(\Delta_{R}^{2}\); and re-ionization optical depth \(\tau_\text{reio.}\). It is the
->>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
-task of the present study to \emph{develop better tools} for estimating
-the agreement of our observations from the Planck mission with
-\(\Lambda\)CDM, simultaneously estimating the parameters. In this
-section we shall describe the main approaches, as well as the
-refinements to these approaches that we have developed.
+after the main components of the universe: the \emph{cosmological
+  constant} \(\Lambda\) and \emph{cold dark matter}. It has six major
+independent parameters: physical baryon density \(\Omega_{b}h^{2}\);
+physical dark matter density \(\Omega_{c}h^{2}\); the Hubble parameter
+at present\(H_{0}\)\footnote{Equivalently the age of the universe
+  \(t_0\)}; curvature fluctuation amplitude \(\Delta_{R}^{2}\); and
+re-ionization optical depth \(\tau_\text{Reio.}\).
 
-The above makes Bayesian inference a convenient methodology for
-estimating cosmological parameters. Hence a large number of algorithms
-was developed to accelerate the computation: Metropolis-Hastings
+It is the task of the present study, to \emph{develop better tools}
+for evaluating the agreement of our observations from the Planck
+mission with \(\Lambda\)CDM, estimating the parameters in the process.
+This is done conveniently in the formalism of Bayesian statistics, due
+to the explicit representation of our knowledge, and data. In that
+language our goal is a type of Bayesian inference. Many algorithms
+were developed to accelerate said process: Metropolis-Hastings
 \citep{Metropolis} in conjunction with the Gibbs sampler
 \citep{Metropolis-Hastings-Gibbs}; Hybrid (Hamiltonian) Monte Carlo
-\citep{1701.02434,Duane_1987}, and --- nested Sampling
-\citep{Skilling2006}, which we shall focus on.
+\citep{1701.02434,Duane_1987}, and nested Sampling
+\citep{Skilling2006} which is our focus for the project. 
 
 Nested sampling~\cite{Skilling2006} is a family of algorithms, each
-with their own unique implementation details:
+with their own unique algorithmic implementation details:
 \begin{enumerate}
 \item \texttt{MultiNest} \citep{Feroz2009MultiNestAE},
+\item \texttt{PolyChord} \citep{polychord}.
 \item \texttt{nestle} \citep{nestle}
 \item \texttt{dyNesty} \citep{Speagle_2020},
-\item \texttt{PolyChord} \citep{polychord}.
 \end{enumerate}
-to name a few major implementations.
+to name a few.  
 
-We have \emph{discovered} a method accelerates \emph{all}  nested sampling
-implementations, each to a different extent. The following paper, was
-primarily tested with \texttt{PolyChord}, however other samplers
-should (and do) see similar performance gains.
-
-Our optimisation is based on the observation due
-to~\cite{chen-ferroz-hobson}, that the nested sampling algorithm,
-unlike other Markov-chain Monte Carlo Bayesian inference methods, is
-sensitive to how the posterior is partitioned into the two conditional
-probabilities: \emph{likelihood} and \emph{prior}, with respect to the
-posterior distribution. They used this to develop a technique ---
-\emph{automatic power posterior repartitioning} (PPR), that they used
-to improve the stability of convergence for prior distributions that
-may have been at variance with the true posterior.
-
-We have found a \emph{generalisation} of this technique, and showed
-that it can be used to \emph{significantly} accelerate the convergence.
-
-We've developed the mathematical framework that encapsulates the idea
-and explores the extents of its utility. In particular, we have found
-a way to describe \emph{how} one may achieve better stability and
-better performance. We also present a numerical application of this
-framework in terms of the following techniques that we have developed:
-mixture repartitioning (superpositional and additive) and re-sizeable
-bounds uniform repartitioning, as well as demonstrated that PPR can
-be used to heuristically accelerate nested sampling.
+In the following sections we shall provide a brief primer on Bayesian
+inference and nested sampling. Followed by an exploration of work by
+\cite{chen-ferroz-hobson} recontextualised in a rigorous mathematical
+framework of our making.From within that framework we shall introduce
+isometric model mixing, its implementation using superposition via
+stochastic choice, followed by demonstrations of its efficacy. Lastly,
+we shall discuss potential extensions of the idea to what we call
+Bayesian meta-analysis.
 
 \section{Theoretical background}\label{sec:orge6061a4}
+In this section we primarily focus on previous work. We introduce only
+the bare minimum conceptual background needed to formulate the
+framework.
 
 \subsection{Bayesian inference}\label{sec:org6b7d2fe}
 
 This topic has been discussed at length in literature
-\citep{jeffreys2010scientific}, so we shall restrict ourselves to the
-minimum required to understand what follows.
+\citep{jeffreys2010scientific}, so we shall omit unnecessary details.
 
-Let \({\cal M}\) be a model of some process, parameterised with
-\[\bm{\theta} = (\theta_{1}, \theta_{2}, \ldots ,
-  \theta_{n}).\] Meaning that it defines a probability distribution of
-physical observables ${\cal O}_\text{predicted}$, contingent on model
-parameters \(\bm{\theta}\). Actual experimental values of
-${\cal O}_\text{actual}$ encapsulated in \(\mathfrak{D}\). From these
-we build conditional probabilities. In the language of
-\cref{table-defs}, \citeauthor{1763}'s theorem is
+Let \({\cal M}\) be a model of some process, parameterised by
+\(\bm{\theta} = (\theta_{1}, \theta_{2}, \ldots , \theta_{n})\), Let's
+encapsulate our empyrical observations of said process in
+\(\mathfrak{D}\).  These objects in Bayesian statistics are
+represented by conditional probabilities given
+in~\cref{table-defs}. Their interactions are governed by
+\citeauthor{1763}'s theorem:
 \begin{equation}\label{eq:bayes} 
- {\cal L} \times \pi (\bm{\theta}) = {\cal Z}\times {\cal P} (\bm{\theta}).
+ {\cal L}(\bm{\theta})  \pi (\bm{\theta}) = {\cal Z}  {\cal P} (\bm{\theta}).
 \end{equation}
-With \emph{evidence} \({\cal Z}\) 
+An immediate corollary of~\cref{eq:bayes} is the definition of \emph{evidence}:
 \begin{equation}\label{eq:def-z}
- {\cal Z} \triangleq \int_{\Psi} {\cal L}(\theta) \pi(\theta) d\theta, 
+ {\cal Z} \triangleq \int_{\Psi} {\cal L}(\bm{\theta}) \pi(\bm{\theta}) d\bm{\theta}, 
 \end{equation}
-where \(\Psi\) is the \emph{prior space} --- the domain of 
-\(\pi(\bm{\theta})\).\footnote{\Cite{jeffreys2010scientific} believes \({\cal Z}\) to be no more than a normalisation factor, but by definition (see Table~\vref{table-defs}), it quantifies the consistency of the hypothesis with  observation. Essentially,  higher \({\cal Z}\), implies higher accuracy of our model.}
+where \(\Psi\) is the \emph{prior space} --- the domain of
+\(\pi(\bm{\theta})\) and \(A \triangleq B\) is standard notation for
+``A is defined by A = B''. The evidence is, to quote
+\cite{importanceOfZ} ``Often the single most important number in the
+problem''. In Bayesian inference it is a measure of agreement between
+our observations and predictions. It constitutes a result of Bayesian
+inference, alongside the \emph{posterior} \({\cal
+  P}(\bm{\theta})\). The latter is the probability of the model
+parameters after accounting for \(\mathfrak{D}\). 
 
 \begin{table}
-  \caption{Definitions of main quantities in Bayesian analysis. PDF means \textbf{p}robability \textbf{d}ensity \textbf{f}unction, PVE --- \textbf{p}arameter \textbf{v}olume \textbf{e}lement, i.e. \(d \bm{\theta}\). Units given for reference, but also to emphasise the use of density functions, vs.\ cumulative distributions.\label{table-defs}}
+  \caption{Definitions of main quantities in Bayesian inference. By
+    convention, for continuous variables, the probabilities are
+    specified via probability density functions (PDF), ave evidence
+    which is always a scalar.  \label{table-defs}}
 \centering
-\begin{tabular}{llrr}
-\textbf{\textbf{Term}} & \textbf{\textbf{Symbol}} & \textbf{\textbf{Definition}} & \textbf{\textbf{Units}}\\
+\begin{tabular}{llr}
+\textbf{\textbf{Term}} & \textbf{\textbf{Symbol}} & \textbf{\textbf{Definition}}\\
 \hline
-Prior (PDF) & \(\pi(\theta)\) & \(P ( \theta  \vert {\cal D})\) & PVE\(^{-1}\)\\
-Likelihood (PDF) & \({\cal L}(\theta)\) & \(P ( {\cal D} \vert \bm{\theta} \cup M)\) & PVE\(^{-1}\)\\
-Posterior (PDF) & \({\cal P}(\theta)\) & \(P ( \theta \vert {\cal D} \cup M)\) & PVE\(^{-1}\)\\
-Evidence & \({\cal Z}\) & \(P ( {\cal D} \vert {\cal M})\) & arbitrary units\\
+Prior (PDF) & \(\pi(\bm{\theta})\) & \(P ( \bm{\theta}  \vert \bm{ \mathfrak{D}})\) \\
+Likelihood (PDF) & \({\cal L}(\bm{\theta})\) & \(P ( \bm{\mathfrak{D}} \vert \bm{\theta} \cap M)\) \\
+Posterior (PDF) & \({\cal P}(\bm{\theta})\) & \(P ( \bm{\theta} \vert \bm{\mathfrak{D}} \cap M)\) \\
+Evidence & \({\cal Z}\) & \(P ( \bm{\mathfrak{D}} \vert {\cal M})\) \\
 \end{tabular}
 \end{table}
 
-The two independent functions, \({\cal L}(\bm{\theta})\) and
-\(\pi(\bm{\theta})\) are inputs to Bayesian inference machine
-(sampler). Their convenient depiction depends on the particular
-sampling algorithm, however, for most nested samplers
-(e.g. \texttt{PolyChord}, \texttt{MultiNest}) we delineate them indirectly with
-log-likelihood:
-\begin{equation*}
-  L(\bm{\theta}) = \ln \cal L (\bm{\theta})
-\end{equation*}
-and \emph{prior quantile} \(C\{\pi\}(\bm{\theta})\), which is the
-\emph{inverse cumulative distribution function} (iCDF) of random
-variable \(\bm{\theta}\) with the probability density function
-\(\pi(\bm{\theta})\). Specifically,
-\begin{equation*}
- C\{\pi\} : \text{unit hyper-cube} \rightarrow \Psi;
-\end{equation*}
-a mapping from a unit hypercube (where the distribution of the images
-of parameters \(\bm{\theta}\) is uniform), onto the prior space
-\(\Psi\).
+The two independent functions, \(\pi(\bm{\theta})\) and
+\({\cal L}(\bm{\theta})\) are inputs to Bayesian inference. The former
+represents our \emph{prior} knowledge of the model parameters, while
+the latter, represents the \emph{likelihood} of the model parameters
+predicting a particular datum\footnote{note that by writing ${\cal L}$
+  as just a function of $\theta$, we've implicitly assumed the
+  existence of a surjective map
+  ${\cal M}: \Psi \rightarrow \mathfrak{D}$. While not generally true,
+  models where such a map doesn't exist are non-deterministic, hence
+  rarely considered in Bayesian inference. } labelled by
+$\bm{\theta}$.
 
-Note, that there is a redundancy in our specification of \({\cal
-   L}(\bm{\theta})\) and \(\pi(\bm{\theta})\).  Consider a
-different pair of functions \(\tilde{{\cal L}}(\bm{\theta})\) and
-\(\tilde{\pi}(\bm{\theta})\), such that
-\begin{equation}\label{eq:redundancy}
-  \tilde{\cal L}(\bm{\theta}) \tilde{\pi}(\bm{\theta}) = \cal L (\bm{\theta}) \pi (\bm{\theta}), 
-\end{equation}
-for all \(\bm{\theta} \in \Psi\). In this representation, the
-value of \({\cal Z}\) is unchanged, hence by \cref{eq:bayes},
-\({\cal P}(\bm{\theta})\) is also. Thus, \emph{most} Bayesian samplers
-are indifferent to concrete definitions of \(\cal L\) and \(\pi\),
-as long as their product --- the posterior, corresponds to the same
-model. However, nested sampling \emph{is} sensitive to the
-\emph{partitioning} of the \({\cal P} (\bm{\theta})\) into \({\cal L}(\bm{\theta})\)
-and \(\pi(\bm{\theta})\), which is the centerpiece of the techniques
-discussed earlier. While as we mentioned it must obtain the same
-evidence and the same posterior, remarkably it may obtain those
-much more quickly for some choices of \(\tilde{\pi}\). In the next
-section we shall elaborate on that point.
+The convenient depiction of inputs depends on the particular sampling
+algorithm, however, for most nested samplers (e.g. \texttt{PolyChord},
+\texttt{MultiNest}) we delineate them indirectly with log-likelihood
+\(\ln \cal L (\bm{\theta})\), and \emph{prior quantile}
+\(C\{\pi\}(\bm{\theta})\). The latter, can be thought of as a
+coordinate transformation $C: \bm{u} \mapsto \bm{\theta}$ that maps a
+uniform distribution of $\bm{u}$ in a unit hypercube to
+$\pi(\bm{\theta})$ in $\Psi$.
 
 \subsection{Nested Sampling}\label{sec:org36366f8}
 
-Bayes' theorem reduces the problem of parameter estimation to
-integration. Thus the naïve approach: uniformly rasterise \(\Psi\) and
-\({\cal Z}\) via Riemann sums, is valid. However, for hypotheses with
-\(O(30)\) parameters, said rasterisation is intractable
-\citep{Caflisch_1998} and integration is done using Monte Carlo
-techniques. Nested sampling is one such technique that has
-considerable performance advantages in high-dimensional many-parameter
-models.
+\citeauthor{1763}'s theorem reduces the problem of parameter
+estimation to integration~\citep{bayes-integration}. Thus the naïve
+approach: uniformly rasterise \(\Psi\) and \({\cal Z}\) via Riemann
+sums, is valid. However, for hypotheses with \(O(30)\) parameters,
+said rasterisation is intractable \citep{Caflisch_1998} and
+integration is done using Monte Carlo techniques. Nested sampling is
+one such technique that has considerable performance advantages in
+many-parameter models.
 
-Consider without loss of generality, a prior space \(\Psi\) that is a
-unit hypercube, where \[\pi(\bm{\theta}) = \text{Const.}\] Draw
-\(n_\text{live}\) random \emph{live points} from the unit
-hypercube. If \({\cal L}\) is a well-behaved function, the probability
-that two points have the same likelihood is vanishing, so each of them
-lies on a \textbf{distinct} iso-likelihood
-hyper-surface\footnote{analogy: height on a contour map. }. Each
-hyper-surface encloses the fraction
-\begin{equation}
-\cfrac{1}{n_\text{live}}
-\end{equation}
-of the total volume of the hypercube on average. More specifically,
-each shell's enclosed volume shall have some random deviation \(\Delta\), from
-\(\cfrac{1}{n_\text{live}}\), with an associated cumulative
-distribution \(P(\Delta)\).
+The gist of the algorithm is that we pick according to some principle
+(\cref{sec:ns}) \emph{live points} and iteratively move them into
+regions of high likelihood. Based on a statistical argument this
+allows us to approximate ${\cal Z}$, ergo ${\cal P}(\bm{\theta})$
+using \cref{eq:bayes}.
 
-Subsequently, we pick another point at random, requiring that the
-likelihood of the new point be higher than the lowest likelihood of
-the initial \emph{live point} ensemble. In \citeauthor{Skilling2006}'s
-notation, the point with the lowest likelihood becomes \emph{dead} and
-the new point becomes is \emph{live}. This is a single iteration of
-nested sampling.
-
-Our argument of approximately equal volumes holds for the new
-ensemble, so the volume encased in the outer-most shell iteratively
-reduces by the same fraction, allows us to approximate said volumes:
-\begin{equation}\label{eq:recurrence-relation}
-  \begin{array}{rcl}
-  X_{0} &=  &1, \\
-  X_{1} &= &X_{0} \left(1- \cfrac{1}{n_\text{live}}\right),\\
-  & \vdots &, \\
-  X_{i} &= &X_{i-1}\left(1- \cfrac{1}{n_\text{live}}\right),\\
-  & \vdots, &
-\end{array}
-\end{equation}
-Thus we iteratively pick live points in regions $\{\bm{\theta}\}$ of
-high \({\cal L}\), and also estimating the evidence, and stop when the
-prior volume encased in the outer shell is lower than a predetermined
-fraction e.g. \(0.01\) of the original hypercube volume.
-
-The recurrence relation~\eqref{eq:recurrence-relation} is not exact,
-however, \(P(\Delta)\) is a known distribution, dependent on the
-\(\dim \Psi\) and \({\cal L}\). Thus, for each \(\epsilon>0\), we
-exists
-\[\delta(\epsilon) >0,\] such that \[P(\Delta > \delta)<\epsilon.\]
-Hence, by choosing \(\epsilon\) based on \(n_\text{live}\), one
-obtains an estimate of the error \(\delta\). Propagating these errors
-allows us to evaluate the prior volume, ergo: ${\cal Z}$ up to an
-estimable error.
-
-This is generalised to non-hypercube $\Psi$ and non-uniform $\pi$ via
-the prior quantile. 
-
-The time complextity of nested sampling $T$ satisfies the following
-relations.
+The time complexity $T$ of nested sampling satisfies
 \begin{subequations}\label{eq:complexity}
   \begin{align}
-    T \propto & n_\text{live}\\
-    T \propto & \langle {\cal T}\{{\cal L}(\bm{\theta})\} \rangle
+    T \propto & n_\text{live} \langle {\cal T}\{{\cal L}(\bm{\theta})\} \rangle {\cal N}\{{\cal T}\{{\cal L}(\bm{\theta}) \},
   \end{align}
 \end{subequations}
-where ${\cal T}$ represents time complexity of the
-function. Corollary: \emph{rejection sampling} --- drawing a point at random,
-and re-drawing at random based on the criteria mentioned, is less
-efficient than \emph{slice sampling} \citep{Neal_2003}.
+where ${\cal T}\{f(\bm{\theta})\}$ represents time complexity of
+evaluating $f(\bm{\theta})$ and ${\cal N}\{f(\bm{\theta})\}$, the
+number of such evaluations. Reducing $n_\text{live}$ reduces the
+resolution of nested sampling, while
+${\cal T}\{ {\cal T}\{{\cal L}(\bm{\theta})\}$ is model-dependent. We
+can, however, reduce the number of likelihood evaluations.
 
-Generally, if the prior is informative, one can design an
-implementation of nested sampling which incorporates that extra
-information, to accelerate nested sampling --- an ideal sampler. It
-would converge optimally when the prior and the posterior coincide:
-\begin{equation}
-\begin{array}{rl} 
-{\cal P}(\bm{\theta}) = \pi(\bm{\theta}), & \forall \bm{\theta}. 
-\end{array}
-\end{equation}
-Many algorithms, however, may have minimum run-time for non-coinciding
-informative priors.
 
-\subsection{Intuitive guesses and unrepresentative
+
+
+
+\subsection{Biases, guesses and unrepresentative
   priors\label{discussion-bias}}
 The choice of prior is relatively arbitrary, yet we have
 demonstrated that one can choose them differently accelerating
@@ -1098,4 +1003,59 @@ the way.
 
 \bibliography{bibliography}
 \bibliographystyle{mnras}
+
+\appendix
+\section{Nested sampling in detail}\label{sec:ns}
+Consider without loss of generality, a prior space \(\Psi\) that is a
+unit hypercube, where \(\pi(\bm{\theta}) = \text{Const.}\) Draw
+\(n_\text{live}\) random \emph{live points} from the unit
+hypercube. If \({\cal L}\) is a well-behaved function, the probability
+that two points have the same likelihood is vanishing, so each of them
+lies on a \textbf{distinct} iso-likelihood
+hyper-surface\footnote{analogy: height on a contour map. }. Each
+hyper-surface encloses the fraction
+\begin{equation}
+\cfrac{1}{n_\text{live}}
+\end{equation}
+of the total volume of the hypercube on average. More specifically,
+each shell's enclosed volume shall have some random deviation \(\Delta\), from
+\(\cfrac{1}{n_\text{live}}\), with an associated cumulative
+distribution \(P(\Delta)\).
+
+Subsequently, we pick another point at random, requiring that the
+likelihood of the new point be higher than the lowest likelihood of
+the initial \emph{live point} ensemble. In \citeauthor{Skilling2006}'s
+notation, the point with the lowest likelihood becomes \emph{dead} and
+the new point becomes is \emph{live}. This is a single iteration of
+nested sampling.
+
+Our argument of approximately equal volumes holds for the new
+ensemble, so the volume encased in the outer-most shell iteratively
+reduces by the same fraction, allows us to approximate said volumes:
+\begin{equation}\label{eq:recurrence-relation}
+  \begin{array}{rcl}
+  X_{0} &=  &1, \\
+  X_{1} &= &X_{0} \left(1- \cfrac{1}{n_\text{live}}\right),\\
+  & \vdots &, \\
+  X_{i} &= &X_{i-1}\left(1- \cfrac{1}{n_\text{live}}\right),\\
+  & \vdots, &
+\end{array}
+\end{equation}
+Thus we iteratively pick live points in regions $\{\bm{\theta}\}$ of
+high \({\cal L}\), and also estimating the evidence, and stop when the
+prior volume encased in the outer shell is lower than a predetermined
+fraction e.g. \(0.01\) of the original hypercube volume.
+
+The recurrence relation~\eqref{eq:recurrence-relation} is not exact,
+however, \(P(\Delta)\) is a known distribution, dependent on the
+\(\dim \Psi\) and \({\cal L}\). Thus, for each \(\epsilon>0\), we
+exists
+\[\delta(\epsilon) >0,\] such that \[P(\Delta > \delta)<\epsilon.\]
+Hence, by choosing \(\epsilon\) based on \(n_\text{live}\), one
+obtains an estimate of the error \(\delta\). Propagating these errors
+allows us to evaluate the prior volume, ergo: ${\cal Z}$ up to an
+estimable error.
+
+This is generalised to non-hypercube $\Psi$ and non-uniform $\pi$ via
+the prior quantile. 
 \end{document}

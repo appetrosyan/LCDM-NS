@@ -10,10 +10,10 @@ import pandas
 matplotlib.use('Qt5Agg')
 g = plots.get_subplot_plotter(chain_dir=r'./cobaya_output')
 
-chains = loadMCSamples(r'./cobaya_output/run')
+# chains = loadMCSamples(r'./cobaya_output/run')
 roots = ['run']
 params = ['logA', 'n_s', 'theta_s_1e2', 'omega_b', 'omega_cdm', 'tau_reio']
-# g.triangle_plot(roots, params, filled=True, shaded=True)
-# plt.show()
+g.triangle_plot(roots, params, filled=True, shaded=True)
+plt.show()
 
 np.array(chains.getMeans()), np.array(chains.getCov())
