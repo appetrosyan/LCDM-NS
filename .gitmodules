@@ -3,4 +3,4 @@
 	url = https://github.com/appetrosyan/CosmoChord.git
 [submodule "LCDM-NS.wiki"]
 	path = LCDM-NS.wiki
-	url = ./LCDM-NS.wiki/
+	url = https://github.com/appetrosyan/LCDM-NS.wiki.git
