@@ -1,9 +1,9 @@
 \begin{tikzpicture}
 
-\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
-\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137} %red
-\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843} %green
-\definecolor{color3}{rgb}{0.83921568627451,0.152941176470588,0.156862745098039}
+\definecolor{color0}{rgb}{0.0,0.0,1.0} %U
+\definecolor{color1}{rgb}{1,0.0,0.0} %PPR
+\definecolor{color2}{rgb}{0,0.8,0.0}                              %SSIM
+\definecolor{color3}{rgb}{0.,0.0,0.0} %G
 
 \begin{axis}[
 legend cell align={left},
@@ -16,7 +16,7 @@ xmin=7, xmax=90,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
 ylabel={\# of \({\cal L}\) evaluations},
-ymin=1.0, ymax=1000000.0,
+ymin=500, ymax=1000000.0,
 ytick style={color=black},
 xmode=log,
 ymode=log
@@ -274,7 +274,7 @@ table {%
 70 15926
 };
 \addlegendentry{$\text{SSIM}(U,G)$}
-\addplot [semithick, color3, mark=*, mark size=2, mark options={solid}]
+\addplot [semithick, color3, mark=., mark size=2, mark options={solid}]
 table {%
 10 908.333333333333
 30 4763

@@ -15,7 +15,7 @@ ylabel={\(\displaystyle \pi(\theta)\)},
 ymin=0, ymax=2.5,
 ytick style={color=black}
 ]
-\addplot [semithick, black]
+\addplot [semithick, blue, dashed]
 table {%
 -1.5 0
 -1.47478991596639 0
@@ -139,7 +139,7 @@ table {%
 1.5 0
 };
 \addlegendentry{$U(\theta; -1, 1) \equiv PPR(\theta; \beta=0)$}
-\addplot [semithick, black, dashed]
+\addplot [semithick, red]
 table {%
 -1.5 0
 -1.47478991596639 0
@@ -263,7 +263,7 @@ table {%
 1.5 0
 };
 \addlegendentry{$PPR(\theta; \beta=0.3)$}
-\addplot [semithick, black, dash pattern=on 1pt off 3pt on 3pt off 3pt]
+\addplot [semithick, green!50!black, dash pattern=on 1pt off 3pt on 3pt off 3pt]
 table {%
 -1.5 0
 -1.47478991596639 0
@@ -386,8 +386,8 @@ table {%
 1.47478991596639 0
 1.5 0
 };
-\addlegendentry{$PPR(\theta; \beta=1)$}
-\addplot [semithick, black, dotted]
+\addlegendentry{$PPR(\theta; \beta=1) \equiv iGPR$}
+\addplot [semithick, red, dotted]
 table {%
 -1.5 0
 -1.47478991596639 0

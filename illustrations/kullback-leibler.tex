@@ -1,9 +1,9 @@
 % This file was created by tikzplotlib v0.9.1.
 \begin{tikzpicture}
 
-\definecolor{color0}{rgb}{0.12156862745098,0.466666666666667,0.705882352941177}
-\definecolor{color1}{rgb}{1,0.498039215686275,0.0549019607843137}
-\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.172549019607843}
+\definecolor{color0}{rgb}{1,0.0,0.0} %ppr
+\definecolor{color1}{rgb}{0,0.8,0.0} %mix
+\definecolor{color2}{rgb}{0.0,0.0,1.0} %U
 
 \begin{axis}[
 legend cell align={left},
@@ -12,12 +12,14 @@ tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
 xlabel={Offset / \(\displaystyle \vec{\mu}\)},
-xmin=-2.5, xmax=272.5,
+xmin=-3.0, xmax=350.0,
 xtick style={color=black},
 y grid style={white!69.0196078431373!black},
-ylabel={Kullback-Leibler Divergence \(\displaystyle D\)},
-ymin=-2.93567696145677, ymax=62.1613818701095,
-ytick style={color=black}
+ylabel={Kullback-Leibler Divergence \(\displaystyle {\cal D}\{\pi, {\cal P}\}\)},
+ymin=-3.0, ymax=100.0,
+ytick style={color=black},
+xmode=log,
+ymode=log
 ]
 \path [draw=color0, semithick]
 (axis cs:10,5.71795365099151)
@@ -164,7 +166,7 @@ table {%
 170 0.026720345309976
 260 0.0314258707949607
 };
-\addlegendentry{mix$(U,G)$}
+\addlegendentry{SSIM$(U,G)$}
 \addplot [semithick, color2, mark=*, mark size=3, mark options={solid}, only marks]
 table {%
 10 55.6850467692306

@@ -1290,7 +1290,7 @@ repartitioned_samples.gui()
 	Outputs generated and saved in plain text for later use.
 **** DONE e-mail Dr Handley about using HDF.
 	 This could reduce the memory usage significantly.
-*** TODO Meet with Dr Handley
+*** DONE Meet with Dr Handley
 *** TODO Implement SSPM in Cobaya.
     :LOGBOOK:
     CLOCK: [2020-04-24 Fri 16:20]--[2020-04-24 Fri 21:20] =>  5:00
@@ -1306,32 +1306,40 @@ repartitioned_samples.gui()
     for throwing away information. It's not like you could have
     clearly marked them as rubbish and simply added them in. 
 *** TODO Refactor the report. 
-**** TODO Communicate that we found a way to accelerate stuff. 
+	:LOGBOOK:
+	CLOCK: [2020-04-26 Sun 10:01]--[2020-04-26 Sun 16:01] =>  6:00
+	CLOCK: [2020-04-25 Sat 16:28]--[2020-04-25 Sat 22:05] =>  5:37
+	CLOCK: [2020-04-25 Sat 11:59]--[2020-04-25 Sat 15:59] =>  4:00
+	:END:
+**** DONE Communicate that we found a way to accelerate stuff. 
 **** TODO Trim fat. 
-**** TODO Renumber the equations. 
-**** TODO Drop re-sizeable
+**** DONE Renumber the equations. 
+	 :LOGBOOK:
+	 CLOCK: [2020-04-25 Sat 11:56]--[2020-04-25 Sat 15:59] =>  4:03
+	 :END:
+**** DONE Drop re-sizeable
 **** TODO Results. 
-**** TODO Check Higson always appears. 
-**** TODO Clarify Figure 5 
-**** TODO Use log scale in y
+**** DONE Check Higson always appears. 
+**** DONE Clarify Figure 5 
+**** DONE Use log scale in y
 **** TODO State K-L divergence. 
 **** TODO Section on Kullback-leibler
 **** TODO Consistent D's figure 5. 
-**** TODO Combine time complexity. 
-**** TODO Timing Proportional to K-L D. 
+**** DONE Combine time complexity. 
+**** DONE Timing Proportional to K-L D. 
 **** TODO FIgure 5 analysis. 
-**** TODO Generalise Additive mixtures. 
-**** TODO Dock stochastic 
-**** TODO Rewrite end of Additive mixtures. 
-**** TODO Fiddly additive
-**** TODO Add to intro that stoch> additive. 
-**** TODO Remove Bayesian > frequentist.
-**** TODO Remove single-sentence paragraphs.
-**** TODO More stuff on Bayesian meta-analysis. 
+**** DONE Generalise Additive mixtures. 
+**** DONE Dock stochastic 
+**** DONE Rewrite end of Additive mixtures. 
+**** DONE Fiddly additive
+**** DONE Add to intro that stoch> additive. 
+**** DONE Remove Bayesian > frequentist.
+**** DONE Remove single-sentence paragraphs.
+**** DONE More stuff on Bayesian meta-analysis. 
 **** TODO Combining cosmo data sets hyper-parameters. 
-**** TODO Misestimating covariances. 
-**** TODO INclude toy model experiments. 
-**** TODO Expand on Bias. Section. 
+**** DONE Misestimating covariances. 
+**** DONE INclude toy model experiments. 
+**** DONE Expand on Bias. Section. 
 **** TODO Boundary effects. 
 **** TODO Conservative Cosmology Umbrella sampling. 
 *** TODO Touch up on comments by Dr Handley
