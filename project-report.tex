@@ -14,10 +14,14 @@
 \usepackage{amssymb}
 \usepackage{capt-of}
 \usepackage{hyperref}
+\usepackage{rotating}
 \usepackage{natbib}
+\usepackage{subcaption}
 \usepackage{varioref}
+\usepackage{pdflscape}
 \usepackage{bm}
 \usepackage{pgfplots}
+\usepackage{pgf}
 \usepackage[nameinlink, capitalize, noabbrev]{cleveref}
 
 \usepgfplotslibrary{groupplots,dateplot}
@@ -34,11 +38,7 @@
 \date{\today}
 \title[Accelerated Nested Sampling]{Accelerated nested sampling in the context of cosmological parameter estimation}
 \hypersetup{
- pdfauthor={},
  pdftitle={Accelerated nested sampling in context of cosmological parameter estimation},
- pdfkeywords={},
- pdfsubject={},
- pdfcreator={Emacs 26.3 (Org mode 9.1.9)}, 
  pdflang={English}}
 \crefname{Option}{Option}{Options}
 \crefname{Property}{Property}{Properties}
@@ -54,9 +54,9 @@
   typically require resources outside the realm of one's personal
   electronics, for example supercomputer clusters, and take weeks to
   complete. We have found a methodology that allows one to incorporate
-  intuitive guesses into nested sampling to improve performance. This
+  intuitive proposals into nested sampling to improve performance. This
   we call consistent posterior repartitioning. We have also developed
-  a scheme for mixing several intuitive guesses into a single model,
+  a scheme for mixing several intuitive proposals into a single model,
   allowing one to extract only the useful information out of the
   combined model without risk of biasing the inference. We demonstrate
   this by comparing full cosmological parameter estimations done using
@@ -118,7 +118,7 @@ that this is capable of making inference using nested sampling more
 robust.
 
 We, however, have discovered that it can also be used to extract
-useful information out of intuitive guesses and accelerate nested
+useful information out of intuitive proposals and accelerate nested
 sampling. We have extended their idea of power posterior
 re-partitioning to several other classes of posterior
 repartitioning. Consequently we have also developed isometric model
@@ -395,7 +395,7 @@ $\bm{\theta}$ location as \( {\cal P}(\bm{\theta})\), but is
 broader/narrower, by allowing said breadth of
 \( \tilde{\pi} (\bm{\theta};\beta)\) to vary. 
 
-\subsection{Intuitive guesses and accelerated
+\subsection{Intuitive proposals and accelerated
   convergence\label{sec:accelerating}}
 
 Now consider the following premise: we're given a model \({\cal M}\),
@@ -446,18 +446,18 @@ could then re-partition the posterior into
   \end{aligned}
 \end{equation}
 where \(Z\{\pi\}\) is the same as in \cref{sec:autopr}.  This we call
-\emph{intuitive guess posterior repartitioning} (iGPR). It is both the
+\emph{intuitive proposal posterior repartitioning} (iPPR). It is both the
 fastest possible consistent partitioning scheme and the least robust,
 each as it is the most informative prior.
 
 Generally, because of the issues discussed in~\vref{discussion-bias},
 we would prefer PPR. We will have lost performance with respect to
-iGPR, but would still have obtained the answer much faster compared to
+iPPR, but would still have obtained the answer much faster compared to
 the inference with \( \bar{\pi} (\bm{\theta})\).
 
 However, PPR is not without its flaws. It is able to fully mitigate
 errors in $\sigma$, not so for errors in $\mu$. PPR is strongly biased
-towards the intuitive guess, and in some cases shown in
+towards the intuitive proposal, and in some cases shown in
 \cref{fig:convergence} this imprints heavily on the posterior, also
 affecting the evidence. As a result, by gaining performance we risk
 extracting information out of our own bias, as opposed to the dataset.
@@ -467,12 +467,12 @@ extracting information out of our own bias, as opposed to the dataset.
 \subsection{General automatic posterior repartitioning}
 
 In this section we look at the family of methods similar to PPR and
-iGPR called consistent repartitiong. We note which schemes are more
+iPPR called consistent repartitioning. We note which schemes are more
 useful for the task of accelerating nested sampling without biasing
 the posterior.
 
 Begin by noting, \Cref{eq:partitioning} does not guarantee correct
-convergence. However, iGPR and PPR converge correctly under some
+convergence. However, iPPR and PPR converge correctly under some
 circumstances. By analysing the dynamics of nested sampling, we found
 that a general repartitioning of \( {\cal P}(\bm{\theta})\) will
 converge to it and obtain the correct evidence, provided it has the
@@ -494,7 +494,7 @@ following properties.
 We shall dedicate the entire next section to elaborate on the last
 property.
 
-But first, PPR and iGPR satisfy \cref{norm-prop} by construction. iGPR
+But first, PPR and iPPR satisfy \cref{norm-prop} by construction. iPPR
 satisfies \cref{spec-prop} if and only if
 \( \tilde{\pi} (\bm{\theta})\) represented the correct posterior to
 begin with (in which case $\Psi_{R} = \Psi$). In that case
@@ -548,15 +548,15 @@ be seen in \cref{fig:additive}.
 \begin{figure}
   \input{illustrations/additive_mixtures.tex}
   \caption{\label{fig:additive} An additive isometric mixture of a
-    Gaussian iGPR and a uniform reference. PPR added for comparison.}
+    Gaussian iPPR and a uniform reference. PPR added for comparison.}
 \end{figure}
 
 Additive mixtures are an attempt to relax some of the limitations
-imposed on PPR. Firstly, our guesses are limited to a class of
+imposed on PPR. Firstly, our proposals are limited to a class of
 functions, defined by a power relation. Fortunately for PPR, this
 class always includes a uniform prior, but not, for example a
 ``wedding cake'' prior (stepped uniform prior). This also means that
-we are limited to only one intuitive guess: we can't for example use
+we are limited to only one intuitive proposal: we can't for example use
 two non-concentric Gaussian peaks without extra
 parametrisation\footnote{There is a more subtle point,
   \cref{obj-property} is violated because of the extreme bias towards
@@ -718,22 +718,63 @@ and its performance is the Kullback-Leilber divergence
   \label{eq:kl-def}
   {\cal D}\{f, g \} = \int_{\Psi}f(\bm{\theta}) \ln \frac{f(\bm{\theta})}{g(\bm{\theta})} d \bm{\theta}.
 \end{equation}
-It is a proto-metric on the space of probability distributions: it is
-not symmetric, it does not satisfy the triangle inequality, but it
-being zero is equivalent to the distributions being identical.
+It is a pre-metric on the space of probability distributions: it is
+not symmetric, it does not satisfy the triangle inequality (hence not
+a full metric), but it being zero is equivalent to the distributions
+being identical.
 
 We use it in two contexts. Firstly, ${\cal D}\{\pi, {\cal P}\}$ is a
 measure of how much information extracted from the posterior came from
 the prior. The smaller the ${\cal D}$, the more informative our
 prior. \Cref{fig:kl-scaling} clearly shows, that it is also a reliable
-predictor of performance.
+predictor of performance. In \cref{fig:kl-d}, we see that the amount
+of information extracted from PPR, with growing offset also
+increases. However, it does so sub-linearly, which combined with
+\cref{fig:convergence}, makes the validity of the obtained posteriors
+from PPR and SSIM, suspect. 
+
+While a full point-wise residual analysis of the marginalised
+posterior would have been much more in the spirit of Bayesian
+statistics, in the interest of convenience, we use
+${\cal D}\{ {\cal P}, \bar{\cal P}$ to quantify the correctness of the
+obtained posterior, where $\bar{\cal P}$ is the posterior obtained
+using a $\pi(\bm{\theta}) = \text{Const}$. 
+
+However, most often when performing Bayesian inference, there is not
+reference uniform or analytical result to compute ${\cal D}$ from. Our
+last indicator of correctness is ${\cal Z}$ --- evidence. If the
+evidence is incorrect, it indicates one of two possible errors. If it
+is greater than the expected value, this indicates that
+$\tilde{\cal L}$ was normalised incorrectly (\cref{fig:hist}). If it
+is less than expected, it indicates that the intuitive proposal used in
+the repartitioning is incorrect (\cref{fig:drift})\footnote{both
+  follow from \cref{eq:bayes}, and under the assumption that the
+  intuitive proposal was more informative than the original prior. }.
+
+
+\begin{table}
+  \centering
+  
+  \caption{Typical values of posterior-to-reference-posterior
+    Kullback-Leibler divergence ${\cal D}\{{\cal P}, \bar{\cal P}\}$
+    for the runs shown in \cref{fig:hist}. The inconsistent
+    re-sizeable uniform had not been given an improper normalisation
+    of $\tilde{\cal L} = {\cal L}$. It is of type \emph{Re-sizeable
+      uniform} described in \cref{sec:resizeable}.}
+  \begin{tabular}{lr}
+    \textbf{Scheme} & ${\cal D}\{ {\cal P}, \bar{\cal P}\}$\\
+    \hline
+    Uniform & 0.000\\
+    Analytical & 0.000\\
+    $R$ & 0.724\\
+    $PPR$ & 0.011\\
+    $SSIM(U, G, R)$ & 0.007\\
+  \end{tabular}
+  \label{tab:hist}
+\end{table}
 
 
 
-\begin{figure}
-  \input{./illustrations/kullback-leibler.tex}
-\caption{Kullback-Leibler divergence \({\cal D}\) for different offsets: Gaussian peaks displaced from \(\bm{\mu}\) by \(\text{Offset}\times \bm{\mu}\). Notice that the faster repartitioning methods produce a lower value of \({\cal D}\). The divergence \({\cal D}\) scales linearly with the offset.\label{fig:kl-d}}
-\end{figure}
 
 \begin{figure}
   \input{./illustrations/scaling-kld.tex}
@@ -745,9 +786,9 @@ predictor of performance.
 \input{./illustrations/histograms.tex}
 \caption{An illustration of the evidence distributions of different
   types of repartitioning schemes. The reference is
-  \(\log {\cal Z} = -62 = - \log V(\Psi)\), from \cref{eq:evidence},
+  \(\log {\cal Z} = -62 = - \log V(\Psi)\), from \cref{eq:def-z},
   where \((a,b)=(-6, 6)\cdot 10^{8}\) and \(G=\mathds{1}_{3}\). Note
-  that both SSIM and PPR have made fewer misestimates of ${\cal
+  that both SSIM and PPR have made fewer erroneous estimates of ${\cal
     Z}$. If the repartitioning is done incorrectly, as with $R$, which
   is re-sizeable uniform repartitioning with the ${\cal L}$ correction
   deliberately containing only one Jacobian factor, the evidence
@@ -756,14 +797,7 @@ predictor of performance.
   correctly.\label{fig:hist}}
 \end{figure}
 
-Unfortunately, while a full analysis of the posterior distributions
-would be much more in the spirit of Bayesian analysis, the data-sets
-being are huge, so one cannot practically include all of the
-\emph{marginalised posterior plots} to prove the correctness of a
-run. We shall provide one example, and drop the discussion: one should
-assume that the posteriors coincide unless otherwise specified. In the
-latter case, the misfit is quantified by Kullback Leibler divergence
-from the true posterior distribution.
+
 
 
 \begin{figure}
@@ -771,8 +805,11 @@ from the true posterior distribution.
   \caption{An example of a posterior obtained with PPR, based on
     Planck parameter covariance matrix, compared with the Planck
     posterior chains. The differences in the distributions indicate
-    variance across different inference
-    runs. \label{fig:overlay-posteriors}}
+    variance across different inference runs.
+    ${\cal D}\{ {\cal P}, \bar{\cal P}\} \approx 0.01$. The deviation
+    is due to a different (smaller) number of live points used, and
+    the difference between the correct likelihood and its
+    approximation using a Gaussian. \label{fig:overlay-posteriors}}
 \end{figure}
 
 
@@ -802,8 +839,8 @@ uncorrelated. If all diagonal elements are equal, then the Gaussian is
 spherical with characteristic diameter given by
 \(2\bm{\sigma} = 2\sqrt{\bm{\Sigma}}\), where \(\bm{\Sigma} = \Sigma \mathds{1}\).
 
-To simulate imperfections we shall consider translational offsets
-between the guessed prior and the likelihood.
+To simulate imperfections we shall consider translation-al offsets
+between the proposed prior and the likelihood.
 
 \section{Results and Discussion.}\label{sec:results}
 The first test case is an uncorrelated spherical Gaussian posterior
@@ -823,7 +860,7 @@ underestimating the normalisation factor for
 
 We shall now show that repartitioning is able to drastically reduce
 the run-time compared to using a uniform prior. More specifically,
-guessing a posterior distribution and using repartitioning, one may
+proposing a posterior distribution and using repartitioning, one may
 reduce the initial compression stage to virtually none.
 
 Having proven the correctness of the runs, let's turn to performance
@@ -896,13 +933,34 @@ magnitude less than~\vref{opt:uniform,opt:shift} would afford.
   bias. \label{fig:convergence}}
 \end{figure}
 
-\begin{figure}
+\begin{figure} \centering
+  \begin{subfigure}{0.86\columnwidth}
+    \centering
+
+    \input{./illustrations/kullback-leibler.tex}
+    \caption{Kullback-Leibler divergence \({\cal D}\) for different
+      offsets: Gaussian peaks displaced from \(\bm{\mu}\) by
+      \(\text{Offset}\times \bm{\mu}\). Notice that the faster
+      repartitioning methods produce a lower value of \({\cal
+        D}\). The divergence \({\cal D}\) scales sub-linearly with the
+      offset.\label{fig:kl-d}}
+\end{subfigure}
+
+\begin{subfigure}{0.86\columnwidth}
+  \centering
+
   \input{./illustrations/evidence-drift.tex}
+  
   \caption{An illustration of offsets affecting ${\cal Z}$. The true
     value is constant, mirrored by the mixture: SSIM of PPR and
-    reference uniform. PPR alone produces incorrect
-    evidence, consistent with \cref{fig:convergence}. \label{fig:drift}}
-\end{figure}
+    reference uniform. PPR alone produces incorrect evidence,
+    consistent with \cref{fig:convergence}. \label{fig:drift}}
+\end{subfigure}
+\caption{Illustrations of effects of offsets on the correctness
+  \ref{fig:drift} and performance \ref{fig:kl-d} of nested sampling
+  under consistent posterior repartitioning.}
+:\end{figure}
+
 
 
 Lastly, \emph{posterior mass} is a measure of converge
@@ -915,10 +973,10 @@ nuisance parameters. Also, the confidence intervals on each parameter
 between the uniform and the repartitioned run are identical,
 signifying that we have not lost precision.
 
-\begin{figure}
-\includegraphics[width=.5\textwidth]{./illustrations/higson.png}
+\begin{figure*}
+\includegraphics[width=.9\textwidth]{./illustrations/higson.png}
 \caption{plot of the evolution of nested sampling. The \color{red} red
-  \color{black} series corresponds to SSIM of IGPR, while the
+  \color{black} series corresponds to SSIM of iPPR, while the
   \color{blue} blue \color{black} series --- to a reference
   uniform. The horizontal axis of plots in the second column is
   \(\ln X\), where \(X(\mathcal{L}) \in [0,1]\) is the fraction of the
@@ -926,7 +984,7 @@ signifying that we have not lost precision.
   the relative posterior mass. In row $i$ the ${\cal P}(\theta_{i})$
   is plotted. Confidence intervals represented with color
   intensity. \label{fig:higson}}
-\end{figure}
+\end{figure*}
 
 
 
@@ -936,19 +994,37 @@ After an initial run of \texttt{Cobaya}, we have obtained the marginalised
 posteriors of all the key parameters of the \(\Lambda\)CDM model,
 as well as the nuisance parameters.
 
-Ignoring any off-diagonal elements of their co-variance, we have
-constructed a mixture re-partitioned prior, containing a Gaussian
-with our best estimates, a uniform containing the original
-boundaries. A second run was thus performed.
+First, we have performed an inference using the~\cite{Planck} dataset,
+with the \(\Lambda\)CDM model. The results of our initial run are
+presented in \cref{fig:cosmology}. From these data, under the
+assumption that the parameters' posteriors are a correlated Gaussian
+distribution, we extract the means $\bm{\mu}$ and the covariance
+matrix \(\bm{\Sigma}\).
 
-Benchmarking on a cluster using time is impractical. Instead we
-measured the number of likelihood calls for each invocation of
-\texttt{PolyChord.run\_polychord()}.
+We use these in a stochastic superpositional mixture of a uniform
+$\pi$ used to obtain them originally and a Gaussian iPPR, patched into
+\texttt{Cobaya}'s interface to \texttt{PolyChord}. The run was then
+performed with identical settings, and the resulting posteriors were
+compared: ${\cal D}\{ {\cal P}, \bar{\cal P}\}$ and ${\cal Z}$,
+alongside the marginalised posterior plots \cref{fig:cosmology-cmp}. 
+\begin{landscape}
+\begin{figure}
+  \centering % Center table
+  \input{./illustrations/cosmology.pgf}
+  \caption{The marginalised posteriors for \texttt{Cobaya} +
+    \texttt{Class} without SSIM. }\label{fig:cosmology}
+\end{figure}
+\end{landscape}
 
-The result is a \textbf{substantial} reduction in run-time.
-
-
-
+\begin{landscape}
+\begin{figure}
+  \centering % Center table
+  \caption{The marginalised posteriors for \texttt{Cobaya} +
+    \texttt{Class} with SSIM, overplayed with marginalised posteriors
+    from \texttt{CosmoChord} and the original run
+    (\texttt{Cobaya})}\label{fig:cosmology-cmp}
+\end{figure}
+\end{landscape}
 
 \section{Conclusions}\label{sec:orgdf2cbd9}
 
@@ -957,32 +1033,45 @@ Our project's purpose had been to investigate the performance
 increase attainable by algorithmic optimisations of the inputs to
 nested samplers.
 
-We have identified a general prescription, named superpositional
-mixture repartitioning that netted the same if not greater
-performance improvement as power posterior repartitioning (PPR).
+We have identified a class of methods based on work by
+\cite{chen-ferroz-hobson}, called consistent posterior
+repartitioning. We have shown that each instance of said class can be
+used to accelerate nested sampling based on a proposal. We have also
+shown that these results often suffer from bias. We have shown that
+techniques such as power posterior repartitioning (PPR)
+\cite{chen-ferroz-hobson}, can mitigate said bias, by reducing the
+performance uplift.
 
-We have also established that the aforementioned prescription had a
-number of advantages:
-\begin{enumerate}
-\item it allows multiple priors to be mixed, while PPR only allows
-one.
-\item it permits a broader class of functions, than are practical for
-PPR, e.g.~ones where \(Z_{\pi}(\beta)\) cannot be represented in
-closed form.
-\item it copes with functions having different domains. PPR cannot.
-\item it is abstract, i.e.~the prior iCDF is a superposition iCDFs of
-the constituents priors. For PPR the iCDF needs to be computed.
-\item it supports an unbiased reference (uniform) prior exactly. PPR
-tends to an unbiased reference as \(\beta\rightarrow\beta_{0}\).
-\item it is able to mitigate improper re-scaling of the likelihood. If
-one of the priors is improperly normalised, the offset from the
-true evidence is reduced as \(n_{live}\rightarrow\infty\). PPR
-does not.
-\item it is resilient to human error.
-\item it is easier to implement and requires little to no mathematical
-input from the user, beyond ensuring the three properties.
-\end{enumerate}
+We have developed a prescription --- stochastic superpositional
+isometric mixing (SSIM), for combining several consistent repartitioning
+proposals into one proposal. When used as input to nested sampling,
+this results in a similar acceleration to the most representative of
+the priors in the mixture, while mitigating bias more effectively than
+e.g.~PPR.
 
+We have established that the aforementioned prescription has a number
+of advantages: it allows multiple types of proposal priors to be
+mixed, while PPR only allows one; it permits a broader class of
+proposals, for example: with differing domains, while PPR only
+operates only if the domains of the proposal and reference coincide.
+SSIM is abstract, i.e.~the prior quantile is a superposition of the
+constituents priors' quantiles. By contrast, for PPR the quantiles
+need to be calculated by the user. SSIM supports an unbiased reference
+(uniform) prior exactly. PPR tends to an unbiased reference as
+\(\beta\rightarrow\beta_{0}\), but the probability of that is
+\(P(\beta=0)\) which is zero for continuous variable $\beta$, and
+negligible if $\beta$ is a machine-represent-able floating point. SSIM
+is robust in that it is able to mitigate improper re-scaling of the
+likelihood in a proposal, provided that at least one representative
+prior with proper re-scaling is present in the mixture.
+
+As a result, faster, but more fragile consistent repartitioning
+schemes (e.g.~iPPR), in conjunction with standard uniform prior can
+outperform more robust but slower PPR in precision accuracy and speed.
+When applied to real-world cosmological parameter estimation, our
+strategy of using SSIM of Uniform and iPPR resulted in a significant
+performance increase, reducing the run-time requirements of
+\texttt{Cobaya} by a factor of \TODO.
 
 \subsection{Further refinements}\label{sec:org8314ddf}
 
@@ -1022,11 +1111,10 @@ involves a estimating connection strengths between nodes of the
 network. Normally, it is done via negative feedback: the connections
 correlated with the right answer are reinforced, wrong --- weakened.
 Identifying the connection strengths as the parameters, in Bayesian
-language, the prior is uniform. Our intuitive guess, represented by a
-Gaussian based on a neural network performing a similar task, can be
-used with repartitioning to achieve faster training. Using
-superpositional mixtures, several such networks can be used to train
-one.
+language, the prior is uniform. Our intuitive proposal, a Gaussian
+based on a neural network performing a similar task, can be used with
+repartitioning to achieve faster training. Using superpositional
+mixtures, several such networks can be used to train one.
 
 We may also extend Bayesian analysis to \emph{consistent Bayesian
   meta-analysis}. Consider data obtained from multiple physical
@@ -1112,7 +1200,7 @@ estimable error.
 This is generalised to non-hypercube $\Psi$ and non-uniform $\pi$ via
 the prior quantile.
 
-\section{Re-sizeable-bounds uniform prior}\label{sec:orga67f872}
+\section{Re-sizeable-bounds uniform prior}\label{sec:resizeable}
 
 The three requirements outlined at the beginning of this section are
 not necessary and sufficient. As was noted in
