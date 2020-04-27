@@ -1,0 +1,177 @@
+%% Creator: Inkscape 1.0rc1 (09960d6, 2020-04-09), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'convergence.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{460.80001831bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.75)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{convergence.pdf}}%
+    \put(0.24695706,0.05082956){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}0\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{convergence.pdf}}%
+    \put(0.3941304,0.05082956){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}4\end{tabular}}}}%
+    \put(0.31184961,0.02115968){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}θ\end{tabular}}}}%
+    \put(0.32812565,0.01595135){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}1\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{convergence.pdf}}%
+    \put(0.09600829,0.13261608){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}0\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{convergence.pdf}}%
+    \put(0.09600829,0.24281004){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}5\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{convergence.pdf}}%
+    \put(0.08220756,0.35300398){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}10\end{tabular}}}}%
+    \put(0.0690172,0.21997464){\color[rgb]{0,0,0}\rotatebox{90}{\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}θ\end{tabular}}}}}%
+    \put(0.07335748,0.23353801){\color[rgb]{0,0,0}\rotatebox{90}{\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}3\end{tabular}}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{convergence.pdf}}%
+    \put(0.07888107,0.4850869){\color[rgb]{0,0,0}\rotatebox{89.844}{\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}θ\end{tabular}}}}}%
+    \put(0.08413367,0.5013487){\color[rgb]{0,0,0}\rotatebox{89.844}{\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}1\end{tabular}}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{convergence.pdf}}%
+    \put(0.58391255,0.05082956){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}0\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{convergence.pdf}}%
+    \put(0.73179188,0.05082956){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}5\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{convergence.pdf}}%
+    \put(0.87277084,0.05082956){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}10\end{tabular}}}}%
+    \put(0.69934954,0.02115968){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}θ\end{tabular}}}}%
+    \put(0.71291291,0.0168194){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}3\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{convergence.pdf}}%
+    \put(0.77105027,0.62933697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}O\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{convergence.pdf}}%
+    \put(0.78812925,0.62933697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}f\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{convergence.pdf}}%
+    \put(0.79574646,0.62933697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}f\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=13]{convergence.pdf}}%
+    \put(0.8033636,0.62933697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}s\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=14]{convergence.pdf}}%
+    \put(0.81464835,0.62933697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}e\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=15]{convergence.pdf}}%
+    \put(0.82801641,0.62933697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}t\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=16]{convergence.pdf}}%
+    \put(0.84338097,0.62933697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{P}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=17]{convergence.pdf}}%
+    \put(0.85648862,0.62933697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{P}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=18]{convergence.pdf}}%
+    \put(0.86957456,0.62933697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{R}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=19]{convergence.pdf}}%
+    \put(0.77105027,0.59749695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}M\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=20]{convergence.pdf}}%
+    \put(0.78975686,0.59749695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}o\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=21]{convergence.pdf}}%
+    \put(0.80301637,0.59749695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}d\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=22]{convergence.pdf}}%
+    \put(0.81679677,0.59749695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}e\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=23]{convergence.pdf}}%
+    \put(0.83012145,0.59749695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}l\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=24]{convergence.pdf}}%
+    \put(0.84301208,0.59749695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{P}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=25]{convergence.pdf}}%
+    \put(0.85611967,0.59749695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{P}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=26]{convergence.pdf}}%
+    \put(0.8692056,0.59749695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{R}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=27]{convergence.pdf}}%
+    \put(0.77105027,0.56565696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}O\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=28]{convergence.pdf}}%
+    \put(0.78812925,0.56565696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}f\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=29]{convergence.pdf}}%
+    \put(0.79574646,0.56565696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}f\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=30]{convergence.pdf}}%
+    \put(0.8033636,0.56565696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}s\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=31]{convergence.pdf}}%
+    \put(0.81464835,0.56565696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}e\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=32]{convergence.pdf}}%
+    \put(0.82801641,0.56565696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}t\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=33]{convergence.pdf}}%
+    \put(0.84338097,0.56565696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{m}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=34]{convergence.pdf}}%
+    \put(0.86451816,0.56565696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{i}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=35]{convergence.pdf}}%
+    \put(0.87055115,0.56565696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{x}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=36]{convergence.pdf}}%
+    \put(0.77105027,0.53381696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}M\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=37]{convergence.pdf}}%
+    \put(0.78975686,0.53381696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}o\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=38]{convergence.pdf}}%
+    \put(0.80301637,0.53381696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}d\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=39]{convergence.pdf}}%
+    \put(0.81679677,0.53381696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}e\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=40]{convergence.pdf}}%
+    \put(0.83012145,0.53381696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}l\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=41]{convergence.pdf}}%
+    \put(0.84301208,0.53381696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{m}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=42]{convergence.pdf}}%
+    \put(0.86414921,0.53381696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{i}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=43]{convergence.pdf}}%
+    \put(0.87018219,0.53381696){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{x}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=44]{convergence.pdf}}%
+    \put(0.77105027,0.50197697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}O\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=45]{convergence.pdf}}%
+    \put(0.78812925,0.50197697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}f\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=46]{convergence.pdf}}%
+    \put(0.79574646,0.50197697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}f\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=47]{convergence.pdf}}%
+    \put(0.8033636,0.50197697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}s\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=48]{convergence.pdf}}%
+    \put(0.81464835,0.50197697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}e\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=49]{convergence.pdf}}%
+    \put(0.82801641,0.50197697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}t\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=50]{convergence.pdf}}%
+    \put(0.84338097,0.50197697){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{U}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=51]{convergence.pdf}}%
+    \put(0.77105027,0.47013695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}M\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=52]{convergence.pdf}}%
+    \put(0.78975686,0.47013695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}o\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=53]{convergence.pdf}}%
+    \put(0.80301637,0.47013695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}d\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=54]{convergence.pdf}}%
+    \put(0.81679677,0.47013695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}e\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=55]{convergence.pdf}}%
+    \put(0.83012145,0.47013695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}l\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=56]{convergence.pdf}}%
+    \put(0.84301208,0.47013695){\color[rgb]{0,0,0}\makebox(0,0)[lt]{\lineheight{1.25}\smash{\begin{tabular}[t]{l}\textit{U}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=57]{convergence.pdf}}%
+  \end{picture}%
+\endgroup%

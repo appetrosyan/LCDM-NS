@@ -302,7 +302,7 @@ has multiple representations in \(\pi (\bm{\theta})\) and
 extra parameter \(\beta\) that re-scales the prior:
 \begin{equation}
   \label{eq:autopr-prior}
-  \tilde{\pi}(\bm{\bm{\theta}};\beta) = \cfrac{\pi(\bm{\theta})^{\beta}}{Z(\beta)\{\pi\}}
+  \hat{\pi}(\bm{\bm{\theta}};\beta) = \cfrac{\pi(\bm{\theta})^{\beta}}{Z(\beta)\{\pi\}}
 \end{equation}
 (see \cref{fig:ppr}) where \(Z(\beta)\{\pi\}\) a functional of
 \(\pi (\bm{\theta})\) is a normalisation factor for
@@ -312,13 +312,13 @@ extra parameter \(\beta\) that re-scales the prior:
 \end{equation}
 In their prescription, the likelihood changes to
 \begin{equation}
-  \tilde{\cal L}(\bm{\theta}; \beta) = {\cal L}(\bm{\theta}) Z(\beta)\{\pi\} \cdot \pi^{1-\beta}(\bm{\theta}).
+  \hat{\cal L}(\bm{\theta}; \beta) = {\cal L}(\bm{\theta}) Z(\beta)\{\pi\} \cdot \pi^{1-\beta}(\bm{\theta}).
 \end{equation}
 
 \begin{figure}
  \input{./illustrations/ppr.tex}
  \caption{\label{fig:ppr} Demonstration of
-   \(\tilde{\pi}(\theta; \beta)\) for different values of \(\beta\) in
+   \(\hat{\pi}(\theta; \beta)\) for different values of \(\beta\) in
    one dimension. Note that we've assumed that the original
    \( \pi (\bm{\theta})\) distribution is a truncated Gaussian,
    i.e.~zero outside the region \((-1, 1)\), which manifests as
@@ -328,26 +328,26 @@ In their prescription, the likelihood changes to
 \end{figure}
 
 Now, by noting that
-\({\cal L}(\bm{\theta})\pi (\bm{\theta}) = \tilde{\cal L}(\bm{\theta}
-\tilde{\pi} (\bm{\theta})\) by construction, hence by \cref{eq:bayes}
+\({\cal L}(\bm{\theta})\pi (\bm{\theta}) = \hat{\cal L}(\bm{\theta}
+\hat{\pi} (\bm{\theta})\) by construction, hence by \cref{eq:bayes}
 the posterior and evidence corresponding to
-\(\tilde{\cal L}(\bm{\theta};\beta)\) and
-\(\tilde{\pi} (\bm{\theta};\beta)\) will be the same as
+\(\hat{\cal L}(\bm{\theta};\beta)\) and
+\(\hat{\pi} (\bm{\theta};\beta)\) will be the same as
 \( {\cal P} (\bm{\theta})\) and \({\cal Z}\). Hence, if
-\(\tilde{\pi} (\bm{\theta};\beta)\) and
-\(\tilde{\cal L}(\bm{\theta};\beta)\) are used as inputs to nested
+\(\hat{\pi} (\bm{\theta};\beta)\) and
+\(\hat{\cal L}(\bm{\theta};\beta)\) are used as inputs to nested
 sampling, they should theoretically produce the same results. In
 practice, however, if the original prior \(\pi (\bm{\theta})\) was
 unrepresentative of the posterior \( {\cal P} (\bm{\theta})\), it may
 become representative for some value $\beta_{R}$. Values
-$\tilde{\beta}$ close to $\beta_{R}$ will be correlated with higher
+$\hat{\beta}$ close to $\beta_{R}$ will be correlated with higher
 likelihoods, thus our sampler shall prefer them. Hence, the system
 will naturally tend to a state where \( {\cal P} (\bm{\theta})\) is
 represented in
-\(\tilde{\pi} (\bm{\theta};\beta)\)\footnote{Technically we obtain
-  \( \tilde{\cal P} (\bm{\theta};\beta)\) which, when marginalised
+\(\hat{\pi} (\bm{\theta};\beta)\)\footnote{Technically we obtain
+  \( \hat{\cal P} (\bm{\theta};\beta)\) which, when marginalised
   over $\beta$, yields
-  \( {\cal P} (\bm{\theta}) = \int \tilde{\cal P} (\bm{\theta};\beta)
+  \( {\cal P} (\bm{\theta}) = \int \hat{\cal P} (\bm{\theta};\beta)
   d \beta\) --- the correct posterior.}. Thus we have mitigated the
 issue of unrepresentative priors. We have sacrificed some performance,
 but gained the ability to salvage some information from a corrupt
@@ -393,7 +393,7 @@ However, we can sidestep this issue. Power Posterior repartitioning
 fully compensates for \( \pi (\bm{\theta})\) that peaks at the same
 $\bm{\theta}$ location as \( {\cal P}(\bm{\theta})\), but is
 broader/narrower, by allowing said breadth of
-\( \tilde{\pi} (\bm{\theta};\beta)\) to vary. 
+\( \hat{\pi} (\bm{\theta};\beta)\) to vary. 
 
 \subsection{Intuitive proposals and accelerated
   convergence\label{sec:accelerating}}
@@ -413,17 +413,17 @@ where some PDF $f$ is parameterised by \(\bm{\mu}\) in its
 \(\bar{\pi}(\bm{\theta})\), but faster? Yes! By exploiting PPR.
 
 Recall, that the reason why PPR obtains the same posterior
-\( \bar{\cal P}(\bm{\theta})= \tilde{\cal P}(\bm{\theta})\) as one
+\( \bar{\cal P}(\bm{\theta})= \hat{\cal P}(\bm{\theta})\) as one
 would have using \( \bar{\pi} (\bm{\theta}) = \text{Const.}\) is
-because \( \tilde{\cal L} (\bm{\theta};\beta)\) and
-\( \tilde{\pi} (\bm{\theta};\beta)\) are a \emph{consistent
+because \( \hat{\cal L} (\bm{\theta};\beta)\) and
+\( \hat{\pi} (\bm{\theta};\beta)\) are a \emph{consistent
   (re)partitioning} of \( \bar{\cal P}(\bm{\theta})\). That is:
 \begin{equation}
   \label{eq:partitioning}
-  \tilde{\cal L} (\bm\tilde{\theta}) \tilde{\pi} (\bm{\tilde{\theta}})  = \bar{\pi} (\bm{\theta}) \bar{\cal L} (\bm{\theta}) = \bar{\cal Z} \bar{\cal P}(\bm{\theta}), 
+  \hat{\cal L} (\bm\hat{\theta}) \hat{\pi} (\bm{\hat{\theta}})  = \bar{\pi} (\bm{\theta}) \bar{\cal L} (\bm{\theta}) = \bar{\cal Z} \bar{\cal P}(\bm{\theta}), 
 \end{equation}
 where in the case of PPR
-$\bm\tilde{\theta} = (\theta_{1}, \theta_{2}, \ldots, \theta_{n},
+$\bm\hat{\theta} = (\theta_{1}, \theta_{2}, \ldots, \theta_{n},
 \beta)$.  This combined with \cref{eq:bayes} is what ensures that PPR
 is able to obtain \( {\cal P}(\bm{\theta})\) correctly (see
 \cref{sec:autopr}). In \cref{discussion-bias}, we have said that it is
@@ -441,8 +441,8 @@ Suppose we were confident of both \(\sigma\) as well as \(\mu\). We
 could then re-partition the posterior into
 \begin{equation}\label{eq:igpr}
   \begin{aligned}
-    \tilde{\pi} (\bm{\theta}) = &\pi(\bm{\theta})\\
-    \tilde{{\cal L}}(\bm{\theta}) = & \frac{\bar{\cal L}(\bm{\theta})}{Z(1)\{\pi\}},
+    \hat{\pi} (\bm{\theta}) = &\pi(\bm{\theta})\\
+    \hat{{\cal L}}(\bm{\theta}) = & \frac{\bar{\cal L}(\bm{\theta})}{Z(1)\{\pi\}},
   \end{aligned}
 \end{equation}
 where \(Z\{\pi\}\) is the same as in \cref{sec:autopr}.  This we call
@@ -482,21 +482,21 @@ following properties.
   \cref{eq:partitioning}. \label[Property]{norm-prop}
 
 \item \textbf{Representation}. In prior hyperspace
-  $\tilde{\Psi} \supset \Psi$ there exists a subspace
-  $\Psi_{R} \subset \tilde{\Psi}$, such that for all
-  $\tilde{\bm{\theta}}\in \Psi_{R}$, \( {\cal P}(\bm{\theta})\) is
-  represented in \( \tilde{\pi}
-  (\bm{\tilde{\theta}})\). \label[Property]{spec-prop}
+  $\hat{\Psi} \supset \Psi$ there exists a subspace
+  $\Psi_{R} \subset \hat{\Psi}$, such that for all
+  $\hat{\bm{\theta}}\in \Psi_{R}$, \( {\cal P}(\bm{\theta})\) is
+  represented in \( \hat{\pi}
+  (\bm{\hat{\theta}})\). \label[Property]{spec-prop}
   
-\item \textbf{Convergence}. The sampling favours configurations $\bm\tilde{\theta} \in \Psi_{R}$. \label[Property]{vconv-prop}
-\item \textbf{Objectivity}. The bias towards $\bm\tilde{\theta}$ regions of large \( \tilde{\cal P}(\bm{\tilde{\theta}})\) is stronger than the bias towards \( \tilde{\pi} (\bm{\tilde{\theta}})\). \label[Property]{obj-prop}
+\item \textbf{Convergence}. The sampling favours configurations $\bm\hat{\theta} \in \Psi_{R}$. \label[Property]{vconv-prop}
+\item \textbf{Objectivity}. The bias towards $\bm\hat{\theta}$ regions of large \( \hat{\cal P}(\bm{\hat{\theta}})\) is stronger than the bias towards \( \hat{\pi} (\bm{\hat{\theta}})\). \label[Property]{obj-prop}
 \end{enumerate}
 We shall dedicate the entire next section to elaborate on the last
 property.
 
 But first, PPR and iPPR satisfy \cref{norm-prop} by construction. iPPR
 satisfies \cref{spec-prop} if and only if
-\( \tilde{\pi} (\bm{\theta})\) represented the correct posterior to
+\( \hat{\pi} (\bm{\theta})\) represented the correct posterior to
 begin with (in which case $\Psi_{R} = \Psi$). In that case
 \cref{vconv-prop} follows from the dynamics of the Bayesian inference.
 
@@ -535,8 +535,8 @@ posterior, i.e.:
 Their additive isometric mixture
 \begin{subequations}
   \begin{align}
-    \tilde{\pi}(\bm{\theta}; \bm{\beta}) = \sum_{i} \beta_{i} \pi_{i}(\bm{\theta})\label{eq:additive-mix}
-    \tilde{{\cal L}}(\bm{\theta}; \bm{\beta}) = \frac{\sum_{i}   \beta_{i} \pi_{i}(\bm{\theta}) {\cal L}_{i}(\bm{\theta})}{\sum_{i} \beta_{i} \pi_{i}(\bm{\theta})}
+    \hat{\pi}(\bm{\theta}; \bm{\beta}) = \sum_{i} \beta_{i} \pi_{i}(\bm{\theta})\label{eq:additive-mix}
+    \hat{{\cal L}}(\bm{\theta}; \bm{\beta}) = \frac{\sum_{i}   \beta_{i} \pi_{i}(\bm{\theta}) {\cal L}_{i}(\bm{\theta})}{\sum_{i} \beta_{i} \pi_{i}(\bm{\theta})}
   \end{align}
 \end{subequations}
 is parameterised by
@@ -564,11 +564,11 @@ parametrisation\footnote{There is a more subtle point,
   on that later.}. While we do gain that freedom, it comes at a cost.
 
 The downfall of additive mixtures lies in the definition of
-$\tilde{\cal L}$. Instead of having to evaluate only one of the
+$\hat{\cal L}$. Instead of having to evaluate only one of the
 constituent likelihoods, we are forced to evaluate all of them. This
 means that we restrict time complexity to
 \begin{equation}
-  {\cal T}\{\tilde{\cal L}\} = O \left(   \max_{i} {\cal T}\{ {\cal L_{i}}\}. \right)\label{eq:hard-cap}
+  {\cal T}\{\hat{\cal L}\} = O \left(   \max_{i} {\cal T}\{ {\cal L_{i}}\}. \right)\label{eq:hard-cap}
 \end{equation}
 This issue can be mitigated with asynchronous computation, provided
 there is no interference. Another optimisation may be possible if the
@@ -602,39 +602,39 @@ We want to superimpose consistent partitioning schemes $\pi_{i}$,
 ${\cal L}_{i}$, by adding \(m-1\) extra parameters $\bm{\beta}$. 
 Firstly, the parameterised prior is 
 \begin{equation}
-  \tilde{\pi}(\bm{\theta}; \beta)  \triangleq
+  \hat{\pi}(\bm{\theta}; \beta)  \triangleq
   \begin{cases}
-	\tilde{\pi}_{1}(\bm{\theta}) & \text{with probability } \beta_{1},\\
+	\hat{\pi}_{1}(\bm{\theta}) & \text{with probability } \beta_{1},\\
 	& \vdots,\\
-	\tilde{\pi}_{n}(\bm{\theta}) & \text{with probability } (1- \sum_{i}^{m}\beta_{i}),
+	\hat{\pi}_{n}(\bm{\theta}) & \text{with probability } (1- \sum_{i}^{m}\beta_{i}),
 	\end{cases}
 \end{equation}
 and likelihood:
 \begin{equation}
-  \tilde{\cal L}(\bm{\theta}; \bm{\beta})  \triangleq
+  \hat{\cal L}(\bm{\theta}; \bm{\beta})  \triangleq
   \begin{cases}
-	\tilde{\cal L}_{1}(\bm{\theta}) &  \text{with probability } \beta_{1},\\
+	\hat{\cal L}_{1}(\bm{\theta}) &  \text{with probability } \beta_{1},\\
 		    &\vdots,\\
-	\tilde{\cal L}_{m}(\bm{\theta}) & \text{with probability} (1- \sum_{i}^{m}\beta_{i}).
+	\hat{\cal L}_{m}(\bm{\theta}) & \text{with probability} (1- \sum_{i}^{m}\beta_{i}).
 \end{cases}
 \end{equation}
 It is a consistent partitioning of the original model if and only if
 \begin{equation}
   \label{eq:sspr}
-  \tilde{\pi}(\bm{\theta}; \bm{\beta}) = \tilde{\pi}(\bm{\theta})_{i} \Leftrightarrow \tilde{\cal L}(\bm{\theta}; \bm{\beta}) = \tilde{\cal L}_{m}(\bm{\theta}; \bm{\beta}), 
+  \hat{\pi}(\bm{\theta}; \bm{\beta}) = \hat{\pi}(\bm{\theta})_{i} \Leftrightarrow \hat{\cal L}(\bm{\theta}; \bm{\beta}) = \hat{\cal L}_{m}(\bm{\theta}; \bm{\beta}), 
 \end{equation}
 that is, the branches are chosen consistently.
 
 The~\cref{spec-prop,norm-prop} are satisfied by construction if at
 least one of the priors represented the
 posterior. The~\cref{vconv-prop} is satisfied similarly to PPR: the
-likelihood is determined by \(\bm\tilde{\theta} \sup \bm{\beta}\), so
+likelihood is determined by \(\bm\hat{\theta} \sup \bm{\beta}\), so
 $\bm{\beta}$s that lead to higher likelihoods are favoured, ergo
 configurations where ${\cal P}$ is represented are also preferred.
 
 Superpositional mixtures have multiple advantages when compared with
 additive mixtures. Crucially, only one of ${\cal L}_{i}$ is evaluated
-each time $\tilde{\cal L}$ is evaluated. As a result, ignoring the
+each time $\hat{\cal L}$ is evaluated. As a result, ignoring the
 overhead of branch choice, the worst case time complexity is better
 than the best case for additive mixtures. This has vast implications
 discussed in \cref{sec:applications}.
@@ -647,7 +647,7 @@ any other calculations.
 
 There can be many implementations of a superpositional mixture. A
 natural first choice would be a quantum computer, where the
-$\tilde{\pi}$ and $\tilde{\cal L}$ are represented by \(m\) level
+$\hat{\pi}$ and $\hat{\cal L}$ are represented by \(m\) level
 systems entangled with each other (consistent choice of branch) and a
 classical computer (to evaluate ${\cal L}$ and $\pi$). However, we can
 also attain an implementation using only computational methods via a
@@ -656,7 +656,7 @@ stochastic choice.
 \emph{Stochastic superpositional isometric mixture} of consistent
 partitioning (SSIM) ensures branch consistency by requiring
 \begin{equation}
-\tilde{\pi}(\bm{\theta}; \bm{\beta}) = \tilde{\pi}_{F(\bm{\theta};
+\hat{\pi}(\bm{\theta}; \bm{\beta}) = \hat{\pi}_{F(\bm{\theta};
   \bm{\beta})}(\bm{\theta};\bm{\beta}),
 \end{equation}
 where $F(\bm{\theta}; \bm{\beta})$ is a function. In our implementation
@@ -692,7 +692,7 @@ set union of the domains of its constituents.
 SSIM, by fixing many of the issues of additive mixtures, inherits most
 of the advantages. It is also much more robust, which we shall discuss
 in the later sections. It does however come with one drawback. As a
-result of branching, the likelihood '$\tilde{\cal L}$ visible to the
+result of branching, the likelihood '$\hat{\cal L}$ visible to the
 sampler, is no longer continuous. Thus nested sampling that relied on
 said continuity will have undefined behaviour. \texttt{PolyChord}'s
 slice sampling seems not affected by the discontinuity, but there may be
@@ -707,7 +707,7 @@ implementation details are ignored. As such additive mixtures are put
 at an inherent disadvantage, because in the average case,
 \begin{equation}
   \label{eq:additive-t-complexity}
-  {\cal N}\{ \tilde{\cal L}\} = \sum_{i}^{m} {\cal N}\{{\cal L}_{i}\}. 
+  {\cal N}\{ \hat{\cal L}\} = \sum_{i}^{m} {\cal N}\{{\cal L}_{i}\}. 
 \end{equation}
 
 An important quantity for measuring both the correctness of our result
@@ -745,7 +745,7 @@ reference uniform or analytical result to compute ${\cal D}$ from. Our
 last indicator of correctness is ${\cal Z}$ --- evidence. If the
 evidence is incorrect, it indicates one of two possible errors. If it
 is greater than the expected value, this indicates that
-$\tilde{\cal L}$ was normalised incorrectly (\cref{fig:hist}). If it
+$\hat{\cal L}$ was normalised incorrectly (\cref{fig:hist}). If it
 is less than expected, it indicates that the intuitive proposal used in
 the repartitioning is incorrect (\cref{fig:drift})\footnote{both
   follow from \cref{eq:bayes}, and under the assumption that the
@@ -759,7 +759,7 @@ the repartitioning is incorrect (\cref{fig:drift})\footnote{both
     Kullback-Leibler divergence ${\cal D}\{{\cal P}, \bar{\cal P}\}$
     for the runs shown in \cref{fig:hist}. The inconsistent
     re-sizeable uniform had not been given an improper normalisation
-    of $\tilde{\cal L} = {\cal L}$. It is of type \emph{Re-sizeable
+    of $\hat{\cal L} = {\cal L}$. It is of type \emph{Re-sizeable
       uniform} described in \cref{sec:resizeable}.}
   \begin{tabular}{lr}
     \textbf{Scheme} & ${\cal D}\{ {\cal P}, \bar{\cal P}\}$\\
@@ -1213,10 +1213,10 @@ discussed by~\cite{Gieres_2000}.
 To illustrate, consider a uniform prior with the following
 parametrisation.
 \begin{equation}
-  \tilde{\pi}(\bm{\theta}; \beta) = \TopHat(\bm{\theta}; \beta \bm{a}, \beta \bm{b})
+  \hat{\pi}(\bm{\theta}; \beta) = \TopHat(\bm{\theta}; \beta \bm{a}, \beta \bm{b})
 \end{equation}
 Although there are no issues when \(\beta>1\) (we set
-\({\cal\tilde{L}}(\bm{\theta}; \beta>1)=0\)), one can immediately
+\({\cal\hat{L}}(\bm{\theta}; \beta>1)=0\)), one can immediately
 spot the issues with \(\beta \in (0,1)\); and \(\beta=0\) is
 altogether nonsensical.
 
@@ -1234,31 +1234,31 @@ as the prior quantile.
 
 Let \(u\) be a point in unit hypercube \(\Psi_{C}\). The quantile
 defines a mapping functionally dependent on the PDF of the prior
-\[C(\beta)\lbrace \tilde{\pi}\rbrace:u \mapsto \bm{\theta},\] such that
+\[C(\beta)\lbrace \hat{\pi}\rbrace:u \mapsto \bm{\theta},\] such that
 the uniform distribution of \(\bm{u}\) leads through
-\(C_{\beta}\{\tilde{\pi}\}(\bm{u})\) to a \(\tilde{\pi}(\bm{\theta};\beta)\)
+\(C_{\beta}\{\hat{\pi}\}(\bm{u})\) to a \(\hat{\pi}(\bm{\theta};\beta)\)
 distribution of \(\bm{\theta} \in\Psi(\beta)\).Note that we replaced the
-parametrisation of the function \(\tilde{\pi}\) with an explicit
+parametrisation of the function \(\hat{\pi}\) with an explicit
 parametrisation of the coordinate transformation, specifically
 \begin{equation}
-  \pi(C(\beta)\{\tilde{\pi}\}(u)) \equiv \tilde{\pi}(\bm{\theta}; \beta),
+  \pi(C(\beta)\{\hat{\pi}\}(u)) \equiv \hat{\pi}(\bm{\theta}; \beta),
 \end{equation}
 where 
 \begin{equation}
-  \tilde{\pi} =  \pi \circ C(\beta) \{ \pi \} 
+  \hat{\pi} =  \pi \circ C(\beta) \{ \pi \} 
 \end{equation}
 is a parameterised distribution resulting from a parameterised
 coordinate transformation of an un-parameterised prior PDF. We shall
 have~\vref{eq:bayes} hold only in the hypercube
 \begin{equation}
-{\cal \hat{P}}(u) = {\cal P}(C(\beta_{0}){\tilde{\pi}}^{-1}(\bm{\theta})) = \cfrac{\hat{\pi} (u) {\cal \hat{L}}(u)}{\int_{\Psi}{\cal \hat{L}}(u) \hat{\pi}(u) du},
+{\cal \hat{P}}(u) = {\cal P}(C(\beta_{0}){\hat{\pi}}^{-1}(\bm{\theta})) = \cfrac{\hat{\pi} (u) {\cal \hat{L}}(u)}{\int_{\Psi}{\cal \hat{L}}(u) \hat{\pi}(u) du},
 \end{equation}
 which is always true, regardless of the repartitioning
 scheme. Trivially, the functional form of \(P(\bm{\theta})\) is not the same
 as \(P(u)\); it's related via a co-ordinate transform, which in our
-case contributes a Jacobian factor \(J(\beta)\{\tilde{\pi}\}\) to the
+case contributes a Jacobian factor \(J(\beta)\{\hat{\pi}\}\) to the
 evidence. But since we're interested in the posterior in the
-coordinates \(\bm{\theta}\), given by the transformation \(C(\beta_{0})\{\tilde{\pi}\}\),
+coordinates \(\bm{\theta}\), given by the transformation \(C(\beta_{0})\{\hat{\pi}\}\),
 while the prior and the likelihood are in the from corresponding
 to \(\beta\).
 
@@ -1279,7 +1279,7 @@ A class of convenient repartitioning schemes is one where the prior's
 argument is re-sized e.g.:
 \begin{equation}
   \label{eq:argument-resize}
-  \tilde{\pi} (\bm{\theta}; \beta) = \pi (f(\beta)\cdot\bm{\theta})
+  \hat{\pi} (\bm{\theta}; \beta) = \pi (f(\beta)\cdot\bm{\theta})
 \end{equation}
 where \(f(\beta)\) is some function.
 
@@ -1287,7 +1287,7 @@ These are quite convenient as the quantile is straightforwardly
 related to the quantile of the original:
 \begin{equation}
   \label{eq:quantile-stuff}
-  C\{\tilde{\pi}\} = f(\beta) C\{\frac{\pi}{f(\beta)}\}.
+  C\{\hat{\pi}\} = f(\beta) C\{\frac{\pi}{f(\beta)}\}.
 \end{equation}
 
 We're already acquainted with an exemplar from this class: PPR if
