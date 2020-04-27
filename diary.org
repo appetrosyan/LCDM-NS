@@ -1307,9 +1307,10 @@ repartitioned_samples.gui()
     clearly marked them as rubbish and simply added them in. 
 *** TODO Refactor the report. 
 	:LOGBOOK:
+	CLOCK: [2020-04-27 Mon 09:45]--[2020-04-27 Mon 17:27] =>  7:42
 	CLOCK: [2020-04-26 Sun 10:01]--[2020-04-26 Sun 16:01] =>  6:00
 	CLOCK: [2020-04-25 Sat 16:28]--[2020-04-25 Sat 22:05] =>  5:37
-	CLOCK: [2020-04-25 Sat 11:59]--[2020-04-25 Sat 15:59] =>  4:00
+	CLOCK: [2020-04-25 Sat 11:59]--[2020-04-25 Sat 17:10] =>  5:11
 	:END:
 **** DONE Communicate that we found a way to accelerate stuff. 
 **** TODO Trim fat. 
