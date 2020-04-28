@@ -426,25 +426,26 @@ where in the case of PPR
 $\bm\hat{\theta} = (\theta_{1}, \theta_{2}, \ldots, \theta_{n},
 \beta)$.  This combined with \cref{eq:bayes} is what ensures that PPR
 is able to obtain \( {\cal P}(\bm{\theta})\) correctly (see
-\cref{sec:autopr}). In \cref{discussion-bias}, we have said that it is
-able to mitigate the underestimate of $\bm{\sigma}$, so we suspect that
-if $\bm{\mu}$ is reasonably correct, we may obtain the result that we
-would have obtained with a uniform prior, but at speeds comparable to
-the prior from \cref{eq:bias}.
+\cref{sec:autopr}). In \cref{discussion-bias}, we have argued that it
+can mitigate the underestimate of $\bm{\sigma}$, so we suspect that if
+$\bm{\mu}$ is reasonably correct, one may obtain the result
+corresponding to a uniform prior \(\bar{\pi}\), but at time scales
+comparable to \cref{eq:bias}.
 
-This results in faster convergence.  With a representative prior,
-whenever live points are chosen, they have a higher probability of
-enclosing more evidence, reaching the termination criterion of nested
-sampling with fewer iterations, as seen in \cref{fig:benchmark}. 
+This accelerates convergence in the following way.  With a
+representative prior, whenever live points are chosen, their
+iso-likelihood contours are more likely to enclose more evidence,
+satisfying the termination criterion of nested sampling with fewer
+iterations (See~\cref{fig:benchmark}).
 
-Suppose we were confident of both \(\sigma\) as well as \(\mu\). We
-could then re-partition the posterior into
-\begin{equation}\label{eq:igpr}
-  \begin{aligned}
+Suppose both \(\sigma\) and \(\mu\) were accurate. We could then
+re-partition the posterior into
+\begin{subequations}\label{eq:igpr}
+  \begin{alignat}{2}
     \hat{\pi} (\bm{\theta}) = &\pi(\bm{\theta})\\
     \hat{{\cal L}}(\bm{\theta}) = & \frac{\bar{\cal L}(\bm{\theta})}{Z(1)\{\pi\}},
-  \end{aligned}
-\end{equation}
+  \end{alignat}
+\end{subequations}
 where \(Z\{\pi\}\) is the same as in \cref{sec:autopr}.  This we call
 \emph{intuitive proposal posterior repartitioning} (iPPR). It is both the
 fastest possible consistent partitioning scheme and the least robust,
@@ -532,12 +533,15 @@ posterior, i.e.:
   \label{eq:collection-of-models}
   {\cal L}_{1}(\bm{\theta}) \pi_{1}(\bm{\theta}) = {\cal L}_{2}(\bm{\theta}) \pi_{2}(\bm{\theta})= \ldots ={\cal L}_{m}(\bm{\theta}) \pi_{m}(\bm{\theta}). 
 \end{equation}
-Their additive isometric mixture
+Their \emph{isometric\footnote{the posterior is the preserved metric.
+  } mixture}, is a consistent partitioning that involves information
+from each constituent prior. For example, an \emph{additive isometric
+  mixture}
 \begin{subequations}
-  \begin{align}
-    \hat{\pi}(\bm{\theta}; \bm{\beta}) = \sum_{i} \beta_{i} \pi_{i}(\bm{\theta})\label{eq:additive-mix}
-    \hat{{\cal L}}(\bm{\theta}; \bm{\beta}) = \frac{\sum_{i}   \beta_{i} \pi_{i}(\bm{\theta}) {\cal L}_{i}(\bm{\theta})}{\sum_{i} \beta_{i} \pi_{i}(\bm{\theta})}
-  \end{align}
+  \begin{alignat}{2}
+    \hat{\pi}(\bm{\theta}; \bm{\beta}) = &\sum_{i} \beta_{i} \pi_{i}(\bm{\theta})\label{eq:additive-mix}\\
+    \hat{{\cal L}}(\bm{\theta}; \bm{\beta}) = &\frac{\sum_{i}   \beta_{i} \pi_{i}(\bm{\theta}) {\cal L}_{i}(\bm{\theta})}{\sum_{i} \beta_{i} \pi_{i}(\bm{\theta})}
+  \end{alignat}
 \end{subequations}
 is parameterised by
 $\bm{\beta} = (\beta_{1}, \beta_{2}, \ldots, \beta_{m})$ where each
@@ -551,14 +555,13 @@ be seen in \cref{fig:additive}.
     Gaussian iPPR and a uniform reference. PPR added for comparison.}
 \end{figure}
 
-Additive mixtures are an attempt to relax some of the limitations
+Isometric mixtures are an attempt to relax some of the limitations
 imposed on PPR. Firstly, our proposals are limited to a class of
 functions, defined by a power relation. Fortunately for PPR, this
 class always includes a uniform prior, but not, for example a
 ``wedding cake'' prior (stepped uniform prior). This also means that
 we are limited to only one intuitive proposal: we can't for example use
-two non-concentric Gaussian peaks without extra
-parametrisation\footnote{There is a more subtle point,
+two non-concentric Gaussian peaks without including infinitely many \footnote{There is a more subtle point,
   \cref{obj-property} is violated because of the extreme bias towards
   the prior peak, that is present for every value of $\beta\ne0$. More
   on that later.}. While we do gain that freedom, it comes at a cost.
@@ -598,9 +601,9 @@ rather than using any other mathematical operation.
 
 \subsubsection{Stochastic superpositional isometric mixtures}
 
-We want to superimpose consistent partitioning schemes $\pi_{i}$,
-${\cal L}_{i}$, by adding \(m-1\) extra parameters $\bm{\beta}$. 
-Firstly, the parameterised prior is 
+We propose that a \emph{superpositional mixture}, defined via the
+following parametrisation:
+\begin{subequations}
 \begin{equation}
   \hat{\pi}(\bm{\theta}; \beta)  \triangleq
   \begin{cases}
@@ -609,7 +612,6 @@ Firstly, the parameterised prior is
 	\hat{\pi}_{n}(\bm{\theta}) & \text{with probability } (1- \sum_{i}^{m}\beta_{i}),
 	\end{cases}
 \end{equation}
-and likelihood:
 \begin{equation}
   \hat{\cal L}(\bm{\theta}; \bm{\beta})  \triangleq
   \begin{cases}
@@ -618,12 +620,15 @@ and likelihood:
 	\hat{\cal L}_{m}(\bm{\theta}) & \text{with probability} (1- \sum_{i}^{m}\beta_{i}).
 \end{cases}
 \end{equation}
-It is a consistent partitioning of the original model if and only if
+is isometric, if and only if
 \begin{equation}
   \label{eq:sspr}
   \hat{\pi}(\bm{\theta}; \bm{\beta}) = \hat{\pi}(\bm{\theta})_{i} \Leftrightarrow \hat{\cal L}(\bm{\theta}; \bm{\beta}) = \hat{\cal L}_{m}(\bm{\theta}; \bm{\beta}), 
 \end{equation}
-that is, the branches are chosen consistently.
+\end{subequations}
+that is, the branches are chosen consistently. 
+
+
 
 The~\cref{spec-prop,norm-prop} are satisfied by construction if at
 least one of the priors represented the
@@ -659,7 +664,7 @@ partitioning (SSIM) ensures branch consistency by requiring
 \hat{\pi}(\bm{\theta}; \bm{\beta}) = \hat{\pi}_{F(\bm{\theta};
   \bm{\beta})}(\bm{\theta};\bm{\beta}),
 \end{equation}
-where $F(\bm{\theta}; \bm{\beta})$ is a function. In our implementation
+where $F: (\bm{\theta}, \bm{\beta}) \mapsto i \in \{1, 2, \ldots, m-1\}$ . In our implementation
 \begin{equation}
   F(\bm{\theta};\bm{\beta})= \text{{\cal N}}_{m}\left(\text{pseudo-random}(\bm{\theta}); \bm{\beta}\right)
 \end{equation}
@@ -1146,6 +1151,11 @@ the way.
 \bibliographystyle{mnras}
 
 \appendix
+\section{Preparing an intuitive proposal\label{sec:iPPR}}
+In this section we shall briefly touch upon how a proposal for SSIM is
+usually prepared.
+
+
 \section{Nested sampling in detail}\label{sec:ns}
 Consider without loss of generality, a prior space \(\Psi\) that is a
 unit hypercube, where \(\pi(\bm{\theta}) = \text{Const.}\) Draw
