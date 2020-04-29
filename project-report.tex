@@ -158,7 +158,7 @@ represented by conditional probabilities given
 in~\cref{table-defs}. Their interactions are governed by
 \citeauthor{1763}'s theorem:
 \begin{equation}\label{eq:bayes} 
- {\cal L}(\bm{\theta})  \pi (\bm{\theta}) = {\cal Z}  {\cal P} (\bm{\theta}).
+ {\cal L}(\bm{\theta})  \pi (\bm{\theta}) = {\cal Z}  {\cal P} (\bm{\theta}
 \end{equation}
 An immediate corollary of~\cref{eq:bayes} is the definition of \emph{evidence}:
 \begin{equation}\label{eq:def-z}
@@ -438,33 +438,73 @@ iso-likelihood contours are more likely to enclose more evidence,
 satisfying the termination criterion of nested sampling with fewer
 iterations (See~\cref{fig:benchmark}).
 
-Suppose both \(\sigma\) and \(\mu\) were accurate. We could then
-re-partition the posterior into
-\begin{subequations}\label{eq:igpr}
-  \begin{alignat}{2}
-    \hat{\pi} (\bm{\theta}) = &\pi(\bm{\theta})\\
-    \hat{{\cal L}}(\bm{\theta}) = & \frac{\bar{\cal L}(\bm{\theta})}{Z(1)\{\pi\}},
-  \end{alignat}
+
+\subsubsection{Example: intuitive proposal posterior repartitioning}
+Suppose that from a different inference, one has obtained
+the posterior \({\cal P}(\bm{\theta})\), and the evidence
+\({\cal Z}\). Under these circumstances,
+\begin{subequations}
+\begin{equation}
+  \label{eq:iPPR}
+ \hat{\pi}(\bm{\theta}) = f(\bm{\theta}, \bm{\mu}, \bm{\sigma}) = {\cal P}(\bm{\theta}), 
+\end{equation}
+is an informative prior that represents our knowledge: it is an
+\emph{intuitive proposal}. However, we wish to avoid biasing the
+inference and use the (usually uniform) prior
+$\bar{\pi}(\bm{\theta})$, with likelihood $\bar{\cal L}(\bm{\theta})$.
+
+To obtain with the intuitive poroposal the same posterior and evidence
+as one would have with $\bar{\pi}(\bm{\theta})$ and
+$\bar{\cal L}(\bm{\theta})$, the partitioning of the posterior needs
+to be \emph{consistent} with the reference model with
+$\bar{\pi}(\bm{\theta})$. Specifically,
+\begin{equation}
+  \label{eq:ippr-l}
+  \hat{\cal L}(\bm{\theta}) = \frac{\bar{\pi}(\bm{\theta}) \bar{\cal L}(\bm{\theta})}{{\cal P}(\bm{\theta})}
+\end{equation}
 \end{subequations}
-where \(Z\{\pi\}\) is the same as in \cref{sec:autopr}.  This we call
-\emph{intuitive proposal posterior repartitioning} (iPPR). It is both the
-fastest possible consistent partitioning scheme and the least robust,
-each as it is the most informative prior.
-
-Generally, because of the issues discussed in~\vref{discussion-bias},
-we would prefer PPR. We will have lost performance with respect to
-iPPR, but would still have obtained the answer much faster compared to
-the inference with \( \bar{\pi} (\bm{\theta})\).
-
-However, PPR is not without its flaws. It is able to fully mitigate
-errors in $\sigma$, not so for errors in $\mu$. PPR is strongly biased
-towards the intuitive proposal, and in some cases shown in
-\cref{fig:convergence} this imprints heavily on the posterior, also
-affecting the evidence. As a result, by gaining performance we risk
-extracting information out of our own bias, as opposed to the dataset.
 
 
 
+
+This we call \emph{intuitive proposal posterior repartitioning}
+(iPPR). It is both the fastest possible consistent partitioning scheme
+and the least robust. Both stem from the same peculiarity of nested
+sampling. Instead of evaluating the evidence ${\cal Z}$ exactly,
+nested sampling uses a statistical argument to evaluate it
+approximately. If our evaluation of ${\cal Z}$ were exact, the correct
+posterior would be mathematically guaranteed by \cref{eq:bayes}. But
+because we allow errors in ${\cal Z}$, one of a few scenarios is
+possible.
+
+If the reference posterior was exactly the same as $\hat{\pi}$, or
+located in the same region, but broader, then the convergence proceeds
+as normal, and we obtain the same, or possibly more accurate (and
+precise) posterior. This is because most iterations immediately move
+live points onto the posterior distribution and there's insufficient
+opportunity to accumulate significant errors in ${\cal Z}$.
+
+If $\hat{\pi}$ were narrower than ${\cal P}$ and within small
+perturbation of being concentric \(\hat{\bm{\mu}} = \bm{\mu}\), points
+are more likely to have been spawned inside high likelihood regions
+already. As a result, nested sampling may never have probed the
+regions of lesser likelihood. As a result, the obtained posterior
+$\hat{\cal P}$, may be itself narrower than the reference, and it will
+not contain any information about the low $\hat{\cal L}$ regions.
+
+Lastly, if there is significant offset between $\hat{\pi}$ and
+${\cal P}$, i.e. ${\cal P}$ is not represented in $\hat{\pi}$, the
+errors in ${\cal Z}$ dominate. Because the probability of choosing a
+live point at the posterior peak \(\bm{\theta}_{{\cal P}}\) is
+proportional to $\hat{\pi}(\bm{\theta}_{{\cal P}})d\bm{\theta}$ for
+\(d\bm{\theta}\) infinitesimal in that region, the posterior peak may
+be probed very rarely. As a result the marginalised posterior
+$\hat{\cal P}$, will mostly resemble $\hat{\pi}$. In other words, bias
+towards $\hat{\pi}$ had imprinted onto $\hat{\cal P}$.
+
+PPR was designed to specifically mitigate the latter issue. Of course,
+as we shall see later, there are methods superior to PPR in that
+specific area.
 \subsection{General automatic posterior repartitioning}
 
 In this section we look at the family of methods similar to PPR and
@@ -495,11 +535,11 @@ following properties.
 We shall dedicate the entire next section to elaborate on the last
 property.
 
-But first, PPR and iPPR satisfy \cref{norm-prop} by construction. iPPR
-satisfies \cref{spec-prop} if and only if
-\( \hat{\pi} (\bm{\theta})\) represented the correct posterior to
-begin with (in which case $\Psi_{R} = \Psi$). In that case
-\cref{vconv-prop} follows from the dynamics of the Bayesian inference.
+PPR and iPPR satisfy \cref{norm-prop} by construction. iPPR satisfies
+\cref{spec-prop} if and only if \( \hat{\pi} (\bm{\theta})\)
+represented the correct posterior to begin with (in which case
+$\Psi_{R} = \Psi$). In that case \cref{vconv-prop} follows from the
+dynamics of the Bayesian inference.
 
 In \cref{sec:autopr} we have shown that PPR satisfies
 \cref{spec-prop}, where
@@ -1351,6 +1391,76 @@ the way it does in \cref{fig:convergence} without violating
 \cref{eq:bayes}. Corollary: we will have known if the posterior is
 dubious. In \cref{sec:results}, we shall discuss how to proceed should
 such a scenario arise.
+
+\section{Making PPR robust again}
+The shortcomings of PPR, may be somewhat mitigated if the goal is to
+ensure stable convergence, rather than maximally improving
+performance. Start by noting that $\beta$ according to nested sampling
+is nothing but an extra nuisance parameter: it requires a prior. Said
+prior plays a pivotal role in PPR's stability. In fact there is an
+obvious, maximally stable choice:
+\begin{equation}
+  \label{}
+\hat{\pi}(\bm{\theta}; \beta) = \delta(\beta) \hat{\pi}(\bm{\theta}), 
+\end{equation}
+which is exactly the uniform prior. It is unbiased: any region inside
+the boundaries, and excluding the boundaries is equally likely to be
+sampled. This is because $\pi^{\beta}(\bm{\theta})$ is uniform, when $\beta=0$, and
+\begin{equation}\label{eq:PPR-uniform}
+P(\beta=0) = \int_{\mathbb{R}} \delta(\beta) d\beta = 1 \ne 0. 
+\end{equation}
+By adding extra $\delta$-functions we can simulate a fixed Stochastic
+isometric superposition, by allowing the weights of these
+$\delta$-functions to vary, we can simulate a superpositional
+isometric mixture of priors related by power law, e.g.
+\begin{equation}
+  \label{}
+  \hat{\pi}(\beta; \bm{w}) = w_{0}\delta(\beta_{0}) + w_{1}\delta(\beta_{1})+\ldots
+\end{equation}
+These are known to be more robust than PPR alone, so a choice of
+$\hat{\pi}(\beta)$ that makes PPR distinct and useful should exist.
+
+A clue lies in that $\beta=0$ is special. So a sensible next step
+would be to try
+\begin{equation}
+  \label{}
+\hat{\pi}(\beta; w) = w \delta(\beta) + (1-w). 
+\end{equation}
+This is equivalent to a uniform $\beta$ PPR (\(1-w\) in a stochastic
+mixture with a uniform prior ($\delta(\beta)$). In general the second
+term can be any function, and it would still be a superpositional
+mixture of PPR with that function as the prior in $\beta$ and a
+uniform.
+
+What about
+\begin{equation}
+\hat{\pi}(\beta; \sigma) = G(\beta; 0, \sigma)?
+\end{equation}
+For numerical simulations, it has some probability (dependent on
+$\sigma \ne 0$) to be unbiased. It is weakly biased, as
+\(P(\beta=0) \rightarrow 0\) with increasing resolution:
+\begin{equation}
+  \label{eq:p0}
+   P(\beta=0) = \lim_{\epsilon\rightarrow 0} \int_{-\epsilon}^{\epsilon}\hat{\pi}(\beta) = 0
+\end{equation}
+but it is already an improvement over a uniform prior (in $\beta$).
+
+Sadly, \cref{eq:p0} highlights why priors $\hat{\pi}(\beta)$ can never
+outperform SSIM in producing an unbiased prior. If
+$\hat{\pi}(\bm{\theta}, \beta)$ is such that \(P(\beta=0) = w \ne 0\)
+it is equivalent to a superpositional isometric mixture of uniform
+(with weight \(w\)) and a PPR with prior
+$\tilde{\pi}(\beta) = \hat{\pi}(\beta) - w \delta(\beta)$.
+
+So, superpositional mixtures can be implemented using PPR by varying
+the prior in $\beta$.
+
+
+
+
+
+
+
 
 
 
