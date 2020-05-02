@@ -1,10 +1,10 @@
 % This file was created by tikzplotlib v0.9.1.
 \begin{tikzpicture}
 
-\definecolor{color0}{rgb}{0.12156862745098,0.266666666666667,0.705882352941177}
-\definecolor{color1}{rgb}{1,0.098039215686275,0.0549019607843137}
+\definecolor{color2}{rgb}{0.0,0.0,1}
+\definecolor{color1}{rgb}{1,0.00,0.00}
 \definecolor{colorblack}{rgb}{0, 0, 0}
-\definecolor{color2}{rgb}{0.172549019607843,0.627450980392157,0.072549019607843}
+\definecolor{color0}{rgb}{0.0,0.8,0.0}
 
 \begin{axis}[
 legend cell align={left},
@@ -2025,7 +2025,7 @@ ytick style={color=black}
 --(axis cs:-63.8198069562379,0)
 --cycle;
 \addlegendimage{area legend, fill=color0}
-\addlegendentry{SSIM\((U, G, R)\)}
+\addlegendentry{SSIM\((U, G)\)}
 
 \path [fill=color1, fill opacity=0.3]
 (axis cs:-63.8198069562379,0)
@@ -4032,21 +4032,21 @@ ytick style={color=black}
 --(axis cs:-63.8198069562379,0)
 --cycle;
 \addlegendimage{area legend, fill=colorblack, fill opacity=0.3}
-\addlegendentry{$G$ -- true posterior}
+\addlegendentry{$G$ -- analytical result}
 
-\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-59.0953888166818,0) rectangle (axis cs:-58.4157262633793,1);
-\addlegendimage{area legend,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}};
+\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}] (axis cs:-59.0953888166818,0) rectangle (axis cs:-58.4157262633793,1);
+\addlegendimage{area legend,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}};
 \addlegendentry{$R$ --- wrong \( \ln\  {\cal L} \)}
 
-\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-58.4157262633793,0) rectangle (axis cs:-57.7360637100768,10);
-\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-57.7360637100768,0) rectangle (axis cs:-57.0564011567743,43);
-\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-57.0564011567743,0) rectangle (axis cs:-56.3767386034718,127);
-\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-56.3767386034718,0) rectangle (axis cs:-55.6970760501693,237);
-\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-55.6970760501693,0) rectangle (axis cs:-55.0174134968668,251);
-\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-55.0174134968668,0) rectangle (axis cs:-54.3377509435643,202);
-\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-54.3377509435643,0) rectangle (axis cs:-53.6580883902618,91);
-\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-53.6580883902618,0) rectangle (axis cs:-52.9784258369593,30);
-\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north west lines, pattern color=blue}] (axis cs:-52.9784258369593,0) rectangle (axis cs:-52.2987632836568,8);
+\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}] (axis cs:-58.4157262633793,0) rectangle (axis cs:-57.7360637100768,10);
+\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}] (axis cs:-57.7360637100768,0) rectangle (axis cs:-57.0564011567743,43);
+\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}] (axis cs:-57.0564011567743,0) rectangle (axis cs:-56.3767386034718,127);
+\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}] (axis cs:-56.3767386034718,0) rectangle (axis cs:-55.6970760501693,237);
+\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}] (axis cs:-55.6970760501693,0) rectangle (axis cs:-55.0174134968668,251);
+\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}] (axis cs:-55.0174134968668,0) rectangle (axis cs:-54.3377509435643,202);
+\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}] (axis cs:-54.3377509435643,0) rectangle (axis cs:-53.6580883902618,91);
+\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}] (axis cs:-53.6580883902618,0) rectangle (axis cs:-52.9784258369593,30);
+\draw[draw=none,fill=color0,fill opacity=0.3,postaction={pattern=north east lines, pattern color=blue}] (axis cs:-52.9784258369593,0) rectangle (axis cs:-52.2987632836568,8);
 \draw[draw=none,fill=color1,fill opacity=0.3] (axis cs:-63.0679399785179,0) rectangle (axis cs:-63.0047898352224,4);
 \addlegendimage{area legend,draw=none,fill=color1,fill opacity=0.3, postaction={pattern=north west lines, pattern color=red}};0
 \addlegendentry{PPR}
