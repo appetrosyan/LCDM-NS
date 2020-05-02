@@ -972,17 +972,19 @@ the offset is small --- \(O(2\sigma)\), the posterior is shifted. With
 a larger offset, e.g. \(O(4\sigma)\), two peaks can be resolved.  Both
 errors are compounded by incorrect evidence (see \cref{fig:drift})
 PPR: \(\ln {\cal Z}\approx -25.4 \pm 0.2\), vs uniform reference
-\(\ln {\cal Z} = -22.7 \pm 0.4\).
-
+\(\ln {\cal Z} = -22.7 \pm 0.4\) and SSIM,
+\(\ln {\cal Z} = -22.5 \pm 0.3\).
 
 
 \begin{figure}
   \input{illustrations/benchmark.tex}
   \caption{number of ${\cal L}$ evaluations as a function of the
-    number of live points. From the slope of best-fit lines, the
-    number of evaluations scales as $k\cdot n_\text{live}^{1.1 \pm 0.2}$,
-    where $\kappa$ reduces across repartitioning
-    schemes. \label{fig:benchmark}}
+    number of live points.
+    \(\max {\cal D}\{{\cal P}, \bar{\cal P}\} < 1.5\), meaning all
+    participating consistent partitions obtained the correct
+    posterior. The number of evaluations scales as
+    $k\cdot n_\text{live}^{1.1 \pm 0.2}$, where $k$ reduces for faster
+    repartitioning schemes. \label{fig:benchmark}}
 \end{figure}
 
 
