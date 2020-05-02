@@ -1277,7 +1277,7 @@ repartitioned_samples.gui()
 	CLOCK: [2020-04-23 Thu 15:43]--[2020-04-23 Thu 17:00] =>  1:17
 	:END:
 	[[./presentation.tex]]
-*** TODO Give presentation.
+*** DONE Give presentation.
     SCHEDULED: <2020-04-27 Mon 16:20>
 *** DONE extract parameter covariances.
 	:LOGBOOK:
@@ -1291,8 +1291,9 @@ repartitioned_samples.gui()
 **** DONE e-mail Dr Handley about using HDF.
 	 This could reduce the memory usage significantly.
 *** DONE Meet with Dr Handley
-*** TODO Implement SSPM in Cobaya.
+*** DONE Implement SSPM (SSIM) in Cobaya.
     :LOGBOOK:
+    CLOCK: [2020-04-30 Thu 20:05]--[2020-05-01 Fri 11:13] => 15:08
     CLOCK: [2020-04-24 Fri 16:20]--[2020-04-24 Fri 21:20] =>  5:00
     CLOCK: [2020-04-23 Thu 13:40]--[2020-04-23 Thu 13:42] =>  0:02
     :END:
@@ -1304,30 +1305,44 @@ repartitioned_samples.gui()
     place the priors on half the parameters, and cobaya in its wizdom
     only produces half the parameters' posteriors. Thanks very much
     for throwing away information. It's not like you could have
-    clearly marked them as rubbish and simply added them in. 
-*** TODO Refactor the report. 
+    clearly marked them as rubbish and returned them in. 
+
+    EDIT: it does. The prior is lost though. 
+    EDIT: Found the priors in Planck likelihood code. 
+**** DONE Use getdist to obtain mean and cov. 
+**** DONE Increase the number of parameters
+     Complicated. Need to add =grade_dims=, passthrough, add two
+     parameters (branch index) and make sure that the stuff works. 
+**** DONE Use mean and cov to implement iGPR (iPPR). 
+**** DONE Make work with correlated Gaussians. 
+**** DONE Implement stochastic choice
+     Derived parameters trip up SSIM.  This may be a huge problem. I
+     also need to implement the parameter correlation decoupler.
+*** DONE Refactor the report. 
 	:LOGBOOK:
+	CLOCK: [2020-04-28 Tue 12:39]--[2020-04-30 Thu 01:39] => 37:00
+	CLOCK: [2020-04-27 Mon 08:38]--[2020-04-27 Mon 21:38] => 13:00
 	CLOCK: [2020-04-26 Sun 10:01]--[2020-04-26 Sun 16:01] =>  6:00
 	CLOCK: [2020-04-25 Sat 16:28]--[2020-04-25 Sat 22:05] =>  5:37
 	CLOCK: [2020-04-25 Sat 11:59]--[2020-04-25 Sat 15:59] =>  4:00
 	:END:
 **** DONE Communicate that we found a way to accelerate stuff. 
-**** TODO Trim fat. 
+**** DONE Trim fat. 
 **** DONE Renumber the equations. 
 	 :LOGBOOK:
 	 CLOCK: [2020-04-25 Sat 11:56]--[2020-04-25 Sat 15:59] =>  4:03
 	 :END:
 **** DONE Drop re-sizeable
-**** TODO Results. 
+**** DONE Results. 
 **** DONE Check Higson always appears. 
 **** DONE Clarify Figure 5 
 **** DONE Use log scale in y
-**** TODO State K-L divergence. 
-**** TODO Section on Kullback-leibler
-**** TODO Consistent D's figure 5. 
+**** DONE State K-L divergence. 
+**** DONE Section on Kullback-leibler
+**** DONE Consistent D's figure 5. 
 **** DONE Combine time complexity. 
 **** DONE Timing Proportional to K-L D. 
-**** TODO FIgure 5 analysis. 
+**** DONE FIgure 5 analysis. 
 **** DONE Generalise Additive mixtures. 
 **** DONE Dock stochastic 
 **** DONE Rewrite end of Additive mixtures. 
@@ -1336,18 +1351,25 @@ repartitioned_samples.gui()
 **** DONE Remove Bayesian > frequentist.
 **** DONE Remove single-sentence paragraphs.
 **** DONE More stuff on Bayesian meta-analysis. 
-**** TODO Combining cosmo data sets hyper-parameters. 
+**** DONE Combining cosmo data sets hyper-parameters. 
 **** DONE Misestimating covariances. 
 **** DONE INclude toy model experiments. 
 **** DONE Expand on Bias. Section. 
-**** TODO Boundary effects. 
-**** TODO Conservative Cosmology Umbrella sampling. 
-*** TODO Touch up on comments by Dr Handley
+**** FAILED Boundary effects. 
+     Too much information already. Doesn't fit into the report. 
+**** DONE Conservative Cosmology Umbrella sampling. 
+     Turrned out to be completely not what I meant in the end of Results and Conclusions. 
+*** DONE Touch up on comments by Dr Handley
     :LOGBOOK:
+    CLOCK: [2020-04-26 Sun 19:37]--[2020-04-30 Thu 19:37] => 96:00
     CLOCK: [2020-04-24 Fri 16:24]--[2020-04-24 Fri 20:33] =>  4:09
     :END:
 **** DONE Abstract. 
 **** DONE Theoretical Background. 
+*** DONE Re-run Cobaya with SSIM on the Cluster. 
+*** TODO Implement SSIM is CosmoChord
+*** TODO Re-run Cosmochord on personal computer. 
+*** TODO Include the burn-in error. 
 * Notes
 ** Michaelmas Term
 
@@ -2337,3 +2359,40 @@ repartitioned_samples.gui()
 	that my diary wasn't detailed enough. I'm sure that all of the
 	lecture courses were done from scratch, perfectly proof-read, and
 	never contain any mistakes or typos.
+
+	Tutors and DoS don't help. They are obviously busy and care
+	about their bottom line more than about the people. They got
+	me an allowance, yes. A waste of both your and my resources. I
+	went away, I had to work for the entire year. I had to fake a
+	document from a psychiatrist to get back. Why? Because instead
+	of recovering, I was fighting an uphill battle: trying to pay
+	for my sister's tutors, help her get into uni, earning enough
+	to pay my family's living. Earning enough to rent an
+	apartment, because in spite of being totally useless, my
+	parents have a right to veto my spouse, and all of that
+	culminating in Lung cancer. Figures, Dad smoked his entire
+	life. Nobody cares. Nobody's going to take that into
+	account. Nor should they. What's the point?
+** Easter term
+*** Renaming. 
+
+SSPR is a misnomer. It's much more general than mixing priors and
+posterior repartitioning schemes. I'll rename every occurrence in the
+text to SSIM (isometric mixtures). 
+
+iGPR sounds wrong. Proposal sounds better. iGPR == iPPR. 
+*** BOundary effects
+
+This is something that I hadn't touched upon in the report that I
+think is quite important. PPR fails to properly account for boundary
+effects. The exaggerated tilt for truncated gaussians rears its ugly
+head: more precisely, the nature of how a truncated gaussian is
+represented changes what $\pi^{\beta}$ is at the boundary. 
+
+The effect is that the $\pi$ at the boundary (or infinitesimal
+$\epsilon$ region around it) is highly suppressed. So a distribution
+that is cut at the boundary will have a suppressed ${\cal L}$. 
+
+I'd love to investigate this further but I neither have the time, nor
+the strength to do it. Besides, it's a little pointless
+anyway. Nothing I do is quite good enough. Why bother...
