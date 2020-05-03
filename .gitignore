@@ -94,3 +94,5 @@ cobaya/*.out
 >>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 _region_.*
 */.DS_Store
+/cobaya/newRun/run.input.yaml
+cobaya/*.input.yaml
