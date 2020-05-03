@@ -16,5 +16,11 @@ params = ['logA', 'n_s', 'theta_s_1e2', 'omega_b', 'omega_cdm', 'tau_reio']
 # g.triangle_plot(roots, params, filled=True, shaded=True)
 # plt.show()
 
-print(repr(np.array(chains.getMeans())), repr(np.array(chains.getCov())))
-np.savetxt(np.array(chains.getMeans()))
+# The fact that this doesn't work, is living proof that Anthony Lewis should stick to science.
+# This is very poorly thought out, and I'm surprised so many people are using any of his programs. 
+# print(chains.getMeans(['logA']))
+
+chains.getParamNames().saveAsText('paramnames')
+np.savetxt('means', chains.getMeans(range(27)))
+
+np.savetxt('covs', chains.getCov(pars=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27]))
