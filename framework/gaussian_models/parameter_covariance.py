@@ -1,7 +1,7 @@
 from abc import ABC
 
 from numpy import pi, array
-from numpy.linalg import slogdet, multi_dot, inv
+from numpy.linalg import slogdet, multi_dot, inv, pinv
 
 from polychord_model import Model
 
@@ -31,10 +31,15 @@ class ParameterCovarianceModel(Model, ABC):
         if rows != cols or rows != self.nDims:
             raise ValueError('Dimensions of cov and mean are incompatible: mean – {}, cov ({}, {}) '.format(
                 self.nDims, rows, cols))
+        try:
+            self._invCov = inv(self.cov)
+        except:
+            print("Singular matrix, reverting to Penrose-Moore inverse, Singular Value Decomposition. ")
+            self._invCov = pinv(self.cov)
         super().__init__(self.dimensionality, self.num_derived, file_root, **kwargs)
 
     def log_likelihood(self, theta):
         delta = theta - self.mu
         ll = - slogdet(2 * pi * self.cov)[1] / 2
-        ll -= multi_dot([delta, inv(self.cov), delta]) / 2
+        ll -= multi_dot([delta, self._invCov, delta]) / 2
         return ll, []

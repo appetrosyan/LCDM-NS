@@ -1366,10 +1366,32 @@ repartitioned_samples.gui()
     :END:
 **** DONE Abstract. 
 **** DONE Theoretical Background. 
-*** DONE Re-run Cobaya with SSIM on the Cluster. 
+*** TODO Re-run Cobaya with SSIM on the Cluster. 
+    :LOGBOOK:
+    CLOCK: [2020-05-01 Fri 14:44]
+    :END:
+    Again. Cobaya's package manager saves the day. In all honesty, if
+    you're thinking that your program needs a package manager, it's a
+    good indicator that you should not be let near a computer. The
+    python mantra of "we're all consenting adults" rings hollow in
+    cases such as these. I did not consent to people being allowed to
+    be stupid and jeopardize my research. I did not consent to python
+    giving people like Anthony Lewis the impression that writing and
+    maintaining a package manager is an easy task. Moreover I did not
+    consent to Python letting him half-arse the job and me having to
+    babysit his spaghetti code. If Python was relegated to toy
+    programs and children, and not allowed anywhere near serious
+    research, this problem would have been avoided. 
+
+    Finally, after non-consensual brain intimacy with Cobaya's package
+    manager, where I had to specifically tell it to use the modern
+    polychord v1.17, it finally started.
+
+    
 *** TODO Implement SSIM is CosmoChord
 *** TODO Re-run Cosmochord on personal computer. 
-*** TODO Include the burn-in error. 
+*** TODO Include the burn-in error paper. 
+*** 
 * Notes
 ** Michaelmas Term
 
