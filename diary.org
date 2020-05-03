@@ -1320,6 +1320,9 @@ repartitioned_samples.gui()
      also need to implement the parameter correlation decoupler.
 *** DONE Refactor the report. 
 	:LOGBOOK:
+	CLOCK: [2020-05-03 Sun 11:55]--[2020-05-03 Sun 17:55] =>  6:00
+	CLOCK: [2020-05-02 Sat 12:54]--[2020-05-02 Sat 20:30] =>  7:36
+	CLOCK: [2020-05-01 Fri 15:53]--[2020-05-02 Sat 02:00] => 10:07
 	CLOCK: [2020-04-28 Tue 12:39]--[2020-04-30 Thu 01:39] => 37:00
 	CLOCK: [2020-04-27 Mon 08:38]--[2020-04-27 Mon 21:38] => 13:00
 	CLOCK: [2020-04-26 Sun 10:01]--[2020-04-26 Sun 16:01] =>  6:00
@@ -1359,6 +1362,9 @@ repartitioned_samples.gui()
      Too much information already. Doesn't fit into the report. 
 **** DONE Conservative Cosmology Umbrella sampling. 
      Turrned out to be completely not what I meant in the end of Results and Conclusions. 
+**** DONE Add 3d plot of SSIM. 
+**** DONE Correct all comments from second draft. 
+**** TODO Expand section on cosmology after Cobaya completes
 *** DONE Touch up on comments by Dr Handley
     :LOGBOOK:
     CLOCK: [2020-04-26 Sun 19:37]--[2020-04-30 Thu 19:37] => 96:00
@@ -1368,7 +1374,7 @@ repartitioned_samples.gui()
 **** DONE Theoretical Background. 
 *** TODO Re-run Cobaya with SSIM on the Cluster. 
     :LOGBOOK:
-    CLOCK: [2020-05-01 Fri 14:44]
+    CLOCK: [2020-05-01 Fri 14:44]--[2020-05-03 Sun 15:53] => 49:09
     :END:
     Again. Cobaya's package manager saves the day. In all honesty, if
     you're thinking that your program needs a package manager, it's a
@@ -1388,10 +1394,14 @@ repartitioned_samples.gui()
     polychord v1.17, it finally started.
 
     
-*** TODO Implement SSIM is CosmoChord
-*** TODO Re-run Cosmochord on personal computer. 
+*** FAILED Implement SSIM is CosmoChord
+Simply not enough time. I can't afford another week. 
 *** TODO Include the burn-in error paper. 
-*** 
+Waiting for Dr Handley to provide one. 
+*** TODO Publish all produced code on Github, 
+*** DONE Turn this diary into a format convenient for the examiner. 
+	Apparently we only need to submit this *if* there's something
+	important in it. Brilliant.
 * Notes
 ** Michaelmas Term
 
