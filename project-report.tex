@@ -799,7 +799,7 @@ that are.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.9\columnwidth]{./illustrations/SSIM_3d.pdf}
+  \includegraphics[width=0.99\columnwidth]{./illustrations/SSIM_3d.pdf}
   \caption{An illustration of SSIM in two dimensions. Colour represents the value of $\pi(\bm{\theta})$. As a result of nested sampling, nucleation of the representative phase is dynamically favoured.}
   \label{fig:mixture-3d}
 \end{figure}
@@ -1026,14 +1026,14 @@ exceeds \(20\%\) extra \({\cal L}\) evaluations, which is an order of
 magnitude less than~\vref{opt:uniform,opt:shift} would afford.
 
 \begin{figure}
-\includegraphics[width=0.5\textwidth]{./illustrations/convergence.pdf}
+  \includegraphics[width=0.99\columnwidth]{./illustrations/convergence.pdf}
 \caption{An illustration of offsets affecting ${\cal P}$ under various
   repartitioning schemes. Dotted series represent the prior
   bias. \label{fig:convergence}}
 \end{figure}
 
 \begin{figure} \centering
-  \begin{subfigure}{0.86\columnwidth}
+  \begin{subfigure}{0.99\columnwidth}
     \centering
 
     \input{./illustrations/kullback-leibler.tex}
@@ -1045,7 +1045,7 @@ magnitude less than~\vref{opt:uniform,opt:shift} would afford.
       offset.\label{fig:kl-d}}
 \end{subfigure}
 
-\begin{subfigure}{0.86\columnwidth}
+\begin{subfigure}{0.99\columnwidth}
   \centering
 
   \input{./illustrations/evidence-drift.tex}
@@ -1075,7 +1075,7 @@ between the uniform and the repartitioned run are identical,
 signifying that we have not lost precision.
 
 \begin{figure*}
-\includegraphics[width=.9\textwidth]{./illustrations/higson.png}
+\includegraphics[width=.99\textwidth]{./illustrations/higson.png}
 \caption{plot of the evolution of nested sampling. The \color{red} red
   \color{black} series corresponds to SSIM of iPPR, while the
   \color{blue} blue \color{black} series --- to a reference
@@ -1126,7 +1126,7 @@ year.
   \centering
   \caption{Accuracy metrics for Cosmology runs using Cobaya.}
   \begin{tabular}{llrrr}
-    \textbf{Prior} & \textbf{Device used} & ${\cal D}\{ {\cal P}, \bar{\cal P}\}$ & ${\cal Z}$ & $n_\text{live}$\\
+    \textbf{Prior} & \textbf{Device} & ${\cal D}\{ {\cal P}, \bar{\cal P}\}$ & ${\cal Z}$ & $n_\text{live}$\\
     \hline
     Uniform & CSD3 &\( 0.000\) & \(-1432.8 \pm 0.8\) & 108\\
     SSIM\((U, G)\) & CSD3 & \(0.2\) & \(-1433.6 \pm 0.1\) & 100\\
@@ -1137,19 +1137,19 @@ year.
 
 \begin{table}
   \centering
-  \caption{Performance metrics for Cosmology runs using
-    Cobaya. Predicted values are crude linear extrapolations of the
-    respective series. Precision normalisation assumes errors in
+  \caption{Performance metrics for Cosmology runs using Cobaya. $t$ is
+    the time from beginning of sampling, to output. Starred series
+    were extrapolated linearly. Precision normalisation assumes errors in
     ${\cal Z}$ scale as $n_\text{live}^{-1}$. }
   \begin{tabular}{llrrr}
-    \textbf{Prior} & \textbf{Device used} & \textbf{Time to completion/hrs.} & \({\cal N}\{ {\cal L}\}\) & $n_\text{live}$\\
+    \textbf{Prior} & \textbf{Device used} & \textbf{$t$/(hrs)} & \({\cal N}\{ {\cal L}\}\) & $n_\text{live}$\\
     \hline
     Uniform & CSD3 &\( 32.2 \) & \(480 000\) & 108\\
     SSIM\((U, G)\) & CSD3 & \(1.7\) & \(90 000\) & 100\\
     SSIM\((U, G)\) & PC & \(50\) & \(49 000\) & 50\\
     \hline
-    Uniform & PC(Projected) & \(912\) & \(240 000\) & 50\\
-    Uniform (precision-normalised) & CSD3 &  \(224\) & 3 360 000  & 700
+    Uniform & PC$^{*}$ & \(912\) & \(240 000\) & 50\\
+    Uniform & CSD3$^{*}$ &  \(224\) & 3 360 000  & 700
   \end{tabular}
   \label{tab:cosmo-performance}
 \end{table}
@@ -1280,7 +1280,18 @@ the way.
     uniform is \color{red} red \color{black}, while SSIM is
     \color{blue} blue \color{black}. With the exception of
     \(n_\mathrm{s}\) and \(\Omega_\mathrm{c}\), all parameters are
-    more tightly constrained. } \label{fig:cosmology}
+    more tightly constrained. iPPR added to rule out finite-grain-size
+    effects for partially representative
+    priors. } \label{fig:cosmology}
+\end{figure}
+\end{landscape}
+\begin{landscape}
+\begin{figure}
+  \centering % Center table
+  \includegraphics[height=\textheight]{./illustrations/cosmo-pc.pdf}
+  \caption{The marginalised posteriors for \texttt{Cobaya} +
+    \texttt{Class} on CSD3 with \(n_\text{live}=100\) vs PC
+    \(n_\text{live}=50\). } \label{fig:cosmology-pc}
 \end{figure}
 \end{landscape}
 
