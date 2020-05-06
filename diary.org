@@ -31,7 +31,8 @@ Any theoretical findings are found and *properly* explained in the
 are provided in the docstrings.
 
 Surveyed literature is compressed into the [[*Notes][Notes]] section. So are any
-calculations necessary to understand how the re-partitioning works.
+calculations necessary to understand how the re-partitioning and SSIM
+work.
 
 
 * Michaelmas
