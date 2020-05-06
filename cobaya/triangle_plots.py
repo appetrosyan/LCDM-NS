@@ -22,5 +22,12 @@ params = ['logA', 'n_s', 'theta_s_1e2', 'omega_b', 'omega_cdm', 'tau_reio']
 # print(chains.getMeans(['logA']))
 
 chains.getParamNames().saveAsText('paramnames')
+<<<<<<< HEAD
 
 print(np.linalg.inv(chains.getCov(27)))
+=======
+np.savetxt('means', chains.getMeans(pars=range(27)))
+print( chains.getCov(27))
+print(np.linalg.inv(chains.getCov(27)))
+np.savetxt('covs', chains.getCov(27))
+>>>>>>> origin/master

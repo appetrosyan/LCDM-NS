@@ -96,3 +96,7 @@ _region_.*
 */.DS_Store
 /cobaya/newRun/run.input.yaml
 cobaya/*.input.yaml
+cobaya/run.*.yaml
+*.yaml
+*/*.input.yaml
+cobaya/run.input.yaml

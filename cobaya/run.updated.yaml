@@ -4,6 +4,23 @@ theory:
       non linear: halofit
       N_ncdm: 1
       N_ur: 2.0328
+    input_params:
+    - A_s
+    - n_s
+    - 100*theta_s
+    - omega_b
+    - omega_cdm
+    - m_ncdm
+    - tau_reio
+    output_params:
+    - H0
+    - Omega_m
+    - Omega_Lambda
+    - YHe
+    - z_reio
+    - sigma8
+    - age
+    - rs_drag
     path: null
     renames:
       As: A_s
@@ -35,6 +52,9 @@ theory:
 likelihood:
   planck_2018_lowl.TT:
     clik_file: baseline/plc_3.0/low_l/commander/commander_dx12_v3_2_29.clik
+    input_params:
+    - A_planck
+    output_params: []
     path: null
     product_id: '151902'
     renames:
@@ -43,6 +63,9 @@ likelihood:
     stop_at_error: false
   planck_2018_lowl.EE:
     clik_file: baseline/plc_3.0/low_l/simall/simall_100x143_offlike5_EE_Aplanck_B.clik
+    input_params:
+    - A_planck
+    output_params: []
     path: null
     product_id: '151902'
     renames:
@@ -51,6 +74,55 @@ likelihood:
     stop_at_error: false
   planck_2018_highl_plik.TTTEEE:
     clik_file: baseline/plc_3.0/hi_l/plik/plik_rd12_HM_v22b_TTTEEE.clik
+    input_params:
+    - A_planck
+    - calib_100T
+    - calib_217T
+    - A_pol
+    - calib_100P
+    - calib_143P
+    - calib_217P
+    - cib_index
+    - A_cib_217
+    - xi_sz_cib
+    - A_sz
+    - ksz_norm
+    - gal545_A_100
+    - gal545_A_143
+    - gal545_A_143_217
+    - gal545_A_217
+    - A_sbpx_100_100_TT
+    - A_sbpx_143_143_TT
+    - A_sbpx_143_217_TT
+    - A_sbpx_217_217_TT
+    - ps_A_100_100
+    - ps_A_143_143
+    - ps_A_143_217
+    - ps_A_217_217
+    - galf_TE_index
+    - galf_TE_A_100
+    - galf_TE_A_100_143
+    - galf_TE_A_100_217
+    - galf_TE_A_143
+    - galf_TE_A_143_217
+    - galf_TE_A_217
+    - galf_EE_index
+    - galf_EE_A_100
+    - galf_EE_A_100_143
+    - galf_EE_A_100_217
+    - galf_EE_A_143
+    - galf_EE_A_143_217
+    - galf_EE_A_217
+    - A_cnoise_e2e_100_100_EE
+    - A_cnoise_e2e_143_143_EE
+    - A_cnoise_e2e_217_217_EE
+    - A_sbpx_100_100_EE
+    - A_sbpx_100_143_EE
+    - A_sbpx_100_217_EE
+    - A_sbpx_143_143_EE
+    - A_sbpx_143_217_EE
+    - A_sbpx_217_217_EE
+    output_params: []
     path: null
     product_id: '151902'
     renames:
@@ -59,6 +131,9 @@ likelihood:
     stop_at_error: false
   planck_2018_lensing.clik:
     clik_file: baseline/plc_3.0/lensing/smicadx12_Dec5_ftl_mv2_ndclpp_p_teb_consext8.clik_lensing
+    input_params:
+    - A_planck
+    output_params: []
     path: null
     product_id: '151902'
     renames:
@@ -69,58 +144,7 @@ sampler:
   polychord:
     SSIM_covmat:
     - []
-    SSIM_means:
-    - 3.03981201
-    - 0.964188892
-    - 1.04186933
-    - 0.022360372
-    - 0.120061226
-    - 0.0516887682
-    - 1.00075142
-    - 0.999656313
-    - 0.998203316
-    - 47.1099361
-    - 0.528796072
-    - 5.45277407
-    - 3.30298056
-    - 8.94488585
-    - 10.9153969
-    - 18.7389873
-    - 93.7868667
-    - 260.551677
-    - 47.4926839
-    - 43.487132
-    - 115.846254
-    - 0.1146585
-    - 0.134317558
-    - 0.478942966
-    - 0.22373783
-    - 0.664836189
-    - 2.08065389
-    - 2.09025485e-09
-    - 67.3424876
-    - 0.315538543
-    - 0.143065799
-    - 0.68438174
-    - 0.245389779
-    - 7.4068651
-    - 0.809014146
-    - 0.985876656
-    - 0.454435796
-    - 0.606329988
-    - 2.09025485
-    - 1.88487855
-    - 13.7974411
-    - 147.09124
-    - 2787.12279
-    - 7.60353888
-    - 4.84028468
-    - 2.7632542
-    - 2787.12279
-    - 23.5422949
-    - 396.231647
-    - 2358.12851
-    - 9.22033771
+    SSIM_means: []
     base_dir: raw_polychord_output
     blocking:
     - - 1
@@ -171,7 +195,7 @@ sampler:
     precision_criterion: 0.001
     read_resume: true
     seed: null
-    use_SSIM: true
+    use_SSIM: false
     write_dead: true
     write_live: true
     write_resume: true
@@ -244,8 +268,8 @@ params:
     latex: Y_\mathrm{P}
     derived: true
     renames:
-    - yheused
     - yhe
+    - yheused
   tau_reio:
     prior:
       dist: norm
@@ -607,7 +631,7 @@ params:
   A_sbpx_217_217_EE:
     value: 1
 output: run
-modules: null
+modules: /home/app/Git/cobaya-deps/
 debug: false
 resume: false
-force: false
+force: true
