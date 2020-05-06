@@ -1,5 +1,6 @@
 \documentclass[usenatbib]{mnras}
 \usepackage[T1]{fontenc}
+\usepackage{inputenc}
 \usepackage{graphicx}
 \usepackage{grffile}
 \usepackage{longtable}
@@ -857,7 +858,7 @@ imprinting as with PPR in \cref{fig:convergence}.
   \begin{tabular}{lrr}
     \textbf{Scheme} & ${\cal D}\{ {\cal P}, \bar{\cal P}\}$ & ${\cal Z}$\\
     \hline
-    Uniform & 0.000 & \(-62.3 \pm 0.30\)\\
+    Uniform & 0.018 & \(-62.3 \pm 0.30\)\\
     Analytical & 0.000 & \(-62.32 \pm 0.00\) \\
     $R$ & 0.724 & \(-54.8 \pm 0.90\)\\
     $PPR$ & 0.011 & \(-62.33 \pm 0.01\)\\
@@ -1083,7 +1084,8 @@ signifying that we have not lost precision.
   prior with likelihood greater than \(\mathcal{L}\). The top plot is
   the relative posterior mass. In row $i$ the ${\cal P}(\theta_{i})$
   is plotted. Confidence intervals represented with color
-  intensity. \label{fig:higson}}
+  intensity. The reference values for the model parameters are
+  \(\theta = (0, 4, 8)\) \label{fig:higson}}
 \end{figure*}
 
 \subsection{Cosmological Simulations.}\label{sec:orgb81c159}
@@ -1102,9 +1104,55 @@ We use these in a stochastic superpositional mixture of a uniform
 $\pi$ used to obtain them originally and a Gaussian iPPR, patched into
 \texttt{Cobaya}'s interface to \texttt{PolyChord}. The run was then
 performed with identical settings, and the resulting posteriors were
-compared: ${\cal D}\{ {\cal P}, \bar{\cal P}\}$ and ${\cal Z}$,
-alongside the marginalised posterior plots \cref{fig:cosmology-cmp}. 
+compared \cref{fig:cosmology}. Despite the appearance,
+\cref{tab:cosmo-accuracy} shows that the posteriors between SSIM and
+no-SSIM runs are not significantly different (${\cal D}<
+0.3$. Moreover the evidence is within one standard deviation and more
+precise with SSIM by a factor of 8. \cref{tab:cosmo-performance},
+highlights a marked improvement in performance. Using SSIM offers a
+reduction of run-time by a factor of 19. By exploiting increased
+precision one can reduce the number of live points, and gain a further
+reduction of run-time by a factor of 37. Further improvements are
+attainable by reducing the precision criterion and terminating
+early. Conversely, to obtain similar precision to SSIM, assuming
+sub-linear scaling with \(n_\text{live}\), one would need to extend
+the duration of the inference to 912 hours \(\approx\) 40
+days. Assuming that errors in evidence scale as
+\(n_\text{live}^{-1/2}\) the time would be then of the order of a
+year.
 
+
+\begin{table}
+  \centering
+  \caption{Accuracy metrics for Cosmology runs using Cobaya.}
+  \begin{tabular}{llrrr}
+    \textbf{Prior} & \textbf{Device used} & ${\cal D}\{ {\cal P}, \bar{\cal P}\}$ & ${\cal Z}$ & $n_\text{live}$\\
+    \hline
+    Uniform & CSD3 &\( 0.000\) & \(-1432.8 \pm 0.8\) & 108\\
+    SSIM\((U, G)\) & CSD3 & \(0.2\) & \(-1433.6 \pm 0.1\) & 100\\
+    SSIM\((U, G)\) & PC & \(0.25\) & \(-1433.5 \pm 0.2\) & 50
+  \end{tabular}
+  \label{tab:cosmo-accuracy}
+\end{table}
+
+\begin{table}
+  \centering
+  \caption{Performance metrics for Cosmology runs using
+    Cobaya. Predicted values are crude linear extrapolations of the
+    respective series. Precision normalisation assumes errors in
+    ${\cal Z}$ scale as $n_\text{live}^{-1}$. }
+  \begin{tabular}{llrrr}
+    \textbf{Prior} & \textbf{Device used} & \textbf{Time to completion/hrs.} & \({\cal N}\{ {\cal L}\}\) & $n_\text{live}$\\
+    \hline
+    Uniform & CSD3 &\( 32.2 \) & \(480 000\) & 108\\
+    SSIM\((U, G)\) & CSD3 & \(1.7\) & \(90 000\) & 100\\
+    SSIM\((U, G)\) & PC & \(50\) & \(49 000\) & 50\\
+    \hline
+    Uniform & PC(Projected) & \(912\) & \(240 000\) & 50\\
+    Uniform (precision-normalised) & CSD3 &  \(224\) & 3 360 000  & 700
+  \end{tabular}
+  \label{tab:cosmo-performance}
+\end{table}
 
 \section{Conclusions}\label{sec:orgdf2cbd9}
 
@@ -1226,9 +1274,13 @@ the way.
 \begin{landscape}
 \begin{figure}
   \centering % Center table
-  \input{./illustrations/cosmology.pgf}
+  \includegraphics[height=\textheight]{./illustrations/cosmology.pdf}
   \caption{The marginalised posteriors for \texttt{Cobaya} +
-    \texttt{Class}. }\label{fig:cosmology}
+    \texttt{Class} on CSD3 with \(n_\text{live}=100\). The Reference
+    uniform is \color{red} red \color{black}, while SSIM is
+    \color{blue} blue \color{black}. With the exception of
+    \(n_\mathrm{s}\) and \(\Omega_\mathrm{c}\), all parameters are
+    more tightly constrained. } \label{fig:cosmology}
 \end{figure}
 \end{landscape}
 
