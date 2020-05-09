@@ -8,13 +8,14 @@
 
 \begin{axis}[
 legend cell align={left},
-legend style={fill opacity=0.8, draw opacity=1, text opacity=1, at={(0.03,0.97)}, anchor=north west, draw=white!80!black},
+legend style={fill opacity=0.8, draw opacity=1, text opacity=1, anchor=north east, draw=white!80!black},
 tick align=outside,
 tick pos=left,
 x grid style={white!69.0196078431373!black},
 xlabel={\(\ln {\cal Z}\)},
 xmin=-63.8198069562379, xmax=-50.9892026507015,
 xtick style={color=black},
+yticklabel={\pgfmathparse{\tick/10}\pgfmathprintnumber{\pgfmathresult}\%},
 y grid style={white!69.0196078431373!black},
 ylabel={\(P(\ln {\cal Z})\)},
 ymin=0, ymax=423.473092744885,
@@ -4031,6 +4032,7 @@ ytick style={color=black}
 --(axis cs:-63.8069635084846,0)
 --(axis cs:-63.8198069562379,0)
 --cycle;
+\draw[draw=none,fill=colorblack,fill opacity=0.3] (axis cs:-62.71953888166818,0) rectangle (axis cs:-62.70,1000);
 \addlegendimage{area legend, fill=colorblack, fill opacity=0.3}
 \addlegendentry{$G$ -- analytical result}
 

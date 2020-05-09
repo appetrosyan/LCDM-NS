@@ -47,32 +47,32 @@
 
 \maketitle
 \begin{abstract}
-  Bayesian inference is a robust framework for testing scientific
-  hypotheses and is used in multiple areas of physics. In cosmology
-  said hypotheses are complex, necessitating the use of Monte-Carlo
-  techniques such as nested sampling. Even so, the computations
-  typically require resources outside the realm of one's personal
-  electronics, for example, supercomputer clusters, taking weeks to
-  complete. By extending previous work, we have found a methodology
-  that allows one to incorporate intuitive proposals into nested
-  sampling to improve performance, called consistent posterior
-  repartitioning. We have also developed a scheme for mixing several
-  intuitive proposals into a single model, allowing one to extract
-  only the useful information out of the combined model without risk
-  of biasing the inference. We demonstrate this by comparing full
-  cosmological parameter estimations done using \texttt{Cobaya} with
-  and without our modifications. The performance uplift is such that
-  the latter analysis was performed without loss of precision on a
-  personal computer within one day, provided a well-tuned proposal
-  distribution. Finally, the findings are systematised, such that
-  inference techniques that are similar to nested sampling in
-  benefiting from our methods, can be identified. The scope of the
-  findings also suggests an extension of Bayesian analysis to multiple
-  datasets simultaneously.
+  By extending previous work, we have found a method of using
+  intuitive proposals with nested sampling to improve performance,
+  accuracy and precision, called consistent posterior
+  repartitioning. We have also developed a prescription called
+  stochastic isometric mixture, of combining several intuitive
+  proposals into a single model. This prescription allows nested
+  sampling to make use of the most representative of the proposal
+  priors. As a consequence, the sampling is hardened against prior
+  imprinting, while also retaining most of its performance and
+  accuracy. We demonstrate this by comparing full cosmological
+  parameter estimations done using \texttt{Cobaya} using
+  \texttt{CLASS} with and without our modifications. We demonstrate a
+  run-time reduction in CSD3 Skylake compute-hours by a factor of
+  \(20\), accompanied with increased precision. When precision
+  normalised, the predicted performance uplift is by three orders of
+  magnitude.  The real-world performance uplift is such that
+  cosmological inference was performed with a net precision gain on a
+  personal computer within two days, provided a well-tuned proposal
+  distribution. The findings are systematised, such that inference
+  techniques that are similar to nested sampling in benefiting from
+  our methods, can be identified. The scope of the findings suggests
+  multiple improvements and an evolution of nested sampling. 
 \end{abstract}
 
 \begin{keywords}
-Bayesian inference -- automated posterior repartitioning -- nested sampling -- cosmology: miscellaneous -- methods: statistical -- methods: data analysis
+Bayesian inference --- automated posterior repartitioning --- nested sampling --- cosmology: miscellaneous --- methods: statistical --- methods: data analysis
 \end{keywords}
 
 \section{Introduction}\label{sec:org14413d7}
@@ -80,131 +80,121 @@ Bayesian inference -- automated posterior repartitioning -- nested sampling -- c
 The standard model of the universe and its evolution in modern
 cosmology is the \(\Lambda\)CDM model \citep{Condon2018}, so named
 after the main components of the universe: the cosmological constant
-\(\Lambda\) and cold dark matter. It has six major independent
-parameters: the physical baryon density \(\Omega_{b}h^{2}\); the
-physical dark matter density \(\Omega_{c}h^{2}\); the value of the
-Hubble parameter at present \(H_{0}\)\footnote{Equivalently the age of
-  the universe \(\tau_0\), which can be inferred from the
-  parameters. }; the curvature fluctuation amplitude
-\(\Delta_{R}^{2}\); the scalar spectral index \(n_{s}\) and
-re-ionization optical depth \(\tau_\text{reio.}\).
+\(\Lambda\) and cold dark matter. It has six major
+independent\footnote{there can be other equivalent parameter
+  sextuplets. } parameters: the physical baryon density
+\(\Omega_\mathrm{b}h^{2}\); the physical (cold) dark matter density
+\(\Omega_\mathrm{c}h^{2}\); the angular parameter
+\(100\theta_\mathrm{s}\); re-ionisation optical depth
+\(\tau_\text{reio}\); power spectrum slope \(n_\mathrm{s}\) and
+amplitude \(\ln (10^{10}A_\mathrm{s})\) \citep{Cosmology}.
 
 The task of the present study is to develop better tools for
 evaluating the agreement of our observations from the Planck mission
-with \(\Lambda\)CDM, estimating the parameters in the
-process. Parameter estimation is convenient in the formalism of
-Bayesian statistics\footnote{See \cite{xkcd} for comparison to
-  frequentist statistics.}. In that language, our goal is efficient
-Bayesian inference.
+with \(\Lambda\)CDM, estimating the parameters in the process. In the
+language of Bayesian statistics\footnote{See \cite{xkcd} for
+  comparison to frequentist statistics.}, our goal is efficient
+Bayesian inference. 
 
-Many algorithms were designed to accelerate said inference:
-Metropolis-Hastings \citep{Metropolis} in conjunction with the Gibbs
-sampler \citep{Metropolis-Hastings-Gibbs}; Hybrid (Hamiltonian) Monte
-Carlo \citep{1701.02434,Duane_1987}, and nested sampling
-\citep{Skilling2006} which is our focus for the project.
+While said inference can be done analytically in principle, it is
+often intractable. Multiple numerical algorithms exist to perform
+Bayesian inference: Metropolis-Hastings \citep{Metropolis} in
+conjunction with the Gibbs sampler \citep{Metropolis-Hastings-Gibbs};
+Hybrid (Hamiltonian) Monte Carlo \citep{1701.02434,Duane_1987}, and
+nested sampling \citep{Skilling2006}. Most inference methods can
+benefit from proposals, so much so that these proposals are often
+provided with the Cosmological inference packages
+\citep{cobaya}. Nested sampling is the exception: proposals lead to
+significant prior imprinting, which significantly reduces the utility
+of the inference. We have found prescription for incorporating
+proposals safely: reducing the run-time, increasing the precision,
+while assuaging if not eliminating prior imprints.
 
-Nested sampling~\citep{Skilling2006} is a family of algorithms, each
-with their own unique algorithmic implementation details. The
-following is a non-exhaustive list of major implementations of nested
-sampling:
-\begin{enumerate}
-\item \texttt{MultiNest} \citep{Feroz2009MultiNestAE},
-\item \texttt{PolyChord} \citep{polychord},
-\item \texttt{nestle} \citep{nestle},
-\item \texttt{dyNesty} \citep{Speagle_2020}.
-\end{enumerate}
-In this project, we shall explore a novel method for accelerating
-nested sampling in general. We shall primarily present results of
-testing said methods on \texttt{PolyChord}; however, we expect that
-the results are transferable.
+\begin{table}
+  \centering
+  \caption{A non-exhaustive list of major implementations of nested sampling.}
+  \begin{tabular}{lr}
+    \textbf{Name} & \textbf{Publication}\\
+    \hline
+    \texttt{MultiNest} & \citep{Feroz2009MultiNestAE} \\
+    \texttt{PolyChord} & \citep{polychord} \\
+    \texttt{nestle} & \citep{nestle} \\
+    \texttt{dyNesty} & \citep{Speagle_2020}
+  \end{tabular}
 
-We optimised nested sampling based upon previous work by
-\cite{chen-ferroz-hobson} borrowing their terminology. Briefly, it is
-the observation that nested sampling is sensitive to the partitioning
-of the quantity known as the
-posterior. \cite{chen-ferroz-hobson} exploited this to make
-inference more robust.
+\end{table}
 
-We, however, have discovered that it can accelerate the inference at
-no loss of precision or accuracy, by extracting information out of
-intuitive proposals, such as the ones typically provided with
-cosmological packages. Proposal usage was previously impractical with
-nested sampling, because it biased the output, and made the findings
-unacceptable scientifically. We confirmed that posterior
-repartitioning mitigates bias imprinting. This improved accuracy,
-stability and precision of nested sampling. Additionally, since it
-converges faster given more information, and proposals are more
-informative by design, we exploited posterior repartitioning to
-accelerate inference.
-
-We extended \cite{chen-ferroz-hobson}'s idea of automatic power
-posterior repartitioning and found several classes of consistent
-partitions that offer comparable or better results but with different
-trade-offs to \cite{chen-ferroz-hobson}. Furthermore, we have designed
-a method of combining several such partitions into one partition, and
-have shown that such a mixture can retain the benefits of all, and the
-weaknesses of neither of its constituent partitions.
+We achieve this by extending \emph{automatic power posterior
+  re-partitioning} \citep{chen-ferroz-hobson}. The issues arising from
+improper usage of proposals are a variant of the problem of
+unrepresentative priors. Hence, we find that posterior re-partitioning
+can be used to mitigate prior imprints. We found multiple extensions
+of posterior re-partitioning, with different trade-offs and potential.
+From these extensions we have identified a combination that can
+provide significantly better results: performance, accuracy,
+precision, convenience, stability and imprint mitigation.
 
 In the following section, we shall provide a brief primer on Bayesian
 inference and nested sampling, followed by an exploration of work by
-\cite{chen-ferroz-hobson}, re-contextualising it mathematically. All
-work is our own from the third section onward, which includes the
-mathematical framework of consistent partitions, a few examples, along
-with descriptions of the underlying mechanism. We dedicate the final
+\cite{chen-ferroz-hobson}. All work is our own from the third section
+onward, which includes the mathematical framework of consistent
+partitions, a few examples\footnote{We present only a small subset of
+  consistent partitions designed during the project. }, along with
+descriptions of the underlying mechanism. We dedicate the final
 sections to practical demonstrations and a few suggested applications
 of our work.
 
 \section{Theoretical background}\label{sec:orge6061a4}
 In this section we primarily focus on previous work, outlining the key
-points of Bayesian inference and automatic posterior
-repartitioning. For more details see~\cite{jeffreys2010scientific}.
+elements of Bayesian inference \citep{jeffreys2010scientific} and
+automatic posterior repartitioning. 
 \subsection{Bayesian inference}\label{sec:primer}
 
-A model of a physical process \({\cal M}\)\footnote{By convention all
-  previous observations are implicit to the model. }, is parameterised
-by \(\bm{\theta} = (\theta_{1}, \theta_{2}, \ldots , \theta_{n})\).
-New empirical observations of said process are encapsulated in
-\(\mathfrak{D}\). In Bayesian statistics, these objects are
-represented by conditional probabilities (\cref{table-defs}). The
-quantity most inextricably attached to the model is ${\cal L}$ --- the
-\textbf{\emph{likelihood}} of \(\mathfrak{D}\), assuming the configuration
-$\bm{\theta}$ and the model. When one data-set \(\mathfrak{D}\) is
-considered, only ${\cal L}$'s the dependence on $\bm{\theta}$ is
-important, so it is often represented by a multivariate function
-${\cal L}(\bm{\theta})$. The probabilities of $\bm{\theta}$
-configurations \textbf{\emph{prior}} and \textbf{\emph{posterior}} to inference are
-$\pi(\bm{\theta})$ and ${\cal P}(\bm{\theta})$ respectively. The prior
-\(\pi(\bm{\theta})\) quantifies the agreement of parameter vector
-$\bm{\theta}$ with all previous observations, provided the model. The
-posterior represents the same, for observations including
-\(\mathfrak{D}\). The locus of all $\bm{\theta}$ for which the prior
-is both defined and non-zero defines the \textbf{\emph{prior space}}
-$\Psi$. Finally, the \textbf{\emph{evidence}} is the probability of the model
-based on all previous observations including \(\mathfrak{D}\). The
-interactions of these probabilities is governed by \citeauthor{1763}'s
-theorem:
+Hypothesis testing in Bayesian statistics requires said hypothesis to
+be formulated in terms of conditional probabilities, organising
+information in the following way.
+
+A model \({\cal M}\) of a physical process, is parameterised by
+\(\bm{\theta} = (\theta_{1}, \theta_{2}, \ldots , \theta_{n})\).  New
+empirical observations of said process are encapsulated in the
+\textbf{\emph{dataset}} \(\mathfrak{D}\).  The
+\emph{\textbf{likelihood}} ${\cal L}$ of the parameters $\bm{\theta}$
+is the probability of observing \(\mathfrak{D}\), conditional on the
+configuration $\bm{\theta}$ and the model ${\cal M}$.  The prior
+\(\pi(\bm{\theta})\) is the probability of $\bm{\theta}$ assuming
+${\cal M}$. It can be obtained from both previous datasets as well as
+constraints inherent to the model. The posterior is a probability of
+$\bm{\theta}$ that is conditional on ${\cal M}$ and the dataset
+${\mathfrak D}$. The locus of all $\bm{\theta}$ for which the prior is
+both defined and non-zero defines the \textbf{\emph{prior space}}
+$\Psi$. Finally, the \textbf{\emph{evidence}} is the probability of
+the data \({\mathfrak D}\) assuming the model.
+
+The interactions of probabilities of \cref{tab:defs} is governed by
+\citeauthor{1763}'s theorem:
 \begin{equation}\label{eq:bayes} 
- {\cal L}(\bm{\theta})  \pi (\bm{\theta}) = {\cal Z}  {\cal P} (\bm{\theta}).  
+ {\cal L}(\bm{\theta}) \times \pi (\bm{\theta}) = {\cal Z} \times {\cal P} (\bm{\theta}).  
 \end{equation}
 
 Bayesian inference is the process of reconciling the model ${\cal M}$
 represented in ${\cal L}$ and $\pi$, with observations
-\(\mathfrak{D}\) represented in ${\cal L}$. The results of Bayesian
-inference are the evidence ${\cal Z}$ and the posterior ${\cal P}$. An
-implementation of Bayesian inference is called the \textbf{\emph{sampling
-  algorithm}} or the \textbf{\emph{sampler}}.
+\(\mathfrak{D}\) represented in ${\cal L}$. A numerical algorithm that
+obtains ${\cal Z}$ and ${\cal P}$ from $\pi$ and ${\cal L}$, is called
+a \textbf{\emph{sampling algorithm}} or \textbf{\emph{sampler}}.
 
 The convenient representation of $\pi$ and ${\cal L}$ depends on the
-particulars of the sampling algorithm. For most \textbf{\emph{nested sampling}}
+particulars of the sampler. For \textbf{\emph{nested sampling}}
 (e.g. \texttt{PolyChord}, \texttt{MultiNest}) we delineate them
-indirectly with log-likelihood \(\ln \cal L (\bm{\theta})\), and
-\textbf{\emph{prior quantile}} \(C\{\pi\}(\bm{\theta})\). The latter, can be
-thought of as a coordinate transformation
-$C: \bm{u} \mapsto \bm{\theta}$ that maps a uniform distribution of
-$\bm{u}$ in a unit hypercube to $\pi(\bm{\theta})$ in $\Psi$.
+indirectly: with the logarithm of the likelihood probability-density
+function \(\ln \cal L (\bm{\theta})\), and \textbf{\emph{prior
+    quantile}} \(C\{\pi\}(\bm{\theta})\). The latter, can be thought
+of as a coordinate transformation $C: \bm{u} \mapsto \bm{\theta}$ that
+maps a uniform distribution of $\bm{u}$ in a unit hypercube to
+$\pi(\bm{\theta})$ in $\Psi$. It is often obtained by inverting the
+cumulative distribution function of the prior.
 
 \begin{table}
-  \caption{Definitions of main quantities in Bayesian inference.   \label{table-defs}}
+  \caption{Definitions of main quantities in Bayesian inference.   \label{tab:defs}}
 \centering
 \begin{tabular}{llr}
 \textbf{\textbf{Term}} & \textbf{\textbf{Symbol}} & \textbf{\textbf{Definition}}\\
@@ -217,24 +207,24 @@ Evidence & \({\cal Z}\) & \(P ( \bm{\mathfrak{D}} \vert {\cal M})\) \\
 \end{table}
 
 
-For Bayes' theorem to hold, the domains of all functions need to be
-the same. Let \(D(f)\) denote the domain of the probability density
-function \(f\), i.e.~where \(f\) is both defined and
-\textbf{non-zero}. Hence
+For \citeauthor{1763}' theorem to hold, the domains of all probability
+density functions need to be the same. Let \(D(f)\) denote the domain
+of the probability density function \(f\), i.e.~where \(f\) is both
+defined and \textbf{non-zero}. Hence
 \begin{equation}
-  D(\pi) \cap D({\cal L})  = D({\cal P}) \subset \Psi,
+  D \{ \pi \} \cap D \{ {\cal L} \} = D \{ {\cal P} \} \subset \Psi,
 \end{equation} 
 meaning the inference is possible only on a subset of the domain of
-the prior and likelihood.\label{domain-discussion}
+prior and likelihood.\label{domain-discussion}
 
-A crucial insight by \cite{chen-ferroz-hobson}, is that for each
-choice of ${\cal L}$ and $\pi$, there is a unique choice of ${\cal Z}$
-and ${\cal P}$; equivalently they represent the same unique model
-${\cal M}$. This correspondence is \emph{surjective}, but not
-\emph{injective}: many choices of \({\cal L}(\bm{\theta})\) and
-\(\pi (\bm{\theta})\) may correspond to the same
-\( {\cal P} (\bm{\theta})\) and \({\cal Z}\).
-
+For each choice of ${\cal L}$ and $\pi$, there is a unique choice of
+${\cal Z}$ and ${\cal P}$; equivalently they represent the same unique
+model ${\cal M}$, or partition it consistently. This correspondence is
+\emph{surjective}, but not \emph{injective}: many choices of
+\({\cal L}(\bm{\theta})\) and \(\pi (\bm{\theta})\) may correspond to
+the same \( {\cal P} (\bm{\theta})\) and \({\cal Z}\)
+\citep{chen-ferroz-hobson}. This remark is the cornerstone of our
+optimisation.
 
 \subsection{Nested Sampling}\label{sec:org36366f8}
 
@@ -246,37 +236,53 @@ By noting that ${\cal P}$ is a probability, hence normalised, from
 \end{equation}
 Thus, \citeauthor{1763}'s theorem reduces parameter estimation ---
 obtaining ${\cal P}$ from $\pi$ and ${\cal L}$, to
-integration~\citep{bayes-integration}. The naïve approach: uniformly
-rasterise \(\Psi\) and obtain \({\cal Z}\) via Riemann sums, is valid
-though intractable for hypotheses with \(O(30)\) parameters
-\citep{Caflisch_1998}. Integration is thus performed using Monte Carlo
-techniques, such as nested sampling.
+integration~\citep{bayes-integration}. The naïve approach to obtaining
+\({\cal Z}\): e.g.~uniformly rasterise \(\Psi\), is intractable for
+hypotheses with \(O(30)\) parameters
+\citep{Caflisch_1998}. Integration is usually performed using Monte
+Carlo techniques, such as nested sampling.
 
-The gist of the algorithm \citep{Skilling2006} is to pick \textbf{\emph{live
-  points}} at random in $\Psi$. Based on a well-defined prior- and
-implementation-dependent principle (\cref{sec:ns}) iteratively move
-said points into regions of high likelihood. A statistical argument
-allows approximating ${\cal Z}$ and its error during each
-iteration. Ergo, by \cref{eq:bayes}, ${\cal P}(\bm{\theta})$ and its
-error are also found. The process terminates whenever a predetermined
-accuracy of ${\cal Z}$ is achieved, often controlled by the errors.
+The following is a short description of nested sampling
+\citep{Skilling2006}. We begin, by picking \(n_\text{live}\)
+\textbf{\emph{live points}} at random in $\Psi$. During each
+subsequent iteration, the point with the lowest likelihood is declared
+\emph{\textbf{dead}}, and another live point $\bm{\theta}\in\Psi$ is
+taken with a higher likelihood, based on the prior $\pi$ and an
+implementation-dependent principle. Live points are thus gradually
+moved into regions of high likelihood. By tracking their locations and
+likelihoods, from a statistical argument we can approximate ${\cal Z}$
+and its error for each iteration, and by \cref{eq:bayes},
+${\cal P}(\bm{\theta})$. We continue until a pre-determined fraction
+of the evidence associated to $\Psi$ remains unaccounted for.
 
-Thus, nested sampling, unlike, e.g.~Metropolis-Hastings
-\cite{Metropolis-Hastings-Gibbs} is sensitive to the concrete
-definitions of prior and likelihood. While many choices of $\pi$ and
-${\cal L}$ correspond to the same ${\cal P}$ and ${\cal Z}$, nested
-sampling's time complexity is different for different specifications
-of $\pi$\citep{Skilling2006}. In particular, for more
-\textbf{\emph{informative}} priors (quantified by global maximum probability
-density) convergence occurs faster.
+Not all parameter inference methods require obtaining ${\cal Z}$. Some
+methods, such as Hamiltonian Monte-Carlo \citep{1701.02434}, allow
+obtaining a normalised ${\cal P}$ directly. For such approaches, any
+consistent specification of $\pi$ and ${\cal L}$ will lead to
+identically the same posterior, barring numerical errors. This is also
+true of methods that evaluate ${\cal Z}$ exactly. However, nested
+sampling allows uncertainty in ${\cal Z}$, which is controlled by
+$\pi$ and ${\cal L}$. Thus, nested sampling, unlike,
+e.g.~Metropolis-Hastings \cite{Metropolis-Hastings-Gibbs} is sensitive
+to the concrete definitions of prior and likelihood. While many
+choices of $\pi$ and ${\cal L}$ correspond to the same ${\cal P}$ and
+${\cal Z}$, the errors and nested sampling's time complexity are
+different for different specifications of $\pi$\citep{Skilling2006}.
+
+A probability density function \(f(\bm{\theta})\) is said to be more
+\emph{\textbf{informative}} than \(g(\bm{\theta})\) if:
+\begin{equation}
+  \label{eq:informative}
+  \max_{\theta\in\Psi} f(\bm{\theta}) > \max_{\theta\in\Psi} g(\bm{\theta}).
+\end{equation}
 
 The time complexity $T$ of nested sampling satisfies
 \begin{equation}\label{eq:complexity}
-  T \propto  n_\text{live}\  \langle {\cal T}\{{\cal L}(\bm{\theta})\} \rangle \ {\cal N}\{{\cal L}(\bm{\theta}) \},
+  T \propto  n_\text{live}\  \langle {\cal T}\{{\cal L}(\bm{\theta})\} \rangle \ \langle  {\cal N}\{{\cal L}(\bm{\theta}) \}, 
 \end{equation}
 where ${\cal T}\{f(\bm{\theta})\}$ represents time complexity of
-evaluating $f(\bm{\theta})$ and ${\cal N}\{f(\bm{\theta})\}$, the
-number of such evaluations. Reducing $n_\text{live}$ reduces the
+evaluating $f(\bm{\theta})$ and ${\cal N}\{f(\bm{\theta})\}$ --- the
+quantity of such evaluations. Reducing $n_\text{live}$ reduces the
 resolution of nested sampling, while
 $ {\cal T}\{{\cal L}(\bm{\theta})\}$ is model-dependent. We can,
 however, reduce the number of likelihood evaluations, by providing a
@@ -304,36 +310,54 @@ Specifically, distribution $h$ is said to be unrepresentative of $g$
 if a uniform distribution $f$ represents $g$ better than $h$ does.
 
 The representation of ${\cal P}$ and $\pi$ is crucial for nested
-sampling's correctness and performance. For example, if $\pi$ and
-$\pi'$ are equally informative, but $\pi$ is more representative of
-${\cal P}$, then the inference with $\pi$ will terminate more quickly
-than with $\pi'$, and will be more accurate.
+sampling's correctness and performance. For example, assuming the same
+likelihood, if $\pi_{0}$ and $\pi_{1}$ are equally informative, but
+$\pi_{0}$ is more representative of ${\cal P}$, then the inference
+with $\pi_{0}$ will terminate more quickly than with $\pi_{1}$, (more
+accurate, also).
 
-Similarly, if $\pi'$ is more informative than $\pi''$, but equally as
-representative, nested sampling will terminate with $\pi'$ faster than
-with $\pi''$, and the result will be more precise. If
-\(\pi' (\bm{\theta})\) is more similar to \( {\cal P} (\bm{\theta})\),
-then points drawn with PDF \(\pi' (\bm{\theta})\) are more likely to
-lie in $\bm{\theta}$ regions of high \( {\cal P} (\bm{\theta})\),
-leading to fewer iterations. However, posteriors ${\cal P}$ obtained
-with different priors are different by \cref{eq:bayes}. In fact, the
-posterior ${\cal P}'$ will be more informative than ${\cal P}''$, and
-more similar to $\pi'$. This we call \textbf{\emph{bias imprinting}}.
+Similarly, if $\pi_{1}$ is more informative than $\pi_{2}$, but
+equally as representative, nested sampling will terminate with
+$\pi_{1}$ faster than with $\pi_{2}$, and the result will be more
+precise. In detail, if \(\pi_{1} (\bm{\theta})\) is more similar to
+\( {\cal P} (\bm{\theta})\), then points drawn with PDF
+\(\pi_{1} (\bm{\theta})\) are more likely to lie in $\bm{\theta}$
+regions of high \( {\cal P} (\bm{\theta})\), leading to fewer
+iterations.
+
+Posteriors ${\cal P}_{1}$ and ${\cal P}_{2}$ obtained with the priors
+$\pi_{1}$ and $\pi_{2}$ are different, because of \cref{eq:bayes}. In
+fact, the posterior ${\cal P}_{1}$ will be more informative than
+${\cal P}_{2}$, and more similar to $\pi_{1}$. This we call
+\textbf{\emph{prior imprinting}}.
 
 
-Imprinting can be desirable if the informative prior $\pi'$ is the
+Imprinting is desirable if the informative prior $\pi_{1}$ is the
 result of multiple inferences over multiple datasets. However, even in
 such a case imprinting limits the information obtainable from
-\(\mathfrak{D}\), manifesting confirmation bias if $\pi$ is not
-representative. The risk of getting no usable data from the inference
-is sufficient to prefer uniform priors even when more information is
-available.
+\(\mathfrak{D}\). The risk of getting no usable data from the
+inference is sufficient to prefer uniform priors even when more
+information is available. This is exasperated in case of proposals,
+which is why they are almost never used with nested sampling.
+
+
 \subsection{Power posterior repartitioning}\label{sec:autopr}
+From this section onward we shall adopt the following notation. $\pi$
+and ${\cal L}$ with similar annotations (index, diactrics), belong to
+the same specification of the model. Models using the uniform prior
+are special, in that they obtain the most accurate posterior and
+evidence. They are represented with an over-bar (the plot of a uniform
+prior in 1D is a horizontal line). Hats delineate the consistent
+partitions, that incorporate the proposal (the hat represents the
+peak(s) often present in informative proposals).
+
 We are working under the assumption that $\pi(\bm{\theta})$ is an
-informative, unrepresentative prior. To avoid loss of precision and
-mitigate bias imprinting, \cite{chen-ferroz-hobson} have proposed
-introducing the parameter \(\beta\) to control the breadth of the
-informative prior:
+informative, unrepresentative prior. We want to obtain correct
+posterior $\bar{\cal P}$ but without using a uniform, universally
+representative reference prior $\bar{\pi}$, because it is often the
+least informative. To avoid loss of precision and mitigate prior
+imprinting, \cite{chen-ferroz-hobson} have proposed introducing the
+parameter \(\beta\) to control the breadth of the informative prior:
 \begin{equation}
   \label{eq:autopr-prior}
   \hat{\pi}(\bm{\bm{\theta}};\beta) = \cfrac{\pi(\bm{\theta})^{\beta}}{Z(\beta)\{\pi\}},
@@ -364,79 +388,102 @@ parameter of the original theory.
 \end{figure}
 
 Note, that
-\({\cal L}(\bm{\theta})\pi (\bm{\theta}) = \hat{\cal L}(\bm{\theta}
-\hat{\pi} (\bm{\theta})\) by construction, hence from \cref{eq:bayes}
+\({\cal L}(\bm{\theta})\pi (\bm{\theta}) = \hat{\cal L}(\bm{\theta})
+\hat{\pi} (\bm{\theta})\) by construction. Thus, from \cref{eq:bayes}
 the posterior and evidence corresponding to
 \(\hat{\cal L}(\bm{\theta};\beta)\) and
 \(\hat{\pi} (\bm{\theta};\beta)\) will be the same as
-\( {\cal P} (\bm{\theta})\) and \({\cal Z}\), corresponding to the
-original $\pi(\bm{\theta})$ and ${\cal L}(\bm{\theta})$.  In practice,
-however, if the original prior \(\pi (\bm{\theta})\) were unrepresentative
-of the posterior \( \bar{\cal P} (\bm{\theta})\), leading to
-significant errors in ${\cal Z}$ and
-${\cal P}(\bm{\theta}) \ne \bar{\cal P}(\bm{\theta})$.  However,
-$\hat{\pi}$ may become representative for some value of
-$\beta = \beta_{R}$. Values $\beta$ close to $\beta_{R}$
-correlate with higher likelihoods, thus the sampler prefers
-them. Hence, the system will converge to a state where
+\( {\cal P} (\bm{\theta})\) and \({\cal Z}\), which correspond to the
+original $\pi(\bm{\theta})$ and ${\cal L}(\bm{\theta})$.
+
+If the informative prior \(\pi (\bm{\theta})\) is less representative
+of the posterior \( \bar{\cal P} (\bm{\theta})\), error in
+$\hat{\cal Z}$ is larger. Hence, while we don't violate
+\cref{eq:bayes} directly, $\bar{\cal Z}$ can be more different from
+${\cal Z}$ while remaining within margin of error, and similarly
+${\cal P}(\bm{\theta}) \ne \bar{\cal P}(\bm{\theta})$. This is where
+the new parameter comes into play. $\hat{\pi}$ may become
+representative for some value of $\beta = \beta_{R}$. Values $\beta$
+close to $\beta_{R}$ correlate with higher likelihoods, thus the
+sampler prefers them. Hence, the system will converge to a state where
 \( {\cal P} (\bm{\theta})\) is represented in
 \(\hat{\pi} (\bm{\theta};\beta)\)\footnote{Technically we obtain
   \( \hat{\cal P} (\bm{\theta};\beta)\) which, when marginalised over
   $\beta$, yields
   \( {\cal P} (\bm{\theta}) = \int \hat{\cal P} (\bm{\theta};\beta) d
-  \beta\) --- the correct posterior.}.
+  \beta\) --- the correct posterior.}.  As a consequence, we reduced
+the errors and obtained the same result as we would have with a less
+informative but more representative prior.
 
 \cite{chen-ferroz-hobson} dubbed this \textbf{\emph{automatic power posterior
-  repartitioning}}(PPR) because the choice of
+  repartitioning}} (PPR) because the choice of
 $\beta\rightarrow\beta_{R}$ is automatic. It mitigates the loss
 precision and thus accuracy for unrepresentative informative priors
 $\pi$, by sacrificing performance.
 
-
+\pagebreak[2]
 \section{Theoretical discoveries}
+\textbf{Disclaimer:} beyond this point all work (theoretical and
+otherwise) is my own, unless otherwise specified.
+
 In this section we shall be working under the inverted premise of
 \cref{sec:autopr}: gaining performance without sacrificing accuracy or
 precision.
 
-\subsection{Biases\label{discussion-bias}}
+\subsection{The trouble with proposals\label{sec:prejudice}}
+To understand why one can't use proposals, we must first address why
+informative priors are avoided. From \cref{eq:bayes}, we can see that
+changing only the prior $\pi$ necessarily leads to changes in both
+${\cal P}$ and ${\cal Z}$. For example if $\pi$ is a Gaussian centered
+at $\bm{\theta}=\bm{\mu}_{\pi}$ and ${\cal L}$ is a Dirac
+$\delta$-function peaked at $\bm{\theta}=\bm{\mu}_{{\cal L}}$, with
+$\bm{\mu}_{\pi}$ sufficiently far from $\bm{\mu}_{{\cal L}}$ then the
+posterior will necessarily have peaks at both $\bm{\mu}_{\pi}$ and
+$\bm{\mu}_{{\cal L}}$. This is an example of prior imprinting and is a
+necessary part of a Bayesian view of statistics. For a Bayesian, the
+prior information is no less valuable than the information inferred
+from the dataset \(\mathfrak{D}\), and the posterior represents
+\emph{all} of our best knowledge.
 
+The problem however, is the \emph{prejudiced sampler}. Because nested
+sampling chooses live points with probability proportional to the
+prior, the probability of a point being drawn from the likelihood peak
+can be made arbitrarily small. In fact, if $\bm{\mu}_{{\cal L}}$ and
+$\bm{\mu}_{\pi}$ are more than five standard deviations apart, thirty
+million samples will be drawn from $\bm{\mu}_{\pi}$ before a single
+point is drawn on the circle containing
+$\bm{\theta} = \bm{\mu}_{{\cal L}}$.
 
-Knowing that nested sampling converges faster for more informative
-priors, why do we almost always use the least informative priors?
-Mainly, because this often accurately represents our prior knowledge
-\citep{JeffreysPrior}. Sometimes, however, even when we do have
-informative priors obtained as posteriors from previous datasets, we
-use a uniform prior \(\pi (\bm{\theta})\) with nested sampling, out of
-fear of biasing the inference. From \cref{eq:bayes}, we see that
-preserving the functional form of \( {\cal L} (\bm{\theta})\), the
-choice of \( \pi (\bm{\theta})\) directly affects the results.
+An apt analogy can be drawn with the Venera-14 mission
+\citep{siddiqi2018beyond}. Upon landing, due to a number of
+unfortunate coincidences, the lander took its one and only measurement
+of Venusian soil from one of its own lens caps. As a result, we have
+obtained objectively correct information from Venus: a sample of an
+object on its surface. However, the efficiency of this measurement of
+the compressibility of rubber leaves much to be desired. 
 
-Moreover, if \( \pi (\bm{\theta})\) is unrepresentative of
-\( \bar{\cal P}(\bm{\theta})\) corresponding to
-\( \bar{\pi} (\bm{\theta}) = \text{Const.}\) and
-\( {\cal L} (\bm{\theta}) = \bar{\cal L} (\bm{\theta})\), the shape of
-\( {\cal P}(\bm{\theta})\) will have a strong imprint from
-\( \pi (\bm{\theta})\). In other words, by sampling an informative
-bias, we mostly obtain information from the bias
-\cref{fig:convergence}.  The utility of such inference is comparable
-to that of the famous Venera-14\footnote{After touchdown, the lander's
-  lens caps had fallen precisely where the probe was going to take the
-  first and only sample of Venusian soil. Consequently, the rather
-  expensive mission to Venus obtained mediocre measurements of earth
-  rubber's compressibility.  } mission.
+Before \cite{chen-ferroz-hobson} the best solution was to use a
+uniform prior that included both $\bm{\mu}_{\pi}$ and
+$\bm{\mu}_{{\cal L}}$. The computational cost of inference is so high
+that the risk of gaining nothing from a dataset is untenable. Thus
+discarding all prior information in hopes of inferring some from the
+dataset is preferable to using the information in $\pi$. 
 
-However, we can sidestep this issue. Power Posterior repartitioning
-fully compensates for \( \pi (\bm{\theta})\) that peaks at
-approximately the same $\bm{\theta}$ location as
-\( {\cal P}(\bm{\theta})\), but is broader or narrower, by allowing
-the breadth of \( \hat{\pi} (\bm{\theta};\beta)\) to vary.
+Thus, proposals are not even considered for use with nested sampling.
+Since proposals may be crude approximations, we may obtain far worse
+than no new information.  Any potential benefit in performance or
+precision is far outweighed by the unreliable posterior.  We do,
+however, have one method of mitigating these problems --- automatic
+posterior repartitioning \citep{chen-ferroz-hobson}. In the following
+sections we shall expand our arsenal of methods of avoiding these
+pitfalls and incorporating proposals into nested sampling-based
+inference.
 
 \subsection{Intuitive proposals and accelerated convergence\label{sec:accelerating}}
-Now consider the following premise: we're given a model \({\cal M}\),
-for which our prior is not quite
-\(\bar{\pi}(\bm{\theta}) = \text{Const.}\). This usually means that
-from other sources, e.g.~other inferences, physical reasoning, etc.,
-we are provided with
+Consider the following premise: we're given a model \({\cal M}\), for
+which our prior $\pi$ is not the uniform
+\(\bar{\pi}(\bm{\theta})\). This usually means that from other
+sources, e.g.~other inferences, physical reasoning, etc., we know that
 \begin{equation}
   \pi (\bm{\theta}) = f(\bm{\theta}; \bm{\mu}, \bm{\Sigma}),
  \label{eq:bias}
@@ -446,13 +493,13 @@ which is representative of the posterior
 $f$ is parameterised by \(\bm{\mu}\) in its location and
 \(\bm{\Sigma}\) its breadth. In order to obtain the same result as one
 would have with the less informative uniform prior
-\(\bar{\pi}(\bm{\theta})\), one needs to adjust the likelihood
+\(\bar{\pi}(\bm{\theta})\), one needs to correct the likelihood
 ${\cal L}$. Recall, that the reason why PPR obtains the same posterior
 \( \bar{\cal P}(\bm{\theta})= \hat{\cal P}(\bm{\theta})\) as one would
 have using \( \bar{\pi} (\bm{\theta}) = \text{Const.}\) is because
 \( \hat{\cal L} (\bm{\theta};\beta)\) and
 \( \hat{\pi} (\bm{\theta};\beta)\) are a \textbf{\emph{consistent
-  (re)partitioning}} of \( \bar{\cal Z}\) and
+    (re)partitioning}} of \( \bar{\cal Z}\) and
 \({\cal P}(\bm{\theta})\). That is:
 \begin{equation}
   \label{eq:partitioning}
@@ -469,90 +516,71 @@ for all $\beta$, by \cref{eq:bayes}. Note that
 \cite{chen-ferroz-hobson} have used \cref{eq:partitioning-p} as the
 primary expression. Following their convention, we shall sometimes
 refer to consistent partitions as posterior repartitioning, rather
-than evidence repartitioning\footnote{See \cref{sec:resizeable} for an
-  example of where evidence repartitioning is a more accurate
-  description.}.
+than evidence repartitioning.
 
-PPR accelerates convergence in the following way. Each iteration
-obtains a larger evidence estimate, so fewer are needed to reach the
-termination point (See~\cref{fig:benchmark}). There is a competing
-mechanism: the evidence estimates accumulate fewer errors, so
-inference proceeds longer before the precision loss triggers
-termination (\cref{fig:higson}). Thus repartitioning reaches a more
-precise result quicker, but can reach a result of similar precision
-quicker still.
+By using a more informative prior in this way, we accelerates
+convergence, because each iteration obtains a larger evidence
+estimate, so fewer are needed to reach the termination point
+(See~\cref{fig:benchmark}). There is a competing mechanism: the
+evidence estimates accumulate fewer errors, so inference proceeds
+longer before the precision loss triggers termination
+(\cref{fig:higson}). Thus repartitioning reaches a more precise result
+quicker. Of course the obtained precision can be sacrificed to further
+accelerate inference. 
 
 \subsubsection{Example: intuitive proposal posterior repartitioning}
-Suppose that from a different inference, one has obtained
-the posterior \({\cal P}(\bm{\theta})\). Under these circumstances,
+Suppose that one has obtained the posterior \({\cal P}(\bm{\theta})\)
+from a different inference. This could be nested sampling with a
+uniform prior, or Hamiltonian Monte Carlo, or a theoretical
+approximation. Under these circumstances,
 \begin{subequations}
 \begin{equation}
   \label{eq:iPPR}
  \hat{\pi}(\bm{\theta}) = f(\bm{\theta}, \bm{\mu}, \bm{\Sigma}) = {\cal P}(\bm{\theta}), 
 \end{equation}
-is an informative prior that represents our knowledge: it is an
-\textbf{\emph{intuitive proposal}}. However, we wish to avoid biasing the
-inference and use the (usually uniform) prior
-$\bar{\pi}(\bm{\theta})$, with likelihood $\bar{\cal L}(\bm{\theta})$.
+is an informative prior that represents our knowledge, but might not
+represent the posterior. We call it an \textbf{\emph{(intuitive)
+    proposal}}. However, we wish to avoid prejudicing the sampler and
+use the (uniform) reference prior $\bar{\pi}(\bm{\theta})$, with
+reference likelihood $\bar{\cal L}(\bm{\theta})$.
 
 To obtain with $\hat{\pi}(\bm{\theta})$ the same posterior and
 evidence as one would have with $\bar{\pi}(\bm{\theta})$ and
 $\bar{\cal L}(\bm{\theta})$, the partitioning of the (evidence) needs
-to be \textbf{\emph{consistent}} with the reference model where
-$\bar{\pi}(\bm{\theta})$. Specifically:
+to be \textbf{\emph{consistent}} with the reference. Specifically:
 \begin{equation}
   \label{eq:ippr-l}
-  \hat{\cal L}(\bm{\theta}) = \frac{\bar{\pi}(\bm{\theta}) \bar{\cal L}(\bm{\theta})}{{\cal f}(\bm{\theta}; \bm{\mu}, \bm{\Sigma})}.
+  \hat{\cal L}(\bm{\theta}) = \frac{\bar{\pi}(\bm{\theta}) \bar{\cal L}(\bm{\theta})}{ f(\bm{\theta}; \bm{\mu}, \bm{\Sigma})}.
 \end{equation}
 \end{subequations}
 This we call \textbf{\emph{intuitive proposal posterior\footnote{More
-    accurately evidence repartitioning, which is equivalent where
-    there's not re-parametrisation besides adding or removing
-    parameters.} repartitioning}} (iPPR). It is the fastest possible
-and the least robust consistent partitioning scheme, which both stem
-from a peculiarity of nested sampling: it estimates the evidence up to
-an error. If our evaluation of ${\cal Z}$ were exact, \cref{eq:bayes}
-would guarantee the correct posterior. Because we allow errors in
-${\cal Z}$, several scenarios are possible.
+      accurately evidence repartitioning, which is equivalent in
+      simple cases.} repartitioning}} (iPPR). It is the fastest
+possible and the least robust consistent partitioning scheme. While we
+have technically addressed the change in ${\cal P}$ due to a different
+prior, we have not addressed the problem of $\hat{\pi}$ being
+(potentially) unrepresentative of $\bar{\cal P}$. In the example
+already considered in \cref{sec:prejudice}, we will have reduced prior
+imprinting, but not all addressed the prejudice. The probability of
+sampling from the true likelihood peak is still minuscule.  By
+contrast, we have seen that automatic power posterior repartitioning
+can mitigate both issues. What iPPR lacks, is a mechanism for
+extending its representation. Rather than attempt a modification akin
+to power partitioning, in \cref{sec:isomixtures} we shall provide this
+mechanism as completely external to iPPR and unleash its potential.
 
-If the reference posterior were largely the same as $\hat{\pi}$, or
-located in the same region, but broader, then the inference obtains
-the same, or possibly more accurate (and precise) posterior, caused by
-more precise evidence.
 
-If $\hat{\pi}$ were narrower than $\bar{\cal P}$ and representative,
-points are more likely to have been spawned inside high likelihood
-regions, thus nested sampling may never have probed the regions of
-lesser likelihood. As a result, the obtained posterior $\hat{\cal P}$,
-may be narrower than the reference $\bar{\cal P}$, and will not
-contain any information about the low $\hat{\cal L}$ regions. This
-effect is \textbf{\emph{bias imprinting}}.
-
-Lastly, if there is a significant offset between $\hat{\pi}$ and
-${\cal P}$, i.e. $\hat{\pi}$ is unrepresentative of ${\cal P}$, the
-errors in ${\cal Z}$ dominate termination. Since the probability of
-choosing a live point at the posterior peak \(\bm{\theta}_{{\cal P}}\)
-is proportional to $\hat{\pi}(\bm{\theta}_{{\cal P}})d\bm{\theta}$ for
-\(d\bm{\theta}\) infinitesimal in that region, the posterior peak may
-be probed very rarely. As a result the marginalised posterior
-$\hat{\cal P}$, will mostly resemble $\hat{\pi}$. We, thus, observe
-severe bias imprinting.
-
-PPR copes with the first and the second case and to a lesser extent
-the third. In the next sections, we shall explore why that is, and
-present methods explicitly designed to mitigate prior imprints.
 \subsection{General automatic posterior repartitioning}\label{sec:gapr}
 
-In this section, we look at the family of methods similar to PPR and
-iPPR called consistent repartitioning. We note which schemes are more
-useful for the task of accelerating nested sampling without biasing
-the posterior. Begin by noting, \Cref{eq:partitioning} alone does not
-guarantee correct convergence: iPPR and PPR converge correctly under
-some circumstances and not others.
+In this section, we look at the family of prescriptions similar to PPR
+and iPPR called consistent partitioning. We note which schemes are
+more useful for the task of accelerating nested sampling without
+biasing the posterior. We begin by noting, that \Cref{eq:partitioning}
+alone does not guarantee the correct posterior and evidence.
 
 We shall consider a general consistent partitioning
 \(\hat{\pi}, \hat{\cal L}\) with re-parametrisation
-\(\hat{\theta}\). Because $\theta \ne \hat{\theta}$, generally, the
+\(\hat{\bm{\theta}}\). Because $\bm{\theta} \ne \hat{\bm{\theta}}$, generally, the
 posterior \({\cal P}(\bm\hat{\theta})\) would not have the same
 functional form as \(\bar{\cal P}(\bm{\theta})\). Nonetheless, if
 inverting the parametrisation from $\bm{\hat{\theta}}$ to $\bm{\theta}$
@@ -616,7 +644,7 @@ importance of \cref{obj-prop}, as the test case \cref{fig:convergence}
 was constructed to violate it specifically.
 
 
-\subsection{Isometric mixtures of repartitioning schemes}
+\subsection{Isometric mixtures of repartitioning schemes\label{sec:isomixtures}}
 In this section we shall consider two methods of combining several
 proposals (consistent partitions) into one (consistent
 partition). Identifying the posterior to which points in $\Psi$
@@ -632,10 +660,11 @@ posterior \(\bar{\cal P}(\bm{\theta})\):
   \label{eq:collection-of-models}
   \hat{\cal L}_{1}(\bm{\theta}) \hat{\pi}_{1}(\bm{\theta}) = \hat{\cal L}_{2}(\bm{\theta}) \hat{\pi}_{2}(\bm{\theta})= \ldots =\hat{\cal L}_{m}(\bm{\theta}) \hat{\pi}_{m}(\bm{\theta}). 
 \end{equation}
-Their \textbf{\textbf{\emph{isometric mixture}}}, is a consistent partitioning that involves information
-from each constituent prior.
+Their \textbf{\textbf{\emph{isometric mixture}}}, is a consistent
+partitioning that involves information from each constituent prior.
 
-For example: \textbf{\emph{additive isometric mixture}} \cref{fig:additive}, defined as
+For example: an \textbf{\emph{additive mixture}} \cref{fig:additive},
+defined as
 \begin{subequations}
   \begin{alignat}{2}
     \hat{\pi}(\bm{\theta}; \bm{\beta}) = &\sum_{i} \beta_{i} \hat{\pi}_{i}(\bm{\theta}),\label{eq:additive-mix}\\
@@ -644,28 +673,31 @@ For example: \textbf{\emph{additive isometric mixture}} \cref{fig:additive}, def
 \end{subequations}
 parameterised by
 $\bm{\beta} = (\beta_{1}, \beta_{2}, \ldots, \beta_{m})$ where each
-$\beta_{i} \in [0,1]$. It is a consistent partitioning if and only if
+$\beta_{i} \in [0,1]$. It is itself a consistent partitioning,
+i.e.~\emph{\textbf{isometric}}, if and only if
 $\sum_{i} \beta_{i} = 1$.
 
 \begin{figure}
   \input{illustrations/additive_mixtures.tex}
   \caption{\label{fig:additive} An additive isometric mixture of a
-    Gaussian iPPR and a uniform reference. Gaussian PPR added for comparison.}
+    Gaussian proposal and a uniform reference. Power-Gaussian added
+    for comparison.}
 \end{figure}
 
 Isometric mixtures are an attempt to relax some of the limitations
-imposed by PPR. Firstly, proposals in PPR form are limited to a class
-of functions linked by a power relation. This class always includes a
-uniform prior, but not, for example, a ``wedding cake'' prior (stepped
-uniform prior). Additive mixtures allow such proposals. Moreover, in
-additive isometric mixtures, all consistent partitions are compatible
-provided their domains match $\Psi$.
+imposed by power posterior repartitioning. Firstly, all proposals in
+PPR have to be linked by a power relation.  This class always includes
+a uniform prior, but not, for example, a ``wedding cake'' prior
+(stepped uniform prior). Additive mixtures permit such
+proposals. Moreover, in additive isometric mixtures, any consistent
+partitions are compatible provided the set union of their domains
+matches $\Psi$.
 
 However, additive mixtures have limited utility: they are slow,
 difficult to implement and susceptible to numerical instability more
-than any other consistent partitioning. In lieu of exploring other
-partitions similar to PPR (e.g.~\cref{sec:orgfe92f25}), in the next
-section we shall diagnose and compensate the aforementioned issues.
+than any other consistent partitioning\footnote{These claims shall be
+  substantiated in a more detailed publication.}.  We can, however do
+much better.
 
 \subsubsection{Stochastic superpositional isometric mixtures}
 
@@ -674,14 +706,14 @@ $\hat{\cal L}$. Instead of having to evaluate only one of the
 constituent likelihoods, we are forced to evaluate all of them. This
 sets a lower bound on time complexity
 \begin{equation}
-  {\cal T}\{\hat{\cal L}\} = o \left(   \max_{i} {\cal T}\{ {\cal L}_{i}\} \right).\label{eq:hard-cap}
+  {\cal T}\{\hat{\cal L}\} = o \left(   \max_{i} {\cal T}\{ {\cal L}_{i}\} \right), \label{eq:hard-cap}
 \end{equation}
-This is close to the average case when the likelihoods are all related
-to the same reference (e.g.~$\bar{\cal L}$) with only minor
-corrections computed to account for different proposals. However if
-${\cal L}_{i}$ and ${\cal L}_{j}$ have no common computations that can
-be re-used, the average case time complexity is
-\(o({\cal T}({\cal L}_{i})+ {\cal T}({\cal L}_{j})\).
+which is the average case when the likelihoods ${\cal L}_{i}$ are all
+related to the same reference (e.g.~$\bar{\cal L}$) with only minor
+corrections computed asynchronously to account for different
+proposals. If ${\cal L}_{i}$ and ${\cal L}_{j}$ have no common
+computations to re-use, the average case time complexity is
+\(o\left[{\cal T}({\cal L}_{i}) + {\cal T}({\cal L}_{j})\right]\).
 
 
 Another issue is that the overall likelihood depends on the prior PDFs
@@ -693,17 +725,18 @@ needs to be evaluated for each type of mixture individually. For a
 linear combination of uniform priors, evaluating the quantile can be
 done analytically, but not in case of two Gaussians or a Gaussian
 mixed with a uniform. By contrast, the quantile of PPR with an
-uncorrelated\footnote{This is problematic for a correlated Gaussian,
-  but every correlated covariance matrix can be diagonalised, which we
-  make part of the parametrisation.}  Gaussian proposal is found in
-closed form.
+uncorrelated\footnote{not so for a correlated Gaussian. Nonetheless,
+  every correlated covariance matrix can be diagonalised, and included
+  in the re-parametrisation. } Gaussian proposal is found in closed
+form.
 
-The idea is to avoid mathematical operations that require evaluation
+We thus try to avoid mathematical operations that require evaluation
 of all of the constituents' priors/likelihoods. This naturally leads
-to deterministic prior branching. This circumvents the difficulties
+to deterministic prior branching, which circumvents the difficulties
 with determining the quantile of the mixture. If the probability of
 said choice can be tuned using a parameter, it can be made part
-$\hat{\bm{\theta}}$ similarly to $\beta$ in PPR.
+$\hat{\bm{\theta}}$ similarly to $\beta$ in PPR. This provides the
+mechanism needed for \cref{vconv-prop}.
 
 Hence, we propose that a \textbf{\emph{superpositional mixture}}, defined via
 the following parametrisation:
@@ -746,21 +779,22 @@ overhead of branch choice, the worst-case time complexity is the same
 if not better than the best case for additive mixtures. This has vast
 implications discussed in \cref{sec:applications}.
 
-Moreover, the superpositional mixture's branch choice is external to
-the likelihoods and independent of them. Consequently, specifications
-of $\hat{\pi}_{i}$ via quantile are sufficient, and no further
-calculations are required from the end-user.
+The superpositional mixture's branch choice must be external to and
+independent from the likelihoods and priors. For example, the prior
+quantile of the mixture must branch into either of the component prior
+quantiles. As a result, the end user doesn't need to perform any
+calculations beyond the proposal quantiles themselves.
 
 There can be many implementations of a superpositional mixture. A
 natural first choice would be a quantum computer, where the
 $\hat{\pi}$ and $\hat{\cal L}$ are represented by \(m\) level systems
 entangled with each other (consistent branching) and a classical
 computer (to evaluate ${\cal L}$ and $\pi$). However, we can also
-attain an implementation using only computational methods via a
-stochastic choice.
+attain an implementation using only computational methods via
+stochastic deterministic choice based on $\bm{\theta}$.
 
-\textbf{\emph{Stochastic superpositional isometric mixture}} of consistent
-partitioning (SSIM) ensures branch consistency by requiring
+The \textbf{\emph{stochastic superpositional (isometric) mixture}} of
+consistent partitioning (SSIM) ensures branch consistency by requiring
 \begin{equation}
 \hat{\pi}(\bm{\theta}; \bm{\beta}) = \hat{\pi}_{F(\bm{\theta};
   \bm{\beta})}(\bm{\theta};\bm{\beta}),
@@ -772,10 +806,8 @@ our implementation it is a niche-apportionment random number generator
 \texttt{hash} of the vector $\bm{\theta}$, illustrated in
 \cref{fig:mixture}.
 
-SSIM also relaxes the requirement on the domains of the proposals:
-they no longer need to coincide, as opposed to e.g.~ additive
-mixtures.  It is also much more robust, which we shall discuss in the
-later sections. It does, nevertheless, come with one drawback. As a
+Superpositional mixtures are superior in robustness and ease of
+implementation. They do, nevertheless, come with one drawback. As a
 result of branching, the likelihood $\hat{\cal L}$ visible to the
 sampler, is no longer continuous (\cref{fig:mixture-3d}). Thus a
 nested sampling implementation that relied on said continuity will
@@ -806,34 +838,31 @@ that are.
 
 
 \section{Measurements and methodology}
-We shall adopt the weighted accounting approach \citep{Cormen} for
-measuring time complexity in units of \({\cal N}\{{\cal L}\}\), and
-reducing all quantities to their long-run averages. Consequently, all
-of the repartitioning schemes' overheads associated with internal
-implementation details are ignored. This puts additive mixtures at an
-inherent disadvantage, because in the average case,
-\begin{equation}
-  \label{eq:additive-t-complexity}
-  {\cal N}\{ \hat{\cal L}\} = \sum_{i}^{m} {\cal N}\{{\cal L}_{i}\}, 
-\end{equation}
-without modifications to the nested sampler's internals.
+Our measurements have to ascertain three key points. First we must
+prove that the consistent partitions obtain sensible estimates of
+${\cal P}$ and ${\cal Z}$ and document the circumstances when they
+don't. We shall then need to measure the performance uplift that can
+be attained while preserving the accuracy and precision of the
+sampling. Lastly, we must attempt to apply this to real-world example:
+Cosmological parameter estimation. 
 
+For performance, we shall adopt the weighted accounting approach
+\citep{Cormen} for measuring time complexity in units of
+\({\cal N}\{{\cal L}\}\), and reducing all quantities to their
+long-run averages. Consequently, all of the partitions' overheads
+associated with internal implementation details are ignored.
 
-We shall use Kullback-Leibler divergence in multiple contexts. First,
+We shall use Kullback-Leibler divergence in two contexts. First,
 ${\cal D}\{\pi, {\cal P}\}$ --- a measure of information obtained from
-the dataset ignoring the prior. If the proposal fully agrees with the
-data, ${\cal D}\{ \pi, {\cal P} \} \approx 0$.  \Cref{fig:kl-scaling}
-clearly shows that it is also a reliable predictor of performance. In
-\cref{fig:kl-d}, we see that the amount of information extracted from
-PPR increases with increased offset. However, it does so sub-linearly,
-which combined with \cref{fig:convergence}, renders the validity of
-the obtained posteriors from PPR and SSIM, suspect. Thus we need a
-method of comparing posteriors to determine their accuracy.
+the dataset ignoring the prior, is used to gauge performance (as seen
+in \Cref{fig:kl-scaling}).
 
-Second, we use ${\cal D}\{ {\cal P}, \bar{\cal P} \}$ to quantify the
-correctness of the obtained posterior, where $\bar{\cal P}$ is the
-posterior obtained using a $\bar{\pi}(\bm{\theta}) = \text{Const}$. We
-also use ${\cal Z}$ to gauge correctness.
+We also need a method of comparing posteriors to determine their
+accuracy. This is the Second use:
+${\cal D}\{ {\cal P}, \bar{\cal P} \}$ quantifies the correctness of
+the obtained posterior, where $\bar{\cal P}$ is the posterior obtained
+using a $\bar{\pi}(\bm{\theta}) = \text{Const}$. We also use
+${\cal Z}$ to gauge correctness.
 
 From \cref{eq:bayes}, errors in ${\cal P}$ are necessarily caused by
 errors in estimating ${\cal Z}$, and is the crucial reason why nested
@@ -854,7 +883,7 @@ imprinting as with PPR in \cref{fig:convergence}.
     for the runs shown in \cref{fig:hist}. The inconsistent
     re-sizeable uniform had not been given an improper normalisation
     of $\hat{\cal L} = {\cal L}$. It is of type \textbf{\emph{Re-sizeable
-      uniform}} described in \cref{sec:resizeable}.}
+        uniform}}.}
   \begin{tabular}{lrr}
     \textbf{Scheme} & ${\cal D}\{ {\cal P}, \bar{\cal P}\}$ & ${\cal Z}$\\
     \hline
@@ -884,14 +913,11 @@ imprinting as with PPR in \cref{fig:convergence}.
 \begin{figure}
 \input{./illustrations/histograms.tex}
 \caption{An illustration of the evidence estimate distribution for
-  different types of consistent repartitioning. The analytical
-  reference is \(\log {\cal Z} = -62 = - \log V(\Psi)\), from
-  \cref{eq:def-z}, where \((a,b)=(-6, 6)\cdot 10^{8}\) and
-  \(\Sigma=\mathds{1}_{3}\). SSIM is a stochastic superposition of
-  Gaussian iPPR (\(G\)), uniform (\(U\)) and resizeable-bounds uniform
-  (\(R\)) priors. The likelihood of \(R\) was not properly re-scaled
-  in that the effects of truncation were omitted, to demonstrate the
-  importance of \cref{eq:partitioning}. \label{fig:hist}}
+  different types of consistent repartitioning. SSIM is a stochastic
+  superposition of Gaussian iPPR (\(G\)), uniform (\(U\)). The
+  likelihood of \(R\) --- a resizeable-bounds uniform prior partition
+  was not properly re-scaled to illustrate the effects of inconsistent
+  partitioning.   \cref{eq:partitioning}. \label{fig:hist}}
 \end{figure}
 
 
@@ -910,31 +936,39 @@ imprinting as with PPR in \cref{fig:convergence}.
 \end{figure}
 
 
-\subsection{Simulations}
-\subsubsection{Numerical models}
-
-We shall primarily focus on no more than three-dimensional models with
-Gaussian likelihoods, as they are sufficiently general to share
-similarities with cosmological data analysis, while also being
-practical to be investigated under small perturbations.  For this
-purpose, we use a uniform baseline prior, and a Gaussian likelihood:
+When constructing the test cases, we shall use on no more than
+three-dimensional models with Gaussian likelihoods, as they are
+sufficiently general to share similarities with cosmological
+inference, while also being practical to investigate under small
+perturbations.  For this purpose, we use a uniform baseline prior, and
+a Gaussian likelihood:
 \begin{equation}
   \ln {\cal L}(\bm{\theta}) = \ln {\cal L}^\text{max}- \dfrac{1}{2}{(\bm{\theta} - \bm{\mu})}^{T}\Sigma^{-1}(\bm{\theta}-\bm{\mu}),
 \end{equation}
 where the covariance matrix \(\bm{\Sigma}\), specifies the extent of
 the peak, and the vector \(\bm{\mu}\) --- the location.
 \({\cal L}^\text{max}\) is the normalisation factor, which we keep
-implicit, for convenience. $\Sigma$ is assumed diagonal, without loss
-of generality.
+implicit, for convenience.
 
-To simulate imperfections we shall consider translation-al offsets
-between the proposed prior and the likelihood.
+$\bm{\Sigma}$ is assumed diagonal, without loss of generality. While
+$\bm{\Sigma}$ can be singular, this usually means a redundancy in the
+parametrisation, which can be fixed (by turning the strongly
+correlated parameters derived). Otherwise it is positive
+semi-definite, and symmetric, meaning that the it can be diagonalised
+via change into its eigen-basis. Counter-intuitively, this basis must
+not be made part of the quantile. It is applied before computations
+involving correlated Gaussians, and reversed afterwards. This is a
+consequence of the extra Jacobian brought on by the difference between
+\cref{eq:partitioning} and \cref{eq:partitioning-p}. Essentially by
+applying the transformation globally the unit hypercube becomes a
+parallelopiped, which is the result of neglecting the Jacobian
+associated to the linear transformation. 
 
-
-The first test case is an uncorrelated spherical Gaussian posterior
-in three dimensions
+To simulate imperfections we consider translational offsets between
+the proposal prior and the model likelihood.  The main test posterior
+is thus
 \begin{equation}
-\mathcal{P}(\bm{\theta}) = G(\bm{\theta}; \bm{\mu} =
+\bar{{\cal P}}(\bm{\theta}) = G(\bm{\theta}; \bm{\mu} =
   (1,2,3),\bm{\Sigma} = \mathds{1}_{3}),
 \end{equation}
 truncated to a cube of side \(a = 1.2 \cdot 10^{9}\). The
@@ -943,8 +977,32 @@ corresponding evidence (\cref{eq:def-z}) is
 distribution is the one that enters iPPR and PPR's priors as well as
 the reference likelihood. All other test cases are dervied from this
 Gaussian either via re-scaling, deformation of variances, or
-translation. 
+translation.
 
+The choice of the prior scale: \(a = O(10^{9})\), is to ensure that
+the series are not affected by run-to-run variance, even with a
+reduced number of live points. This has the added benefit of
+simulating an unbounded uniform prior numerically, as it is near the
+numerical limits. Also, any error in re-scaling the likelihood
+(e.g.~\cref{fig:hist}) leading to an inconsistent partition would not
+be obvious or as clean with a smaller prior boundary. Lastly, this
+allowed us to test the hypothesis that both stochastic mixtures and
+power posterior repartitioning can effectively remove the burn-in
+stage altogether. Last but not least, under such circumstances,
+stochastic mixtures are put at the greatest disadvantage. In the
+average case, approximately half the original live points are drawn
+from the proposal distribution and half from the uniform. The
+probability of finding the offset posterior peak is thus minuscule for
+large offsets. By contrast, In the average case the original live
+points with a Gaussian power posterior are drawn from a twice broad
+Gaussian.
+
+The value \(1.2\) was chosen because it is the shortest non-machine
+representable floating point number whose inverse is also not machine
+representable. This causes numerical instability in the uniform prior
+probability density function and quantile (at the boundaries). This
+was chosen for tests of boundary effects, which had to be removed from
+the project, because of volume constraints. 
 
 \section{Results and Discussion.}\label{sec:results}
 The first test was to ensure that the repartitioning was done
@@ -957,30 +1015,60 @@ The second class of tests involved deforming the prior Gaussians.
 Both SSIM (iPPR and uniform) and PPR were resilient with respect to
 re-scaling and anisotropic deformation of the likelihood, obtaining
 ${\cal D}\{ {\cal P}, \bar{\cal P}\} \leq 0.03$. iPPR coped with
-situations where ${\cal P}$ was narrower than $\pi$, while failing, in
+situations where ${\cal P}$ was narrower than $\pi$, while failing in
 the opposite case: ${\cal D}\{ {\cal P}, \bar{\cal P}\} \geq 5.5$,
-when $\Sigma = 0.3 \mathds{1}_{3}$.
+when ${\cal D}\{ \pi, {\cal P} \} = 5.5$ and
+$\Sigma = 0.3 \times \mathds{1}_{3}$.
 
-The final test was with regards to translational offsets. Here the
-bounding Cube was reduced in size \(a = 2\cdot 10^{3}\) to improve the
-run-times of uniform reference runs. The results are shown in
-\cref{fig:kl-d,fig:convergence,fig:drift}, and were discussed in
-previous sections.
+The final test was with regards to translational offsets. The results
+are shown in \cref{fig:kl-d,fig:convergence,fig:drift}. In
+\cref{fig:kl-d}, we see that the amount of information extracted from
+PPR increases with increased offset. However, it does so sub-linearly,
+which combined with \cref{fig:convergence}, renders suspect the
+validity of the posteriors obtained using PPR and SSIM. However,
+\cref{fig:drift} shows that only PPR is adversely affected.
 
-A special case is that shown in \cref{fig:convergence}. The main
-notable feature is the inaccuracy of the posterior obtained by PPR. If
-the offset is small --- \(O(2\sigma)\), the posterior is shifted. With
-a larger offset, e.g. \(O(4\sigma)\), two peaks can be resolved.  Both
-errors are compounded by incorrect evidence (see \cref{fig:drift})
-PPR: \(\ln {\cal Z}\approx -25.4 \pm 0.2\), vs uniform reference
+The posterior to posterior Kullback-Leibler divergence remained stable
+and less than \(0.3\) for the stochastic mixture and the
+reference. Power repartitioning fluctuated considerably, ensuring that
+no suitable plot could be produced. This suggests instability towards
+perturbations, and unpredictability of the accuracy of the
+posterior. However, none of the values reached the prior to posterior
+divergence. This suggests that at no offset was the posterior entirely
+obtained from the prior. As a result, power repartitioning may still
+be useful for unrepresentative informative priors, that are not
+proposals, as \cite{chen-ferroz-hobson} have shown. 
+
+A special case is that shown in \cref{fig:convergence}, in a reduced
+size bounding box \(a=2\times 10^{3}\). The main notable feature is
+the inaccuracy of the posterior obtained by PPR. If the offset is
+small --- \(O(2\sigma)\), the posterior is shifted. With a larger
+offset, e.g. \(O(4\sigma)\), two peaks can be resolved.  Both errors
+are caused by incorrect evidence (see \cref{fig:drift}) PPR:
+\(\ln {\cal Z}\approx -25.4 \pm 2\), vs uniform reference
 \(\ln {\cal Z} = -22.7 \pm 0.4\) and SSIM,
-\(\ln {\cal Z} = -22.5 \pm 0.3\).
+\(\ln {\cal Z} = -22.5 \pm 0.3\). There are two key observations to be
+made: the evidence is still within reasonable variance from the
+reference, and its estimated error is large. As a result, while we
+haven't obtained the right information, we know that something went
+wrong.
+
+This is not at variance with \cite{chen-ferroz-hobson}'s observations,
+as they do not have a comparable test case. All of the numerical test
+cases were restricted to two physical parameters, while we extended it
+to three. The example given required considerable fine tuning to be
+reproducible\footnote{Too much free time in quarantine. }, as larger
+or smaller offsets often lead to correct convergence some of the
+time. Finally, the instability may be specific to \texttt{PolyChord},
+as \citeauthor{chen-ferroz-hobson} have used \texttt{Multinest}
+\cite{multinest} instead.
 
 
 \begin{figure}
   \input{illustrations/benchmark.tex}
   \caption{number of ${\cal L}$ evaluations as a function of the
-    number of live points.
+    number of live points. \(U\) is the reference uniform, and \(G\)
+    is the pure Gaussian proposal.
     \(\max {\cal D}\{{\cal P}, \bar{\cal P}\} < 1.5\), meaning all
     participating consistent partitions obtained the correct
     posterior. The number of evaluations scales as
@@ -1018,18 +1106,17 @@ of run-to-run variance of PPR (approximately
 \(20\%\))\footnote{Comparison with \cref{fig:benchmark} may be
   miselading, as the error margins there correspond to exact
   coincidence, while the case in question involves an offset of
-  $6\mu$. }.
-
-The
-performance impact has considerable run-to-run variance, however never
-exceeds \(20\%\) extra \({\cal L}\) evaluations, which is an order of
-magnitude less than~\vref{opt:uniform,opt:shift} would afford.
+  $6\mu$. }, which is an order of magnitude less
+than~\vref{opt:uniform,opt:shift} would afford. That said, using the
+proposal directly is faster still \cref{fig:benchmark}.
 
 \begin{figure}
   \includegraphics[width=0.99\columnwidth]{./illustrations/convergence.pdf}
-\caption{An illustration of offsets affecting ${\cal P}$ under various
-  repartitioning schemes. Dotted series represent the prior
-  bias. \label{fig:convergence}}
+  \caption{An illustration of offsets affecting ${\cal P}$ under
+    various repartitioning schemes. Dotted series represent the prior
+    imprint. The reference uniform and the stochastic mixture agree
+    with the analytical posterior: Gaussian peak at
+    $\bm{\theta} = (4, 6, 8)$. \label{fig:convergence}}
 \end{figure}
 
 \begin{figure} \centering
@@ -1100,19 +1187,42 @@ assumption that the parameters' posteriors are a correlated Gaussian
 distribution, we extract the means $\bm{\mu}$ and the covariance
 matrix \(\bm{\Sigma}\).
 
-We use these in a stochastic superpositional mixture of a uniform
-$\pi$ used to obtain them originally and a Gaussian iPPR, patched into
-\texttt{Cobaya}'s interface to \texttt{PolyChord}. The run was then
-performed with identical settings, and the resulting posteriors were
-compared \cref{fig:cosmology}. Despite the appearance,
-\cref{tab:cosmo-accuracy} shows that the posteriors between SSIM and
-no-SSIM runs are not significantly different (${\cal D}<
-0.3$. Moreover the evidence is within one standard deviation and more
-precise with SSIM by a factor of 8. \cref{tab:cosmo-performance},
-highlights a marked improvement in performance. Using SSIM offers a
-reduction of run-time by a factor of 19. By exploiting increased
+We use a stochastic mixture of a uniform prior and a single Gaussian
+obtained from the posterior samples of a run with a uniform prior,
+which we patch into \texttt{Cobaya}'s interface to \texttt{PolyChord}
+\cite{code}. The posteriors of two runs with identical settings (save
+live point number) are given in \cref{fig:cosmology}.
+
+Firstly, notice that the posteriors have a significant overlap. Each
+plot on the diagonal of \cref{fig:cosmology} is a Gaussian, agreeing
+with the results of the reference run to within less than 1/10-th of a
+standard deviation. However SSIM predicts a deformed (non-ellipsoidal)
+covariance of the \(\Lambda\)CDM parameters. 
+
+The deformations are present in all posteriors that used a Gaussian
+proposal, which indicates that the deformations are systematic. The
+deformities are not caused by finite-grain size in the stochastic
+mixture, as the Gaussian proposal has them, and to a greater
+extent. The mixing portion parameter $\beta$, has converged to a mean
+of $\langle \beta \rangle = 0.82$, which indicates that the Gaussian
+proposal was not fully the most representative, but also that the
+later stages of sampling were dominated by the Gaussian
+proposal. Despite the appearance, however, \cref{tab:cosmo-accuracy}
+shows that the posteriors between SSIM and non-SSIM runs are not
+significantly different (${\cal D}< 0.3$). Moreover the evidence is
+within one standard deviation and more precise with SSIM by a factor
+of \(8\).
+
+While this might indicate a higher accuracy than obtainable with a
+pure uniform prior, one must exercise caution. While we can eliminate
+some potential systematic errors, a more conclusive analysis is
+needed.
+
+With accuracy out of the way, \cref{tab:cosmo-performance}, highlights
+a significant improvement in performance. Using SSIM offers a
+reduction of run-time by a factor of \(19\). By exploiting increased
 precision one can reduce the number of live points, and gain a further
-reduction of run-time by a factor of 37. Further improvements are
+reduction of run-time by a factor of \(37\). Further improvements are
 attainable by reducing the precision criterion and terminating
 early. Conversely, to obtain similar precision to SSIM, assuming
 sub-linear scaling with \(n_\text{live}\), one would need to extend
@@ -1122,14 +1232,17 @@ days. Assuming that errors in evidence scale as
 year.
 
 
+
+
 \begin{table}
   \centering
   \caption{Accuracy metrics for Cosmology runs using Cobaya.}
   \begin{tabular}{llrrr}
-    \textbf{Prior} & \textbf{Device} & ${\cal D}\{ {\cal P}, \bar{\cal P}\}$ & ${\cal Z}$ & $n_\text{live}$\\
+    \textbf{Prior} & \textbf{Device} & ${\cal D}\{ {\cal P}, \bar{\cal P}\}$ & $\ln {\cal Z}$ & $n_\text{live}$\\
     \hline
     Uniform & CSD3 &\( 0.000\) & \(-1432.8 \pm 0.8\) & 108\\
     SSIM\((U, G)\) & CSD3 & \(0.2\) & \(-1433.6 \pm 0.1\) & 100\\
+    iPPR(\(G\)) & CSD3 & \(0.4\) & \(-1433.8 \pm 0.05\) & 100\\
     SSIM\((U, G)\) & PC & \(0.25\) & \(-1433.5 \pm 0.2\) & 50
   \end{tabular}
   \label{tab:cosmo-accuracy}
@@ -1194,10 +1307,11 @@ performance increase, reducing the run-time requirements of
 
 \subsection{Further refinements}\label{sec:org8314ddf}
 
-A purpose-built nested sampler is able to more accurately and more
-efficiently make use of the advantages netted by SSIM. Adaptive
-sampling strategies, awareness of branching and many more
-optimisations require access to the internal state of the sampler. 
+A purpose-built nested sampler would be able to more accurately and
+more efficiently make use of the advantages netted by stochastic
+mixtures. Adaptive sampling strategies, awareness of branching and
+many more optimisations require access to the internal state of the
+sampler.
 
 We should also explore the implementation of Superpositional mixtures
 using quantum computers. Qubits are a natural fit for representing the
@@ -1227,18 +1341,18 @@ evaluated only some of the time. It will only be comparable to the
 pure slow run if the fast prior were utterly unrepresentative of the
 results, which itself is a valuable insight. This may be of particular
 interest for further refining \texttt{CLASS} and \texttt{Cobaya}, as
-the sheer complexity of the Planck likelihood code is the current
-major bottleneck.
+the time complexity of computing the likelihood is the bottleneck of
+modern cosmological code.
 
 Nested sampling can also be applied to inference-related problems,
-such as reinforcement learning. The process of training a neural
-network involves estimating connection strengths between nodes of said
-network. Normally, this is achieved via negative feedback: connections
-correlated with the desired behaviour are reinforced, and vice versa
-\cite{Kaelbling_1996}. This problem maps neatly onto Bayesian
-inference when identifying connections strengths as parameters of a
-model, and likelihood --- correlation with desired behaviour. Most
-neural networks are trained with uniform priors.
+such as reinforcement learning \cite{javid2020}. The process of
+training a neural network involves estimating connection strengths
+between nodes of said network. Normally, this is achieved via negative
+feedback: connections correlated with the desired behaviour are
+reinforced, and vice versa \cite{Kaelbling_1996}. This problem maps
+neatly onto Bayesian inference when identifying connections strengths
+as parameters of a model, and likelihood --- correlation with desired
+behaviour. Most neural networks are trained with uniform priors.
 
 
 We may also extend Bayesian analysis to \textbf{\emph{consistent
@@ -1252,14 +1366,15 @@ estimates of the age of the universe may be obtained in one fell swoop
 from all the available models and data. This will have the bonus of
 highlighting datasets that are incompatible with the overall
 conclusion, allowing us to re-evaluate the experimental data as
-needed\footnote{Additional, more elaborate explanations shall be
+needed\footnote{Additional, more detailed explanations shall be
   published in a paper submitted to the \textbf{\emph{Monthly Notices
       of the Royal Astronomical Society}}.}.
 
-Some of our lesser discoveries can also be re-purposed. For example,
-Additive mixtures' potential may be unleashed with an algorithm other
-than nested sampling that is similar to it in being sensitive to the
-partitioning, but does not require the prior quantile.
+This is related to the issue of discordant datasets \cite{tension},
+and Bayes factor as a method of combining datasets, a cursory look at
+e.g.~\cite{Marshall_2006}, will find that the proposed meta-analysis
+is distinct. The key difference is in the delineation of datasets.
+
 
 In conclusion, the new methodology of combining information from many
 priors shows great promise in the field of Bayesian inference. It has
@@ -1274,7 +1389,7 @@ the way.
 \begin{landscape}
 \begin{figure}
   \centering % Center table
-  \includegraphics[height=\textheight]{./illustrations/cosmology.pdf}
+  \includegraphics[height=0.95\textheight]{./illustrations/cosmology.pdf}
   \caption{The marginalised posteriors for \texttt{Cobaya} +
     \texttt{Class} on CSD3 with \(n_\text{live}=100\). The Reference
     uniform is \color{red} red \color{black}, while SSIM is
@@ -1288,7 +1403,7 @@ the way.
 \begin{landscape}
 \begin{figure}
   \centering % Center table
-  \includegraphics[height=\textheight]{./illustrations/cosmo-pc.pdf}
+  \includegraphics[height=0.95\textheight]{./illustrations/cosmo-pc.pdf}
   \caption{The marginalised posteriors for \texttt{Cobaya} +
     \texttt{Class} on CSD3 with \(n_\text{live}=100\) vs PC
     \(n_\text{live}=50\). } \label{fig:cosmology-pc}
@@ -1297,279 +1412,285 @@ the way.
 
 
 \appendix
+\section{Code}
 
-\section{Nested sampling in detail}\label{sec:ns}
-Consider without loss of generality, a prior space \(\Psi\) that is a
-unit hypercube, where \(\pi(\bm{\theta}) = \text{Const.}\) Draw
-\(n_\text{live}\) random \emph{live points} from the unit
-hypercube. If \({\cal L}\) is a well-behaved function, the probability
-that two points have the same likelihood is vanishing, so each of them
-lies on a \textbf{distinct} iso-likelihood
-hyper-surface\footnote{analogy: height on a contour map. }. Each
-hyper-surface encloses the fraction
-\begin{equation}
-\cfrac{1}{n_\text{live}},
-\end{equation}
-of the total volume of the hypercube on average. More specifically,
-each shell's enclosed volume shall have some random deviation \(\Delta\), from
-\(\cfrac{1}{n_\text{live}}\), with an associated cumulative
-distribution \(P(\Delta)\).
+All code used to generate the plots, the framework for systematising
+consistent partitons as well as the configurations of \texttt{Cobaya}
+for cosmological simulations can be found on Github \cite{sspr}. In a separate
+repository is the version of Cobaya with our modifications, which is
+able to support the options for stochastic mixing.
+% \section{Nested sampling in detail}\label{sec:ns}
+% Consider without loss of generality, a prior space \(\Psi\) that is a
+% unit hypercube, where \(\pi(\bm{\theta}) = \text{Const.}\) Draw
+% \(n_\text{live}\) random \emph{live points} from the unit
+% hypercube. If \({\cal L}\) is a well-behaved function, the probability
+% that two points have the same likelihood is vanishing, so each of them
+% lies on a \textbf{distinct} iso-likelihood
+% hyper-surface\footnote{analogy: height on a contour map. }. Each
+% hyper-surface encloses the fraction
+% \begin{equation}
+% \cfrac{1}{n_\text{live}},
+% \end{equation}
+% of the total volume of the hypercube on average. More specifically,
+% each shell's enclosed volume shall have some random deviation \(\Delta\), from
+% \(\cfrac{1}{n_\text{live}}\), with an associated cumulative
+% distribution \(P(\Delta)\).
 
-Subsequently, we pick another point at random, requiring that the
-likelihood of the new point be higher than the lowest likelihood of
-the initial \emph{live point} ensemble. In \citeauthor{Skilling2006}'s
-notation, the point with the lowest likelihood becomes \emph{dead} and
-the new point becomes is \emph{live}. This is a single iteration of
-nested sampling.
+% Subsequently, we pick another point at random, requiring that the
+% likelihood of the new point be higher than the lowest likelihood of
+% the initial \emph{live point} ensemble. In \citeauthor{Skilling2006}'s
+% notation, the point with the lowest likelihood becomes \emph{dead} and
+% the new point becomes is \emph{live}. This is a single iteration of
+% nested sampling.
 
-Our argument of approximately equal volumes holds for the new
-ensemble, so the volume encased in the outer-most shell iteratively
-reduces by the same fraction, allows us to approximate said volumes:
-\begin{equation}\label{eq:recurrence-relation}
-  \begin{array}{rcl}
-  X_{0} &=  &1, \\
-  X_{1} &= &X_{0} \left(1- \cfrac{1}{n_\text{live}}\right),\\
-  & \vdots &, \\
-  X_{i} &= &X_{i-1}\left(1- \cfrac{1}{n_\text{live}}\right),\\
-  & \vdots, &
-\end{array}
-\end{equation}
-Thus we iteratively pick live points in regions $\{\bm{\theta}\}$ of
-high \({\cal L}\), and also estimating the evidence, and stop when the
-prior volume encased in the outer shell is lower than a predetermined
-fraction e.g: \(0.01\) of the original hypercube volume.
+% Our argument of approximately equal volumes holds for the new
+% ensemble, so the volume encased in the outer-most shell iteratively
+% reduces by the same fraction, allows us to approximate said volumes:
+% \begin{equation}\label{eq:recurrence-relation}
+%   \begin{array}{rcl}
+%   X_{0} &=  &1, \\
+%   X_{1} &= &X_{0} \left(1- \cfrac{1}{n_\text{live}}\right),\\
+%   & \vdots &, \\
+%   X_{i} &= &X_{i-1}\left(1- \cfrac{1}{n_\text{live}}\right),\\
+%   & \vdots, &
+% \end{array}
+% \end{equation}
+% Thus we iteratively pick live points in regions $\{\bm{\theta}\}$ of
+% high \({\cal L}\), and also estimating the evidence, and stop when the
+% prior volume encased in the outer shell is lower than a predetermined
+% fraction e.g: \(0.01\) of the original hypercube volume.
 
-The recurrence relation~\eqref{eq:recurrence-relation} is not exact,
-however, \(P(\Delta)\) is a known distribution, dependent on the
-\(\dim \Psi\) and \({\cal L}\). Thus, for each \(\epsilon>0\), there
-exists \(\delta(\epsilon) >0,\) such that
-\(P(\Delta > \delta)<\epsilon.\) Hence, by choosing \(\epsilon\) based
-on \(n_\text{live}\), one obtains an estimate of the error
-\(\delta\). Propagating these errors allows us to evaluate the prior
-volume, ergo: ${\cal Z}$ up to an estimable error.
+% The recurrence relation~\eqref{eq:recurrence-relation} is not exact,
+% however, \(P(\Delta)\) is a known distribution, dependent on the
+% \(\dim \Psi\) and \({\cal L}\). Thus, for each \(\epsilon>0\), there
+% exists \(\delta(\epsilon) >0,\) such that
+% \(P(\Delta > \delta)<\epsilon.\) Hence, by choosing \(\epsilon\) based
+% on \(n_\text{live}\), one obtains an estimate of the error
+% \(\delta\). Propagating these errors allows us to evaluate the prior
+% volume, ergo: ${\cal Z}$ up to an estimable error.
 
-This is generalised to non-hypercube $\Psi$ and non-uniform $\pi$ via
-the prior quantile.
+% This is generalised to non-hypercube $\Psi$ and non-uniform $\pi$ via
+% the prior quantile.
 
-\section{Re-sizeable-bounds uniform prior}\label{sec:resizeable}
-In this appendix, we shall highlight why posterior repartitioning is a
-misnomer, and why the more general idea of evidence repartitioning is
-more fruitful.
+% \section{Re-sizeable-bounds uniform prior}\label{sec:resizeable}
+% In this appendix, we shall highlight why posterior repartitioning is a
+% misnomer, and why the more general idea of evidence repartitioning is
+% more fruitful.
 
-As noted in section~\vref{domain-discussion}, the domains of all
-functions need to be consistent, otherwise~\vref{eq:bayes} no longer
-holds. The mathematical implications of neglecting function domains in
-the context of Quantum mechanics has been discussed
-by~\cite{Gieres_2000}. However, this does not preclude us from
-considering re-parametrisations of $\pi$ and ${\cal L}$ that are
-consistent with the same evidence. 
+% As noted in section~\vref{domain-discussion}, the domains of all
+% functions need to be consistent, otherwise~\vref{eq:bayes} no longer
+% holds. The mathematical implications of neglecting function domains in
+% the context of Quantum mechanics has been discussed
+% by~\cite{Gieres_2000}. However, this does not preclude us from
+% considering re-parametrisations of $\pi$ and ${\cal L}$ that are
+% consistent with the same evidence. 
 
-To illustrate, consider a uniform prior with the following
-parametrisation:
-\begin{equation}
-  \hat{\pi}(\bm{\theta}; \beta) = \TopHat(\bm{\theta}; \beta \bm{a}, \beta \bm{b}).
-\end{equation}
-Although there are no issues when \(\beta>1\) (we set
-\({\cal\hat{L}}(\bm{\theta}; \beta>1)=0\)), one can immediately
-spot the issues with \(\beta \in (0,1)\); and \(\beta=0\) is
-altogether nonsensical.
+% To illustrate, consider a uniform prior with the following
+% parametrisation:
+% \begin{equation}
+%   \hat{\pi}(\bm{\theta}; \beta) = \TopHat(\bm{\theta}; \beta \bm{a}, \beta \bm{b}).
+% \end{equation}
+% Although there are no issues when \(\beta>1\) (we set
+% \({\cal\hat{L}}(\bm{\theta}; \beta>1)=0\)), one can immediately
+% spot the issues with \(\beta \in (0,1)\); and \(\beta=0\) is
+% altogether nonsensical.
 
-This issue indicates that the prescription of keeping
-\begin{equation}
-  \pi {\cal L} = \text{Const.}
-\end{equation}
-is not complete. Nevertheless, such a scheme may be salvaged if
-\cref{eq:partitioning} is taken as the primary, with counter-intuitive
-extensions, e.g.~for a point \(\bm{\theta}_{0} \notin \Psi\), we don't
-expect
-\begin{equation}
-{\cal L}(\bm{\theta}_{0}) \rightarrow \infty,
-\end{equation}
-but as we shall see:
-  \begin{equation}
-    {\cal L}(\bm{\theta}_{0}) \rightarrow 0.
-  \end{equation}
+% This issue indicates that the prescription of keeping
+% \begin{equation}
+%   \pi {\cal L} = \text{Const.}
+% \end{equation}
+% is not complete. Nevertheless, such a scheme may be salvaged if
+% \cref{eq:partitioning} is taken as the primary, with counter-intuitive
+% extensions, e.g.~for a point \(\bm{\theta}_{0} \notin \Psi\), we don't
+% expect
+% \begin{equation}
+% {\cal L}(\bm{\theta}_{0}) \rightarrow \infty,
+% \end{equation}
+% but as we shall see:
+%   \begin{equation}
+%     {\cal L}(\bm{\theta}_{0}) \rightarrow 0.
+%   \end{equation}
   
-  The first crucial step is to recognise that the algorithm draws from
-  a unit hypercube with uniform probability, and that the prior is an
-  artefact of a coordinate transformation which we referred to as the
-  prior quantile.
+%   The first crucial step is to recognise that the algorithm draws from
+%   a unit hypercube with uniform probability, and that the prior is an
+%   artefact of a coordinate transformation which we referred to as the
+%   prior quantile.
 
-Let \(u\) be a point in unit hypercube \(\Psi_{C}\). The quantile
-defines a mapping functionally dependent on the PDF of the prior
+% Let \(u\) be a point in unit hypercube \(\Psi_{C}\). The quantile
+% defines a mapping functionally dependent on the PDF of the prior
 
-\begin{equation}
-  C(\beta)\lbrace \hat{\pi}\rbrace:u \mapsto \bm{\theta},\label{eq:coordinate-transform}
-\end{equation}
+% \begin{equation}
+%   C(\beta)\lbrace \hat{\pi}\rbrace:u \mapsto \bm{\theta},\label{eq:coordinate-transform}
+% \end{equation}
 
-such that
-the uniform distribution of \(\bm{u}\) leads through
-\(C_{\beta}\{\hat{\pi}\}(\bm{u})\) to a \(\hat{\pi}(\bm{\theta};\beta)\)
-distribution of \(\bm{\theta} \in\Psi(\beta)\).Note that we replaced the
-parametrisation of the function \(\hat{\pi}\) with an explicit
-parametrisation of the coordinate transformation, specifically
-\begin{equation}
-  \pi(C(\beta)\{\hat{\pi}\}(u)) \equiv \hat{\pi}(\bm{\theta}; \beta),
-\end{equation}
-where 
-\begin{equation}
-  \hat{\pi} =  \pi \circ C(\beta) \{ \pi \} 
-\end{equation}
-is a parameterised distribution resulting from a parameterised
-coordinate transformation of an un-parameterised prior PDF. We shall
-have~\vref{eq:bayes} hold only in the hypercube
-\begin{equation}
-{\cal \hat{P}}(u) = {\cal P}(C(\beta_{0}){\hat{\pi}}^{-1}(\bm{\theta})) = \cfrac{\hat{\pi} (u) {\cal \hat{L}}(u)}{\int_{\Psi}{\cal \hat{L}}(u) \hat{\pi}(u) du},
-\end{equation}
-which is always true, regardless of the repartitioning
-scheme. Trivially, the functional form of \(P(\bm{\theta})\) is not the same
-as \(P(u)\); it's related via a co-ordinate transform, which in our
-case contributes a Jacobian factor \(J(\beta)\{\hat{\pi}\}\) to the
-evidence. But since we're interested in the posterior in the
-coordinates \(\bm{\theta}\), given by the transformation \(C(\beta_{0})\{\hat{\pi}\}\),
-while the prior and the likelihood are in the from corresponding
-to \(\beta\).
+% such that
+% the uniform distribution of \(\bm{u}\) leads through
+% \(C_{\beta}\{\hat{\pi}\}(\bm{u})\) to a \(\hat{\pi}(\bm{\theta};\beta)\)
+% distribution of \(\bm{\theta} \in\Psi(\beta)\).Note that we replaced the
+% parametrisation of the function \(\hat{\pi}\) with an explicit
+% parametrisation of the coordinate transformation, specifically
+% \begin{equation}
+%   \pi(C(\beta)\{\hat{\pi}\}(u)) \equiv \hat{\pi}(\bm{\theta}; \beta),
+% \end{equation}
+% where 
+% \begin{equation}
+%   \hat{\pi} =  \pi \circ C(\beta) \{ \pi \} 
+% \end{equation}
+% is a parameterised distribution resulting from a parameterised
+% coordinate transformation of an un-parameterised prior PDF. We shall
+% have~\vref{eq:bayes} hold only in the hypercube
+% \begin{equation}
+% {\cal \hat{P}}(u) = {\cal P}(C(\beta_{0}){\hat{\pi}}^{-1}(\bm{\theta})) = \cfrac{\hat{\pi} (u) {\cal \hat{L}}(u)}{\int_{\Psi}{\cal \hat{L}}(u) \hat{\pi}(u) du},
+% \end{equation}
+% which is always true, regardless of the repartitioning
+% scheme. Trivially, the functional form of \(P(\bm{\theta})\) is not the same
+% as \(P(u)\); it's related via a co-ordinate transform, which in our
+% case contributes a Jacobian factor \(J(\beta)\{\hat{\pi}\}\) to the
+% evidence. But since we're interested in the posterior in the
+% coordinates \(\bm{\theta}\), given by the transformation \(C(\beta_{0})\{\hat{\pi}\}\),
+% while the prior and the likelihood are in the from corresponding
+% to \(\beta\).
 
-Finally, 
-\begin{equation}
- {\cal P}(\bm{\theta}) = \cfrac{J(\beta_{0})}{J(\beta)} \cfrac{\pi(\bm{\theta}; \beta) {\cal L}(\bm{\theta}; \beta)}{\int \pi(\bm{\theta}; \beta) {\cal L}(\bm{\theta}; \beta) d \bm{\theta}}.
-\end{equation}
-So we expect that for the simple case of scaling the uniform box
-prior with \(\beta\), that we need to re-scale the likelihood by
-\(\beta^{2n}\). The second Jacobian factor enters the likelihood because
-we have normalised \(\pi(\bm{\theta})\), but not \(\pi(\bm{\theta}; \beta)\). This is hinted at in
-the notation, (no tilde), and when accounted for, gives  the correct
-posterior and evidence as seen in the experiments.
+% Finally, 
+% \begin{equation}
+%  {\cal P}(\bm{\theta}) = \cfrac{J(\beta_{0})}{J(\beta)} \cfrac{\pi(\bm{\theta}; \beta) {\cal L}(\bm{\theta}; \beta)}{\int \pi(\bm{\theta}; \beta) {\cal L}(\bm{\theta}; \beta) d \bm{\theta}}.
+% \end{equation}
+% So we expect that for the simple case of scaling the uniform box
+% prior with \(\beta\), that we need to re-scale the likelihood by
+% \(\beta^{2n}\). The second Jacobian factor enters the likelihood because
+% we have normalised \(\pi(\bm{\theta})\), but not \(\pi(\bm{\theta}; \beta)\). This is hinted at in
+% the notation, (no tilde), and when accounted for, gives  the correct
+% posterior and evidence as seen in the experiments.
 
-\subsubsection{Argument resizing}\label{sec:orgfe92f25}
+% \subsubsection{Argument resizing}\label{sec:orgfe92f25}
 
-A class of convenient repartitioning schemes is one where the prior's
-argument is re-sized e.g:
-\begin{equation}
-  \label{eq:argument-resize}
-  \hat{\pi} (\bm{\theta}; \beta) = \pi (f(\beta)\cdot\bm{\theta}),
-\end{equation}
-where \(f(\beta)\) is some function.
+% A class of convenient repartitioning schemes is one where the prior's
+% argument is re-sized e.g:
+% \begin{equation}
+%   \label{eq:argument-resize}
+%   \hat{\pi} (\bm{\theta}; \beta) = \pi (f(\beta)\cdot\bm{\theta}),
+% \end{equation}
+% where \(f(\beta)\) is some function.
 
-These are quite convenient as the quantile is straightforwardly
-related to the quantile of the original:
-\begin{equation}
-  \label{eq:quantile-stuff}
-  C\{\hat{\pi}\} = f(\beta) C\{\frac{\pi}{f(\beta)}\}.
-\end{equation}
-We're already acquainted with an exemplar from this class: PPR if
-\( \pi (\bm{\theta}) \propto \exp [P_{n}(\theta)]\) where $P_{n}$ is a
-polynomial.
-
-
-\section{Objectivity\label{sec:objectivity}}
-We shall elaborate here on the meaning of \cref{obj-prop}, and why
-\cref{eq:partitioning} and \cref{eq:bayes}, don't guarantee the
-correct \( {\cal P}(\bm{\theta})\) and ${\cal Z}$.  It is a
-peculiarity of nested sampling. It is much faster than e.g.~uniform
-rasterisation, because instead of evaluating ${\cal Z}$ exactly, it
-uses a statistical argument to successively approximate ${\cal
-  Z}$. The four properties are necessary for errors in ${\cal Z}$ to
-accumulate more slowly than is necessary to have moved all of the live
-points onto the posterior peak(s). In \cref{fig:convergence}, we see a
-particular case that highlights what happens if \cref{obj-prop} is
-violated.
-
-Specifically, the arrangement of prior and posterior is such that
-points lie in regions of average likelihood. Along the $\theta_{1}$
-direction, the likelihood is so large that any small displacement
-within the prior in the direction of the posterior accounts for a
-large portion of the evidence. This is seen in \cref{fig:higson},
-where the bulk of the evidence is gathered early.
-
-However, along $\theta_{3}$ there is a significant difference in the
-likelihood, so a small fraction of the live points do indeed get moved
-onto the posterior. Nonetheless, we reached the termination criterion
-before points could have been moved fully, producing an incorrect
-marginalised posterior.  This situation is contrived, as it required
-fine-tuning. The odds of this occurring in practice are minuscule, and
-the presence of \cref{fig:convergence} does not invalidate the
-importance of PPR.
+% These are quite convenient as the quantile is straightforwardly
+% related to the quantile of the original:
+% \begin{equation}
+%   \label{eq:quantile-stuff}
+%   C\{\hat{\pi}\} = f(\beta) C\{\frac{\pi}{f(\beta)}\}.
+% \end{equation}
+% We're already acquainted with an exemplar from this class: PPR if
+% \( \pi (\bm{\theta}) \propto \exp [P_{n}(\theta)]\) where $P_{n}$ is a
+% polynomial.
 
 
-This highlights a crucial problem with PPR (and later, additive
-mixtures) that the probability of having an unbiased prior in some
-region is negligible\footnote{ \(P(\beta=0)\) to be precise.}. There
-is always a bias: points are always more likely to spawn and be moved
-towards the prior peak. When using repartitioning, we need to ensure
-that this bias is weaker than the bias towards the posterior. The
-latter is implementation-dependent, \texttt{MultiNest} is more prone
-to such errors.
+% \section{Objectivity\label{sec:objectivity}}
+% We shall elaborate here on the meaning of \cref{obj-prop}, and why
+% \cref{eq:partitioning} and \cref{eq:bayes}, don't guarantee the
+% correct \( {\cal P}(\bm{\theta})\) and ${\cal Z}$.  It is a
+% peculiarity of nested sampling. It is much faster than e.g.~uniform
+% rasterisation, because instead of evaluating ${\cal Z}$ exactly, it
+% uses a statistical argument to successively approximate ${\cal
+%   Z}$. The four properties are necessary for errors in ${\cal Z}$ to
+% accumulate more slowly than is necessary to have moved all of the live
+% points onto the posterior peak(s). In \cref{fig:convergence}, we see a
+% particular case that highlights what happens if \cref{obj-prop} is
+% violated.
 
-However, crucially, we will have obtained a smaller evidence with a
-larger error: this is the only way in which the posterior may appear
-the way it does in \cref{fig:convergence} without violating
-\cref{eq:bayes}. Corollary: we will have known if the posterior is
-dubious. In \cref{sec:results}, we discussed how to proceed should
-such a scenario arise.
+% Specifically, the arrangement of prior and posterior is such that
+% points lie in regions of average likelihood. Along the $\theta_{1}$
+% direction, the likelihood is so large that any small displacement
+% within the prior in the direction of the posterior accounts for a
+% large portion of the evidence. This is seen in \cref{fig:higson},
+% where the bulk of the evidence is gathered early.
 
-\section{Making PPR robust again}
-The shortcomings of PPR, may be somewhat mitigated if the goal is to
-ensure stable convergence, rather than maximally improving
-performance. Start by noting that $\beta$ according to nested sampling
-is nothing but an extra nuisance parameter: it requires a prior. This
-prior plays a pivotal role in PPR's stability. In fact there is an
-obvious, maximally stable, choice:
-\begin{equation}
-  \label{}
-\hat{\pi}(\bm{\theta}; \beta) = \delta(\beta) \hat{\pi}(\bm{\theta}), 
-\end{equation}
-which is exactly the uniform prior. It is unbiased: any region inside
-the boundaries, and excluding the boundaries is equally likely to be
-sampled. This is because $\pi^{\beta}(\bm{\theta})$ is uniform, when $\beta=0$, and
-\begin{equation}\label{eq:PPR-uniform}
-P(\beta=0) = \int_{\mathbb{R}} \delta(\beta) d\beta = 1 \ne 0. 
-\end{equation}
-By adding extra $\delta$-functions we can simulate a fixed Stochastic
-isometric superposition. Similarly, by allowing the weights of these
-$\delta$-functions to vary, we can simulate a superpositional
-isometric mixture of priors related by power law, e.g.
-\begin{equation}
-  \label{}
-  \hat{\pi}(\beta; \bm{w}) = w_{0}\delta(\beta_{0}) + w_{1}\delta(\beta_{1})+\ldots
-\end{equation}
-These are known to be more robust than PPR alone, so a choice of
-$\hat{\pi}(\beta)$ that makes PPR distinct and useful should exist.
+% However, along $\theta_{3}$ there is a significant difference in the
+% likelihood, so a small fraction of the live points do indeed get moved
+% onto the posterior. Nonetheless, we reached the termination criterion
+% before points could have been moved fully, producing an incorrect
+% marginalised posterior.  This situation is contrived, as it required
+% fine-tuning. The odds of this occurring in practice are minuscule, and
+% the presence of \cref{fig:convergence} does not invalidate the
+% importance of PPR.
 
-A clue lies in that $\beta=0$ is special. So a sensible next step
-would be to try
-\begin{equation}
-  \label{}
-\hat{\pi}(\beta; w) = w \delta(\beta) + (1-w). 
-\end{equation}
-This is equivalent to a uniform $\beta$ PPR (\(1-w\) in a stochastic
-mixture with a uniform prior ($\delta(\beta)$). In general the second
-term can be any function, and it would still be a superpositional
-mixture of PPR with that function as the prior in $\beta$ and a
-uniform.
 
-What about
-\begin{equation}
-\hat{\pi}(\beta; \sigma) = G(\beta; 0, \sigma)?
-\end{equation}
-For numerical simulations, it has some probability (dependent on
-$\sigma \ne 0$) to be unbiased. It is weakly biased, as
-\(P(\beta=0) \rightarrow 0\) with increasing resolution:
-\begin{equation}
-  \label{eq:p0}
-   P(\beta=0) = \lim_{\epsilon\rightarrow 0} \int_{-\epsilon}^{\epsilon}\hat{\pi}(\beta) = 0
-\end{equation}
-but it is already an improvement over a uniform prior (in $\beta$).
+% This highlights a crucial problem with PPR (and later, additive
+% mixtures) that the probability of having an unbiased prior in some
+% region is negligible\footnote{ \(P(\beta=0)\) to be precise.}. There
+% is always a bias: points are always more likely to spawn and be moved
+% towards the prior peak. When using repartitioning, we need to ensure
+% that this bias is weaker than the bias towards the posterior. The
+% latter is implementation-dependent, \texttt{MultiNest} is more prone
+% to such errors.
 
-Sadly, \cref{eq:p0} highlights why priors $\hat{\pi}(\beta)$ can never
-outperform SSIM in producing an unbiased prior. If
-$\hat{\pi}(\bm{\theta}, \beta)$ is such that \(P(\beta=0) = w \ne 0\)
-it is equivalent to a superpositional isometric mixture of uniform
-(with weight \(w\)) and a PPR with prior
-$\tilde{\pi}(\beta) = \hat{\pi}(\beta) - w \delta(\beta)$.
+% However, crucially, we will have obtained a smaller evidence with a
+% larger error: this is the only way in which the posterior may appear
+% the way it does in \cref{fig:convergence} without violating
+% \cref{eq:bayes}. Corollary: we will have known if the posterior is
+% dubious. In \cref{sec:results}, we discussed how to proceed should
+% such a scenario arise.
 
-So, superpositional mixtures can be implemented using PPR by varying
-the prior in $\beta$.
+% \section{Making PPR robust again}
+% The shortcomings of PPR, may be somewhat mitigated if the goal is to
+% ensure stable convergence, rather than maximally improving
+% performance. Start by noting that $\beta$ according to nested sampling
+% is nothing but an extra nuisance parameter: it requires a prior. This
+% prior plays a pivotal role in PPR's stability. In fact there is an
+% obvious, maximally stable, choice:
+% \begin{equation}
+%   \label{}
+% \hat{\pi}(\bm{\theta}; \beta) = \delta(\beta) \hat{\pi}(\bm{\theta}), 
+% \end{equation}
+% which is exactly the uniform prior. It is unbiased: any region inside
+% the boundaries, and excluding the boundaries is equally likely to be
+% sampled. This is because $\pi^{\beta}(\bm{\theta})$ is uniform, when $\beta=0$, and
+% \begin{equation}\label{eq:PPR-uniform}
+% P(\beta=0) = \int_{\mathbb{R}} \delta(\beta) d\beta = 1 \ne 0. 
+% \end{equation}
+% By adding extra $\delta$-functions we can simulate a fixed Stochastic
+% isometric superposition. Similarly, by allowing the weights of these
+% $\delta$-functions to vary, we can simulate a superpositional
+% isometric mixture of priors related by power law, e.g.
+% \begin{equation}
+%   \label{}
+%   \hat{\pi}(\beta; \bm{w}) = w_{0}\delta(\beta_{0}) + w_{1}\delta(\beta_{1})+\ldots
+% \end{equation}
+% These are known to be more robust than PPR alone, so a choice of
+% $\hat{\pi}(\beta)$ that makes PPR distinct and useful should exist.
+
+% A clue lies in that $\beta=0$ is special. So a sensible next step
+% would be to try
+% \begin{equation}
+%   \label{}
+% \hat{\pi}(\beta; w) = w \delta(\beta) + (1-w). 
+% \end{equation}
+% This is equivalent to a uniform $\beta$ PPR (\(1-w\) in a stochastic
+% mixture with a uniform prior ($\delta(\beta)$). In general the second
+% term can be any function, and it would still be a superpositional
+% mixture of PPR with that function as the prior in $\beta$ and a
+% uniform.
+
+% What about
+% \begin{equation}
+% \hat{\pi}(\beta; \sigma) = G(\beta; 0, \sigma)?
+% \end{equation}
+% For numerical simulations, it has some probability (dependent on
+% $\sigma \ne 0$) to be unbiased. It is weakly biased, as
+% \(P(\beta=0) \rightarrow 0\) with increasing resolution:
+% \begin{equation}
+%   \label{eq:p0}
+%    P(\beta=0) = \lim_{\epsilon\rightarrow 0} \int_{-\epsilon}^{\epsilon}\hat{\pi}(\beta) = 0
+% \end{equation}
+% but it is already an improvement over a uniform prior (in $\beta$).
+
+% Sadly, \cref{eq:p0} highlights why priors $\hat{\pi}(\beta)$ can never
+% outperform SSIM in producing an unbiased prior. If
+% $\hat{\pi}(\bm{\theta}, \beta)$ is such that \(P(\beta=0) = w \ne 0\)
+% it is equivalent to a superpositional isometric mixture of uniform
+% (with weight \(w\)) and a PPR with prior
+% $\tilde{\pi}(\beta) = \hat{\pi}(\beta) - w \delta(\beta)$.
+
+% So, superpositional mixtures can be implemented using PPR by varying
+% the prior in $\beta$.
 
 
 

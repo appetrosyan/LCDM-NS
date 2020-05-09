@@ -34,6 +34,12 @@ Surveyed literature is compressed into the [[*Notes][Notes]] section. So are any
 calculations necessary to understand how the re-partitioning and SSIM
 work.
 
+* Finak wrriteup
+
+** TODO Analogy with MH. 
+
+** TODO bias. 
+
 
 * Michaelmas
 ** Week 3
