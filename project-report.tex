@@ -116,10 +116,10 @@ while assuaging if not eliminating prior imprints.
   \begin{tabular}{lr}
     \textbf{Name} & \textbf{Publication}\\
     \hline
-    \texttt{MultiNest} & \citep{Feroz2009MultiNestAE} \\
-    \texttt{PolyChord} & \citep{polychord} \\
-    \texttt{nestle} & \citep{nestle} \\
-    \texttt{dyNesty} & \citep{Speagle_2020}
+    \texttt{MultiNest} & \cite{Feroz2009MultiNestAE} \\
+    \texttt{PolyChord} & \cite{polychord} \\
+    \texttt{nestle} & \cite{nestle} \\
+    \texttt{dyNesty} & \cite{Speagle_2020}
   \end{tabular}
 
 \end{table}
@@ -263,7 +263,7 @@ identically the same posterior, barring numerical errors. This is also
 true of methods that evaluate ${\cal Z}$ exactly. However, nested
 sampling allows uncertainty in ${\cal Z}$, which is controlled by
 $\pi$ and ${\cal L}$. Thus, nested sampling, unlike,
-e.g.~Metropolis-Hastings \cite{Metropolis-Hastings-Gibbs} is sensitive
+e.g.~Metropolis-Hastings \citep{Metropolis-Hastings-Gibbs} is sensitive
 to the concrete definitions of prior and likelihood. While many
 choices of $\pi$ and ${\cal L}$ correspond to the same ${\cal P}$ and
 ${\cal Z}$, the errors and nested sampling's time complexity are
@@ -626,7 +626,7 @@ Firstly, they satisfy \cref{norm-prop} by construction. iPPR satisfies
 \cref{spec-prop} if and only if \( \hat{\pi} (\bm{\theta})\)
 represented the correct posterior to begin with, in which case
 $\Psi_{R} = \Psi$. \Cref{vconv-prop} follows from the correctness
-proof of nested sampling, \citep{Skilling2006} and \cref{norm-prop} if
+proof of nested sampling \citep{Skilling2006}, and \cref{norm-prop} if
 \cref{spec-prop} is also satisfied. In \cref{sec:autopr} we have shown
 that PPR satisfies \cref{spec-prop}, where
 $\Psi_{R} = \{ \beta = \beta_{R} = \text{Const.}\}$, if $\beta_{R}$
@@ -719,7 +719,7 @@ computations to re-use, the average case time complexity is
 Another issue is that the overall likelihood depends on the prior PDFs
 of the constituents. This is problematic since nested sampling
 requires specification of the prior via its quantile
-\cite{Skilling2006,polychord,multinest}. Function inversion is not
+\citep{Skilling2006,polychord,multinest}. Function inversion is not
 linear with respect to addition, so the quantile of the weighted sum
 needs to be evaluated for each type of mixture individually. For a
 linear combination of uniform priors, evaluating the quantile can be
@@ -1061,7 +1061,7 @@ reproducible\footnote{Too much free time in quarantine. }, as larger
 or smaller offsets often lead to correct convergence some of the
 time. Finally, the instability may be specific to \texttt{PolyChord},
 as \citeauthor{chen-ferroz-hobson} have used \texttt{Multinest}
-\cite{multinest} instead.
+\citep{multinest} instead.
 
 
 \begin{figure}
@@ -1092,7 +1092,7 @@ re-run~\label[Option]{opt:shift}
 \end{enumerate}
 \Cref{opt:accept-with-err} is a last resort. \Cref{opt:accept} is
 adequate for low accuracy applications, provided errors are properly
-estimated using e.g.~\texttt{nestcheck} \cite{higson2018nestcheck}.
+estimated using e.g.~\texttt{nestcheck} \citep{higson2018nestcheck}.
 From \cref{fig:benchmark}, we see that the performance uplift allows
 for \cref{opt:shift} to be more efficient than~\ref{opt:uniform},
 albeit marginally so.
@@ -1176,11 +1176,11 @@ signifying that we have not lost precision.
 \end{figure*}
 
 \subsection{Cosmological Simulations.}\label{sec:orgb81c159}
-After an initial run of \texttt{Cobaya}, we have obtained the marginalised
+After an initial run of \texttt{Cobaya} \citep{cobaya}, we have obtained the marginalised
 posteriors of all the key parameters of the \(\Lambda\)CDM model,
 as well as the nuisance parameters.
 
-First, we have performed an inference using the~\cite{Planck} dataset,
+First, we have performed an inference using the Planck \citep{Planck} dataset,
 with the \(\Lambda\)CDM model. The results of our initial run are
 presented in \cref{fig:cosmology}. From these data, under the
 assumption that the parameters' posteriors are a correlated Gaussian
@@ -1190,7 +1190,7 @@ matrix \(\bm{\Sigma}\).
 We use a stochastic mixture of a uniform prior and a single Gaussian
 obtained from the posterior samples of a run with a uniform prior,
 which we patch into \texttt{Cobaya}'s interface to \texttt{PolyChord}
-\cite{code}. The posteriors of two runs with identical settings (save
+\citep{code}. The posteriors of two runs with identical settings (save
 live point number) are given in \cref{fig:cosmology}.
 
 Firstly, notice that the posteriors have a significant overlap. Each
@@ -1345,11 +1345,11 @@ the time complexity of computing the likelihood is the bottleneck of
 modern cosmological code.
 
 Nested sampling can also be applied to inference-related problems,
-such as reinforcement learning \cite{javid2020}. The process of
+such as reinforcement learning \citep{javid2020}. The process of
 training a neural network involves estimating connection strengths
 between nodes of said network. Normally, this is achieved via negative
 feedback: connections correlated with the desired behaviour are
-reinforced, and vice versa \cite{Kaelbling_1996}. This problem maps
+reinforced, and vice versa \citep{Kaelbling_1996}. This problem maps
 neatly onto Bayesian inference when identifying connections strengths
 as parameters of a model, and likelihood --- correlation with desired
 behaviour. Most neural networks are trained with uniform priors.
@@ -1370,7 +1370,7 @@ needed\footnote{Additional, more detailed explanations shall be
   published in a paper submitted to the \textbf{\emph{Monthly Notices
       of the Royal Astronomical Society}}.}.
 
-This is related to the issue of discordant datasets \cite{tension},
+This is related to the issue of discordant datasets \citep{tension},
 and Bayes factor as a method of combining datasets, a cursory look at
 e.g.~\cite{Marshall_2006}, will find that the proposed meta-analysis
 is distinct. The key difference is in the delineation of datasets.
@@ -1382,6 +1382,14 @@ demonstrably reduced the run-time of some of the most complex
 problems: that of Cosmological Parameter Estimation. A rich field of
 research awaits those courageous-enough to follow. It is ours but to point
 the way.
+
+\appendix
+\section{Code}
+All code used to generate the plots, the framework for systematising
+consistent partitons as well as the configurations of \texttt{Cobaya}
+for cosmological simulations can be found on Github \citep{sspr}. In a
+separate repository~\citep{code} is the version of Cobaya with our
+modifications, which was used to produce the figures overleaf.
 
 \bibliography{bibliography}
 \bibliographystyle{mnras}
@@ -1411,14 +1419,9 @@ the way.
 \end{landscape}
 
 
-\appendix
-\section{Code}
 
-All code used to generate the plots, the framework for systematising
-consistent partitons as well as the configurations of \texttt{Cobaya}
-for cosmological simulations can be found on Github \cite{sspr}. In a separate
-repository is the version of Cobaya with our modifications, which is
-able to support the options for stochastic mixing.
+
+
 % \section{Nested sampling in detail}\label{sec:ns}
 % Consider without loss of generality, a prior space \(\Psi\) that is a
 % unit hypercube, where \(\pi(\bm{\theta}) = \text{Const.}\) Draw
