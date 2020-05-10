@@ -14,6 +14,7 @@
 \usepackage{hyperref}
 \usepackage{rotating}
 \usepackage{natbib}
+\usepackage{caption}
 \usepackage{subcaption}
 \usepackage{varioref}
 \usepackage{pdflscape}
@@ -22,6 +23,7 @@
 \usepackage{pgf}
 \usepackage[nameinlink, capitalize, noabbrev]{cleveref}
 
+\captionsetup{compatibility=false}
 \usepgfplotslibrary{groupplots,dateplot}
 \usetikzlibrary{patterns,shapes.arrows}
 \pgfplotsset{compat=newest}
@@ -44,6 +46,43 @@
 \newcommand{\TODO}{\textbf{TODO}}
 
 \begin{document}
+\newpage
+\thispagestyle{plain} % empty
+\section*{Disclaimer: COVID-19}
+The Covid-19 pandemic had a mixed effect on the following project. As
+soon as action was taken by the university, all international students
+were asked to leave. Different countries have had different policies
+in place. Unfortunately, because of the policies in Armenia, I had to
+spend a week in quarantine outside of my house, and without functional
+access to the CSD3 cluster. However, as the project is by nature
+theoretical, with a large portion of computational data, this did not
+preclude productivity, rather shifted priority away from cosmological
+simulations. The project lab-book was not affected either, it was kept
+and updated digitally, so COVID-19 had no bearing on the amount of
+work needed to maintain it (if anything it put everyone who maintained
+the lab-book digitally at an advantage).
+
+Upon arriving at home, social distancing regulation was enforced via
+martial law. We are not (as of writing) permitted to occupy the same
+space as relatives, which meant that I was to live alone away from my
+spouse and parents. I could however ask for some of my personal
+belongings be transferred, which included a more convenient
+workstation, which also permitted more computationally expensive
+experiments to be conducted.
+
+Unfortunately, resources on the CSD3 cluster became increasingly
+scarce. Firstly, the queue times lead to significant setbacks in the
+cosmological simulations. Additionally, because of increased network
+load in all countries, establishing and maintaining a stable connection
+to CSD3 became increasingly difficult. It did not lead to any results
+being cut, but only because our project lead to a significant
+optimisation of Cosmological data analysis. Had the speedup been less
+than by a factor of 20, we would not be able to obtain the final two
+figures.
+
+Overall, Covid-19 placed obstacles, which were not insurmountable. 
+
+\mbox{}
 
 \maketitle
 \begin{abstract}
@@ -57,18 +96,19 @@
   priors. As a consequence, the sampling is hardened against prior
   imprinting, while also retaining most of its performance and
   accuracy. We demonstrate this by comparing full cosmological
-  parameter estimations done using \texttt{Cobaya} using
-  \texttt{CLASS} with and without our modifications. We demonstrate a
-  run-time reduction in CSD3 Skylake compute-hours by a factor of
-  \(20\), accompanied with increased precision. When precision
-  normalised, the predicted performance uplift is by three orders of
-  magnitude.  The real-world performance uplift is such that
-  cosmological inference was performed with a net precision gain on a
-  personal computer within two days, provided a well-tuned proposal
-  distribution. The findings are systematised, such that inference
-  techniques that are similar to nested sampling in benefiting from
-  our methods, can be identified. The scope of the findings suggests
-  multiple improvements and an evolution of nested sampling. 
+  parameter estimations performed with the inference package
+  \texttt{Cobaya} utilising the module \texttt{CLASS}, with and
+  without our modifications. We demonstrate a run-time reduction in
+  CSD3 Skylake compute-hours by a factor of \(20\), accompanied with
+  increased precision. When precision normalised, the predicted
+  performance uplift is by three orders of magnitude.  The real-world
+  performance uplift is such that cosmological inference was performed
+  with a net precision gain on a personal computer within two days,
+  provided a well-tuned proposal distribution. The findings are
+  systematised, such that inference techniques that are similar to
+  nested sampling in benefiting from our methods, can be
+  identified. The scope of the findings suggests multiple improvements
+  and an evolution of nested sampling.
 \end{abstract}
 
 \begin{keywords}
@@ -96,7 +136,7 @@ language of Bayesian statistics\footnote{See \cite{xkcd} for
   comparison to frequentist statistics.}, our goal is efficient
 Bayesian inference. 
 
-While said inference can be done analytically in principle, it is
+While said inference can be executed analytically in principle, it is
 often intractable. Multiple numerical algorithms exist to perform
 Bayesian inference: Metropolis-Hastings \citep{Metropolis} in
 conjunction with the Gibbs sampler \citep{Metropolis-Hastings-Gibbs};
@@ -104,11 +144,12 @@ Hybrid (Hamiltonian) Monte Carlo \citep{1701.02434,Duane_1987}, and
 nested sampling \citep{Skilling2006}. Most inference methods can
 benefit from proposals, so much so that these proposals are often
 provided with the Cosmological inference packages
-\citep{cobaya}. Nested sampling is the exception: proposals lead to
-significant prior imprinting, which significantly reduces the utility
-of the inference. We have found prescription for incorporating
-proposals safely: reducing the run-time, increasing the precision,
-while assuaging if not eliminating prior imprints.
+\citep{cobaya}. Nested sampling is the exception, because it does not
+take proposals as separate input, and using them as priors may
+adversely affect the results. We have found a prescription for
+incorporating proposals safely: reducing the run-time, increasing the
+precision, while assuaging if not eliminating the aforementioned
+adverse effects.
 
 \begin{table}
   \centering
@@ -126,10 +167,11 @@ while assuaging if not eliminating prior imprints.
 
 We achieve this by extending \emph{automatic power posterior
   re-partitioning} \citep{chen-ferroz-hobson}. The issues arising from
-improper usage of proposals are a variant of the problem of
-unrepresentative priors. Hence, we find that posterior re-partitioning
-can be used to mitigate prior imprints. We found multiple extensions
-of posterior re-partitioning, with different trade-offs and potential.
+improper usage of proposals as priors, are a variant of the problem of
+\emph{unrepresentative priors} that we shall discuss in
+\cref{sec:autopr}. Hence, we find that posterior re-partitioning can
+be used to mitigate prior imprints. We found multiple extensions of
+posterior re-partitioning, with different trade-offs and potential.
 From these extensions we have identified a combination that can
 provide significantly better results: performance, accuracy,
 precision, convenience, stability and imprint mitigation.
@@ -273,8 +315,14 @@ A probability density function \(f(\bm{\theta})\) is said to be more
 \emph{\textbf{informative}} than \(g(\bm{\theta})\) if:
 \begin{equation}
   \label{eq:informative}
-  \max_{\theta\in\Psi} f(\bm{\theta}) > \max_{\theta\in\Psi} g(\bm{\theta}).
+  {\cal D}\{ f, g \} > {\cal D}\{ g, f\}.
 \end{equation}
+This also highlights, that Kullback-Leilber divergence is not a metric
+on the space of distributions. However, being asymmetric lends itself
+well to considerations where such an asymmetry is natural: e.g.~priors
+are not equivalent to posteriors, one comes after the other, and so
+${\cal D}$ can be used to quantify the ``surprise'' information
+obtained during inference.
 
 The time complexity $T$ of nested sampling satisfies
 \begin{equation}\label{eq:complexity}
@@ -338,7 +386,11 @@ such a case imprinting limits the information obtainable from
 \(\mathfrak{D}\). The risk of getting no usable data from the
 inference is sufficient to prefer uniform priors even when more
 information is available. This is exasperated in case of proposals,
-which is why they are almost never used with nested sampling.
+which is why they are almost never used with nested sampling. The
+issue is that the algorithm has no room to consult the proposal
+distributions outside of the prior. Using a prior taken out of ``thin
+air'', with nested sampling is recipe for disaster. However, in the
+next section we shall discuss how one can mitigate these issues.
 
 
 \subsection{Power posterior repartitioning}\label{sec:autopr}
@@ -431,11 +483,20 @@ In this section we shall be working under the inverted premise of
 precision.
 
 \subsection{The trouble with proposals\label{sec:prejudice}}
-To understand why one can't use proposals, we must first address why
-informative priors are avoided. From \cref{eq:bayes}, we can see that
-changing only the prior $\pi$ necessarily leads to changes in both
-${\cal P}$ and ${\cal Z}$. For example if $\pi$ is a Gaussian centered
-at $\bm{\theta}=\bm{\mu}_{\pi}$ and ${\cal L}$ is a Dirac
+
+Nested sampling is different from Metropolis-Hastings-Gibbs and many
+other Markov-Chain Monte Carlo methods. Often, such algorithms are
+designed with a separate input that is the proposal: an initial guess
+that guides the algorithm towards the right answer.  For nested
+sampling no such provisions are in place. The only location where such
+information can be used is the prior.  Thus, to understand why one
+can't use proposals directly, we must first address why informative
+priors are avoided.
+
+From \cref{eq:bayes}, we can see that changing only the prior $\pi$
+necessarily leads to changes in both ${\cal P}$ and ${\cal Z}$. For
+example if $\pi$ is a Gaussian centered at
+$\bm{\theta}=\bm{\mu}_{\pi}$ and ${\cal L}$ is a Dirac
 $\delta$-function peaked at $\bm{\theta}=\bm{\mu}_{{\cal L}}$, with
 $\bm{\mu}_{\pi}$ sufficiently far from $\bm{\mu}_{{\cal L}}$ then the
 posterior will necessarily have peaks at both $\bm{\mu}_{\pi}$ and
@@ -449,10 +510,10 @@ The problem however, is the \emph{prejudiced sampler}. Because nested
 sampling chooses live points with probability proportional to the
 prior, the probability of a point being drawn from the likelihood peak
 can be made arbitrarily small. In fact, if $\bm{\mu}_{{\cal L}}$ and
-$\bm{\mu}_{\pi}$ are more than five standard deviations apart, thirty
-million samples will be drawn from $\bm{\mu}_{\pi}$ before a single
-point is drawn on the circle containing
-$\bm{\theta} = \bm{\mu}_{{\cal L}}$.
+$\bm{\mu}_{\pi}$ are separated by more than five standard deviations
+of the prior Gaussian, thirty million samples will be drawn from
+$\bm{\mu}_{\pi}$ before a single point is drawn on the circle
+containing $\bm{\theta} = \bm{\mu}_{{\cal L}}$.
 
 An apt analogy can be drawn with the Venera-14 mission
 \citep{siddiqi2018beyond}. Upon landing, due to a number of
@@ -723,7 +784,7 @@ requires specification of the prior via its quantile
 linear with respect to addition, so the quantile of the weighted sum
 needs to be evaluated for each type of mixture individually. For a
 linear combination of uniform priors, evaluating the quantile can be
-done analytically, but not in case of two Gaussians or a Gaussian
+performed analytically, but not in case of two Gaussians or a Gaussian
 mixed with a uniform. By contrast, the quantile of PPR with an
 uncorrelated\footnote{not so for a correlated Gaussian. Nonetheless,
   every correlated covariance matrix can be diagonalised, and included
@@ -850,7 +911,9 @@ For performance, we shall adopt the weighted accounting approach
 \citep{Cormen} for measuring time complexity in units of
 \({\cal N}\{{\cal L}\}\), and reducing all quantities to their
 long-run averages. Consequently, all of the partitions' overheads
-associated with internal implementation details are ignored.
+associated with internal implementation details are ignored. This is
+to ensure fairness in comparing power repartitioning to a stochastic
+mixture\footnote{SSIM has far less overhead}.
 
 We shall use Kullback-Leibler divergence in two contexts. First,
 ${\cal D}\{\pi, {\cal P}\}$ --- a measure of information obtained from
@@ -887,11 +950,11 @@ imprinting as with PPR in \cref{fig:convergence}.
   \begin{tabular}{lrr}
     \textbf{Scheme} & ${\cal D}\{ {\cal P}, \bar{\cal P}\}$ & ${\cal Z}$\\
     \hline
-    Uniform & 0.018 & \(-62.3 \pm 0.30\)\\
-    Analytical & 0.000 & \(-62.32 \pm 0.00\) \\
+    Uniform & 0.018 & \(-62.70 \pm 0.30\)\\
+    Analytical & 0.000 & \(-62.72 \pm 0.00\) \\
     $R$ & 0.724 & \(-54.8 \pm 0.90\)\\
-    $PPR$ & 0.011 & \(-62.33 \pm 0.01\)\\
-    $SSIM(U, G)$ & 0.007 & \(-62.32 \pm 0.01\)\\
+    $PPR$ & 0.011 & \(-62.73 \pm 0.01\)\\
+    $SSIM(U, G)$ & 0.007 & \(-62.72 \pm 0.01\)\\
     $SSIM(U, G, R)$ & 0.696 & \(-57.70 \pm 0.30\)\\
   \end{tabular}
   \label{tab:hist}
@@ -912,12 +975,13 @@ imprinting as with PPR in \cref{fig:convergence}.
 
 \begin{figure}
 \input{./illustrations/histograms.tex}
-\caption{An illustration of the evidence estimate distribution for
-  different types of consistent repartitioning. SSIM is a stochastic
-  superposition of Gaussian iPPR (\(G\)), uniform (\(U\)). The
-  likelihood of \(R\) --- a resizeable-bounds uniform prior partition
-  was not properly re-scaled to illustrate the effects of inconsistent
-  partitioning.   \cref{eq:partitioning}. \label{fig:hist}}
+\caption{An illustration of the histograms for the last 1000 evidence
+  estimates of different types of consistent partitioning. SSIM is a
+  stochastic superposition of Gaussian iPPR (\(G\)), uniform
+  (\(U\)). The likelihood of \(R\) --- a resizeable-bounds uniform
+  prior partition was not properly re-scaled to illustrate the effects
+  of inconsistent partitioning.
+  \cref{eq:partitioning}. \label{fig:hist}}
 \end{figure}
 
 
@@ -971,9 +1035,15 @@ is thus
 \bar{{\cal P}}(\bm{\theta}) = G(\bm{\theta}; \bm{\mu} =
   (1,2,3),\bm{\Sigma} = \mathds{1}_{3}),
 \end{equation}
-truncated to a cube of side \(a = 1.2 \cdot 10^{9}\). The
-corresponding evidence (\cref{eq:def-z}) is
-\(\ln \mathcal{Z}\approx-62.3\). The quantile of this Gaussian
+truncated to a cube of side length\footnote{The value \(1.2\) was
+  chosen because it is the shortest non-machine representable floating
+  point number, whose inverse is also not machine representable. This
+  causes numerical instability in the uniform prior probability
+  density function and quantile (at the boundaries). This was chosen
+  for tests of boundary effects, which had to be removed from the
+  project, because of volume constraints. } \(a = 1.2 \cdot
+10^{9}\). The corresponding evidence (\cref{eq:def-z}) is
+\(\ln \mathcal{Z}\approx-62.7\). The quantile of this Gaussian
 distribution is the one that enters iPPR and PPR's priors as well as
 the reference likelihood. All other test cases are dervied from this
 Gaussian either via re-scaling, deformation of variances, or
@@ -997,15 +1067,10 @@ large offsets. By contrast, In the average case the original live
 points with a Gaussian power posterior are drawn from a twice broad
 Gaussian.
 
-The value \(1.2\) was chosen because it is the shortest non-machine
-representable floating point number whose inverse is also not machine
-representable. This causes numerical instability in the uniform prior
-probability density function and quantile (at the boundaries). This
-was chosen for tests of boundary effects, which had to be removed from
-the project, because of volume constraints. 
+
 
 \section{Results and Discussion.}\label{sec:results}
-The first test was to ensure that the repartitioning was done
+The first test was to ensure that the repartitioning was implemented
 correctly, so the Gaussians entering all Gaussian repartitioning
 schemes were given with identical variance and mean. Results are shown
 in \cref{tab:hist} and \cref{fig:hist}.
@@ -1056,12 +1121,17 @@ wrong.
 This is not at variance with \cite{chen-ferroz-hobson}'s observations,
 as they do not have a comparable test case. All of the numerical test
 cases were restricted to two physical parameters, while we extended it
-to three. The example given required considerable fine tuning to be
+to three. The example given required considerable fine-tuning to be
 reproducible\footnote{Too much free time in quarantine. }, as larger
 or smaller offsets often lead to correct convergence some of the
-time. Finally, the instability may be specific to \texttt{PolyChord},
-as \citeauthor{chen-ferroz-hobson} have used \texttt{Multinest}
-\citep{multinest} instead.
+time. Another hint at why power repartitioning may have been affected
+more than a stochastic mixture can be gleaned from \cref{fig:hist}. By
+noticing that the correct evidence is still within one standard
+deviation of the estimate obtained using power repartitioning we can
+suggest, that the result is less precise. So the unusual shape of the
+marginalised posterior, is the result of loss of precision. The
+inaccurate posterior is within margin of error of the analytical
+result, 
 
 
 \begin{figure}
@@ -1371,9 +1441,46 @@ needed\footnote{Additional, more detailed explanations shall be
       of the Royal Astronomical Society}}.}.
 
 This is related to the issue of discordant datasets \citep{tension},
-and Bayes factor as a method of combining datasets, a cursory look at
-e.g.~\cite{Marshall_2006}, will find that the proposed meta-analysis
-is distinct. The key difference is in the delineation of datasets.
+and Bayes factor as a method of combining datasets. The idea is not
+new: usage of evidence as the sole judge of consistency between a
+model and a dataset had been discussed as long as the subject of
+Bayesian inference exists. Multiple metrics had been proposed
+e.g.~\cite{Marshall_2006}.
+
+However, we propose a different delineation of datasets. Instead of
+considering the results of some early experiments as parts of the
+prior, and considering their agreement with newer observations only,
+we propose clearing the prior of anything but the theoretical
+constraints violation of which would lead to the theory being
+disproved. For example, if our theory predicts no negative-mass dark
+matter, our prior is uniform in the positive
+\(\Omega_{\mathrm{c}}\). The data that used to be part of the prior
+inextricably, are now considered proposals. In Bayesian meta-analysis,
+our prior is a stochastic mixture of all previous observations of dark
+matter and the aforementioned constrained uniform prior. To clarify,
+this does not imply a mixture of just two priors. If the existence of
+dark matter can be (and was) inferred from \(n\) datasets, then our
+mixture is of as many as \(n+1\) priors, and would consist of the
+posteriors of the analysis of the experiments used as proposals. The
+joint likelihood is suitably programmed. Due to the consistent
+branching, there is no ``cross-talk'' between likelihoods. However,
+the marginalised posteriors would indicate the best fit parameter
+distributions and take consistency and precision of different
+observations into account. Effectively, this synthesises data into a
+coherent model, without artificially splitting the model into
+different experimental datasets, and requiring manual reconcilliation.
+
+The posteriors for the branch probabilities would be a measure of the
+consistency of specific experiments. If nested sampling chose to
+ignore e.g.~the Type IA supernova datasets, it may suggest that such
+experiments are systematically inconsistent with other
+observations. It is much better than attempting to reconcile the
+discrepant datasets manually, as people are prone to
+fallacies. Moreover, for experiments for which data is still prserved,
+can be continuously integrated into a joint posterior. This may reveal
+cases where data was doctored to fit a particular conclusion. In such
+cases, the marginalised posteriors will show unusual covariances, and
+be outliers in the analysis. 
 
 
 In conclusion, the new methodology of combining information from many
