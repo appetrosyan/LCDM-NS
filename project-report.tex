@@ -475,13 +475,6 @@ $\pi$, by sacrificing performance.
 
 \pagebreak[2]
 \section{Theoretical discoveries}
-\textbf{Disclaimer:} beyond this point all work (theoretical and
-otherwise) is my own, unless otherwise specified.
-
-In this section we shall be working under the inverted premise of
-\cref{sec:autopr}: gaining performance without sacrificing accuracy or
-precision.
-
 \subsection{The trouble with proposals\label{sec:prejudice}}
 
 Nested sampling is different from Metropolis-Hastings-Gibbs and many
@@ -897,6 +890,72 @@ that are.
   \label{fig:mixture-3d}
 \end{figure}
 
+\subsection{On notation and mental models}
+
+It is opportune time to discuss a subtlety that we have previously
+neglected. \Cite{chen-ferroz-hobson} originally named the technique
+automatic posterior repartitioning, which evokes a clear mental
+model. Assuming that the original definitions of \( \pi \) and
+\(\mathcal{L}\) were a partitioning of only the posterior, a new value
+of \(\beta\) produces a new partitioning, thus it re-partitions the
+posterior.  The extra parameter is a time-like object, with a clear
+direction of evolution, in that any change to its value causes a
+re-partitioning of the model.
+
+While this mental model had served well for the purposes of solving
+the unrepresentative prior problem, it is severely limiting to the
+effect of introducing proposals.
+
+The first ineptitude of the mental model is that the expression
+``re-partitioning'' implies the mutability of the posterior. It is not
+mutable. In fact, the posterior that we obtained via re-partitioning
+has a strict functional dependence on the parameter, which is strictly
+a different function. Meaningful information is lost when we project
+the repartitioned result to the original prior space, albeit only a
+Bayesian would regard it as such.
+
+A second deeper problem is that the notation inherently puts impetus
+on the posterior. In reality automatic posterior repartitioning is a
+necessary, but insufficient condition for consistent partitioning. As
+long as no coordinate transformation is performed, the difference is
+negligible. However, for more complicated cases, e.g.~re-sizeable
+prior space schemes, the posterior repartitioning is
+under-determined. A naive extension doesn't and indeed can't produce
+the expected result, if one considers an extension similar to
+\begin{equation}
+  \label{eq:naive-extension}
+\pi(\theta) \mathcal{L}(\theta) = \hat{\pi}(\theta) \mathcal{\hat{L}}(\theta) 
+\end{equation}
+one shall obtain nonsense. One can prove (by considering a reference
+prior space from which all prior spaces of the same dimensionality
+derive via coordinate transformation), that the correct expression is
+actually one that preserves the evidence differential element.
+
+What we propose is a much more general world-view and a more accurate
+and expressive model. A consistent partitioning involves specifying a
+hyperspace that includes the original prior space. The partitioning
+into $\pi$ and $\mathcal{L}$ is done once only, when the Bayesian
+inference problem is set up. The original posterior is a function in
+the original prior (sub)space. The posterior we obtain as a result, is
+the original in some projections, the evidence to which it corresponds
+is also the same as the original.
+
+One might object that this is not a good model for the superpositional
+mixture, as the dynamical analogy would be much more appropriate, as
+the parameters really only control the partitioning. This point is
+partially valid. I would advocate seeing superpositions as an
+extension into a hilbert space of vectors that are themselves
+spaces. Not easy to imagine, but to someone fluent in Quantum theory,
+not a challenge. A better analogy would be to imagine the spaces for
+each individual prior side by side, and have a few parameters that
+control the relative ``heights'' of these spaces, or activation energy
+for diffusion. This is a middle-ground that retains the generality of
+treating the entire problem in a hyperspace, but also has a dynamical
+analogy.
+
+Arguments can be made either way, but an important consideration is to
+have a model that gives accurate predictions first, and is easy to
+imagine second.
 
 \section{Measurements and methodology}
 Our measurements have to ascertain three key points. First we must
@@ -1377,16 +1436,12 @@ performance increase, reducing the run-time requirements of
 
 \subsection{Further refinements}\label{sec:org8314ddf}
 
-A purpose-built nested sampler would be able to more accurately and
-more efficiently make use of the advantages netted by stochastic
-mixtures. Adaptive sampling strategies, awareness of branching and
-many more optimisations require access to the internal state of the
-sampler.
+As of now, the system can be adapted to work with virtually any nested
+sampler in existence. All that one needs is a pseudo random number
+generator that can be seeded with the coordinates to produce a
+deterministic spread.
 
-We should also explore the implementation of Superpositional mixtures
-using quantum computers. Qubits are a natural fit for representing the
-branch choice and superposition is an explicit property of Quantum
-mechanics.
+
 
 \subsection{Applications}\label{sec:applications}
 The obtained results are general. They can be applied in any area of
