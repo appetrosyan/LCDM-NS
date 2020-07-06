@@ -100,3 +100,4 @@ cobaya/run.*.yaml
 *.yaml
 */*.input.yaml
 cobaya/run.input.yaml
+/*.gz

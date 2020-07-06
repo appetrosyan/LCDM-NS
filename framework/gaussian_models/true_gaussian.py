@@ -3,8 +3,11 @@ from gaussian_models.power_posterior import log_likelihood_correction, power_gau
 
 
 class GaussianPeakedPrior(ParameterCovarianceModel):
-    """This is implemented as a special case of the power posterior repartitioning. One does need to care if it's the
-    right function. """
+    """This is implemented as a special case of the power posterior
+    repartitioning.  One does need to care if it's the right
+    function.
+
+    """
     default_file_root = 'GaussianPosteriorModel'
 
     def log_likelihood(self, theta):
