@@ -67,8 +67,6 @@
 cobaya/*.out
 /cobaya/latest.out 
 *.blg
-<<<<<<< HEAD
-=======
 *.targ.xz
 /project-report-figure5.pdf
 /project-report-figure*.pdf
@@ -91,7 +89,6 @@ cobaya/*.out
 /cobaya/latest.out 
 /cobaya/latest*
 /presentation.pdf
->>>>>>> 037269076b5cba6ce6006807b240bda8e5973093
 _region_.*
 */.DS_Store
 /cobaya/newRun/run.input.yaml
@@ -100,6 +97,7 @@ cobaya/run.*.yaml
 *.yaml
 */*.input.yaml
 cobaya/run.input.yaml
+<<<<<<< HEAD
 /cobaya/covs
 /cobaya/bounds.csv
 /cobaya/cobaya
@@ -115,3 +113,10 @@ cobaya/run.input.yaml
 /cobaya/ssim.1.txt
 /framework/.pdf.png
 /framework/cosmolog_param_cov.py
+=======
+project-report.fdb_latexmk
+project-report.fls
+supernest.fdb_latexmk
+supernest.fls
+supernest.pdf
+>>>>>>> origin/master
