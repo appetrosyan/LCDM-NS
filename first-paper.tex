@@ -1,0 +1,97 @@
+% Created 2020-07-06 Mon 18:41
+% Intended LaTeX compiler: pdflatex
+\documentclass[draft,usenatbib]{mnras}
+\usepackage[utf8]{inputenc}
+\usepackage[T2A]{fontenc}
+\usepackage[english]{babel}
+\usepackage{hyperref}
+\usepackage{ulem}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{capt-of}
+\usepackage{pgf}
+\usepackage{pgfplots}
+\usepackage[nameinlink,capitalize,noabbrev]{cleveref}
+\usepackage{bm}
+\usepackage{caption}
+\usepackage{natbib}
+\author{Aleksandr Petrosyan}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={Aleksandr Petrosyan},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.1.9)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+
+
+\section{Introduction}
+\label{sec:org0a68d24}
+
+The standard model of the universe and its evolution in modern
+cosmology is the \(\Lambda\)CDM model \citep{Condon2018}, so named
+after the main components of the universe: the cosmological constant
+\(\Lambda\) and cold dark matter. It has six major citep:Condon2018
+independent \footnote{there can be other equivalent parameter
+sextuplets.} parameters: the physical baryon density
+\(\Omega_\mathrm{b}h^{2}\); the physical (cold) dark matter density
+\(\Omega_\mathrm{c}h^{2}\); the angular parameter
+\(100\theta_\mathrm{s}\); re-ionisation optical depth
+\(\tau_\text{reio}\); power spectrum slope \(n_\mathrm{s}\) and
+amplitude \(\ln (10^{10}A_\mathrm{s})\) \cite{Cosmology}
+
+The task of the present study is to develop better tools for 
+evaluating the agreement of our observations from the Planck mission
+with \(\Lambda\)CDM, estimating the parameters in the process. In
+the language of Bayesian statistics \footnote{See \cite{xkcd} for
+comparison to frequentist statistics.}, our goal is efficient
+Bayesian inference.
+
+While said inference can be executed analytically in principle, it
+is often intractable even when performed numerically. For context,
+the standard \(\Lambda\)CDM inference run requires an HPC cluster
+with at least 128 nodes, each with at least 6GB of memory and an
+equivalent of three full days of operation. To add insult to injury,
+the error margins on the parameters and the evidence, if computed at
+all, are staggering.  Even then such a result requires judicious
+tuning and careful consideration of the model, which at present
+cannot be automated. Equivalent inference for any model other than
+\(\Lambda\)CDM is thus out of reach of most cosmologists. This we
+shall aim to correct.
+
+
+Multiple numerical algorithms exist to perform Bayesian inference:
+Metropolis-Hastings \citep{Metropolis} in conjunction with the Gibbs
+sampler \citep{Metropolis-Hastings-Gibbs}; Hybrid (Hamiltonian)
+Monte Carlo \citep{1701.02434,Duane_1987}, and nested sampling
+\citep{Skilling2006}. Each of these algorithms has different
+advantages: Metropolis Hastings is the fastest at estimating the
+model parameters, at the cost of not evaluating the evidence, which
+is a universal metric of model fitness. 
+
+Additionally, Most inference methods can benefit from proposals, so
+much so that these proposals are often provided with the
+Cosmological inference packages \citep{cobaya}. Nested sampling is
+the exception, because it does not take proposals as separate input,
+and using them as priors may adversely affect the results. Thus,
+most cosmologists nowadays prefer to avoid the expensive but full
+Bayesian inference via Nested Sampling.
+
+ \begin{table}
+  \centering
+  \caption{A non-exhaustive list of major implementations of nested sampling.}
+  \begin{tabular}{lr}
+	  \textbf{Name} & \textbf{Publication}\\
+      \hline
+      \texttt{MultiNest} & \cite{Feroz2009MultiNestAE} \\
+      \texttt{PolyChord} & \cite{polychord} \\
+      \texttt{nestle} & \cite{nestle} \\
+      \texttt{dyNesty} & \cite{Speagle_2020}
+  \end{tabular}
+\end{table}
+\end{document}

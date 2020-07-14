@@ -1,0 +1,91 @@
+#+LATEX_CLASS: mnras
+#+LATEX_CLASS_OPTIONS: [draft,usenatbib]
+#+LATEX_HEADER: \usepackage{pgf}
+#+LATEX_HEADER: \usepackage{pgfplots}
+#+LATEX_HEADER: \usepackage[nameinlink,capitalize,noabbrev]{cleveref}
+#+LATEX_HEADER: \usepackage{bm}
+#+LATEX_HEADER: \usepackage{caption}
+#+LATEX_HEADER: \usepackage{natbib}
+#+BIBLIOGRAPHY: bibliography
+
+* Introduction
+
+  The standard model of the universe and its evolution in modern
+  cosmology is the \(\Lambda\)CDM model \citep{Condon2018}, so named
+  after the main components of the universe: the cosmological constant
+  \(\Lambda\) and cold dark matter. It has six major citep:Condon2018
+  independent [fn::there can be other equivalent parameter
+  sextuplets. ] parameters: the physical baryon density
+  \(\Omega_\mathrm{b}h^{2}\); the physical (cold) dark matter density
+  \(\Omega_\mathrm{c}h^{2}\); the angular parameter
+  \(100\theta_\mathrm{s}\); re-ionisation optical depth
+  \(\tau_\text{reio}\); power spectrum slope \(n_\mathrm{s}\) and
+  amplitude \(\ln (10^{10}A_\mathrm{s})\) \cite{Cosmology}
+
+  The task of the present study is to develop better tools for 
+  evaluating the agreement of our observations from the Planck mission
+  with \(\Lambda\)CDM, estimating the parameters in the process. In
+  the language of Bayesian statistics [fn::See \cite{xkcd} for
+  comparison to frequentist statistics.], our goal is efficient
+  Bayesian inference.
+
+  While said inference can be executed analytically in principle, it
+  is often intractable even when performed numerically. For context,
+  the standard \(\Lambda\)CDM inference run requires an HPC cluster
+  with at least 128 nodes, each with at least 6GB of memory and an
+  equivalent of three full days of operation. To add insult to injury,
+  the error margins on the parameters and the evidence, if computed at
+  all, are staggering.  Even then such a result requires judicious
+  tuning and careful consideration of the model, which at present
+  cannot be automated. Equivalent inference for any model other than
+  \(\Lambda\)CDM is thus out of reach of most cosmologists. This we
+  shall aim to correct.
+
+
+  Multiple numerical algorithms exist to perform Bayesian inference:
+  Metropolis-Hastings \citep{Metropolis} in conjunction with the Gibbs
+  sampler \citep{Metropolis-Hastings-Gibbs}; Hybrid (Hamiltonian)
+  Monte Carlo \citep{1701.02434,Duane_1987}, and nested sampling
+  \citep{Skilling2006}. Each of these algorithms has different
+  advantages: Metropolis Hastings is one of the fastest at estimating
+  the model parameters, at the cost of not evaluating the evidence,
+  which is a universal metric of model fitness.
+
+  It is also well-known that most Bayesian inference methods, like
+  Metropolis-Hastings, can benefit from extra information provided at
+  inference time. This we call proposals as they usually contain
+  information about what we expect the posterior distribution to be
+  for each parameter. It has become standard practice to provide the
+  proposals along with cosmological inference packages, such as
+  =CosmoMC=. However, to date there has been no such mechanism for
+  nested sampling. 
+
+  In the present paper we shall outline the method of /stochastic
+  superpositional mixing/ of /consistent partitions/, demonstrate its
+  efficacy at utilising proposal information. We shall do so by
+  providing a brief overview of Bayesian inference, highlighting the
+  peculiarities of said inference method vital for our method to work.
+
+  #+begin_export latex
+   \begin{table}
+	\centering
+  	\caption{A non-exhaustive list of major implementations of nested sampling.}
+  	\begin{tabular}{lr}
+		\textbf{Name} & \textbf{Publication}\\
+    	\hline
+    	\texttt{MultiNest} & \cite{Feroz2009MultiNestAE} \\
+    	\texttt{PolyChord} & \cite{polychord} \\
+    	\texttt{nestle} & \cite{nestle} \\
+    	\texttt{dyNesty} & \cite{Speagle_2020}
+  	\end{tabular}
+  \end{table}
+  #+end_export
+ 
+  
+  
+
+
+
+* Footnotes
+
+
