@@ -98,7 +98,21 @@ cobaya/run.*.yaml
 */*.input.yaml
 cobaya/run.input.yaml
 <<<<<<< HEAD
-/*.gz
+/cobaya/covs
+/cobaya/bounds.csv
+/cobaya/cobaya
+/cobaya/cobaya with SSIM - CSD3/
+/cobaya/cobaya with SSIM - PC/
+/cobaya/cobaya with iPPR - CSD3/
+/cobaya/cobaya without SSIM/
+/cobaya/means
+/cobaya/newRun/
+/cobaya/paramnames
+/cobaya/raw_polychord_output.tar.xz
+/cobaya/run-SSIM.1.txt
+/cobaya/ssim.1.txt
+/framework/.pdf.png
+/framework/cosmolog_param_cov.py
 =======
 project-report.fdb_latexmk
 project-report.fls
