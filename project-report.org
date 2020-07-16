@@ -96,9 +96,12 @@ prior is both defined and non-zero defines the */prior space/* $\Psi$.
 Finally, the */evidence/* is the probability of the data ${\mathfrak D}$
 assuming the model.
 
-The interactions of probabilities of [[#tab:defs]] is governed by
-\citeauthor{1763}'s theorem: $$\label{eq:bayes} {\cal L}(\bm{\theta})
-\times \pi (\bm{\theta}) = {\cal Z} \times {\cal P} (\bm{\theta}).$$
+The interactions of probabilities of [[defs]] is governed by
+\citeauthor{1763}'s theorem: 
+\[
+\label{eq:bayes} {\cal L}(\bm{\theta})
+\times \pi (\bm{\theta}) = {\cal Z} \times {\cal P} (\bm{\theta}).
+\]
 
 Bayesian inference is the process of reconciling the model ${\cal M}$
 represented in ${\cal L}$ and $\pi$, with observations $\mathfrak{D}$
@@ -116,16 +119,15 @@ distribution of $\bm{u}$ in a unit hypercube to $\pi(\bm{\theta})$ in
 $\Psi$. It is often obtained by inverting the cumulative distribution
 function of the prior.
 
-
+<<defs>>
 | **Term**   | **Symbol**              | **Definition**                                           |
 |------------+-------------------------+----------------------------------------------------------|
 | Prior      | $\pi(\bm{\theta})$      | $P ( \bm{\theta}  \vert {\cal M})$                       |
 | Likelihood | ${\cal L}(\bm{\theta})$ | $P ( \bm{\mathfrak{D}} \vert \bm{\theta} \cap {\cal M})$ |
 | Posterior  | ${\cal P}(\bm{\theta})$ | $P ( \bm{\theta} \vert \bm{\mathfrak{D}} \cap {\cal M})$ |
 | Evidence   | ${\cal Z}$              | $P ( \bm{\mathfrak{D}} \vert {\cal M})$                  |
-#+CAPTION: Definitions of main quantities in Bayesian inference. [tab:defs]
-#+LABEL: tab:defs
-#+custom_ID: tab:defs
+#+CAPTION: Definitions of main quantities in Bayesian inference. 
+
 For \citeauthor{1763}' theorem holds, on the set intersection of the
 domains of all probability density functions. Let $D(f)$ denote the
 domain of the probability density function $f$, i.e. where $f$ is both
@@ -148,7 +150,7 @@ This remark is the cornerstone of our optimisation.
    :END:
 
 ${\cal P}$ is a probability, therefore normalised, which combined with
-[[#eq:bayes][[eq:bayes]]] yields $$\label{eq:def-z}
+cref:eq:bayes yields $$\label{eq:def-z}
   {\cal Z} = \int_{\Psi} {\cal L}(\bm{\theta}) \pi(\bm{\theta}) d\bm{\theta}.$$
 Thus, \citeauthor{1763}'s theorem reduces parameter estimation ---
 obtaining ${\cal P}$ from $\pi$ and ${\cal L}$, to

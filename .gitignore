@@ -120,3 +120,4 @@ supernest.fdb_latexmk
 supernest.fls
 supernest.pdf
 >>>>>>> origin/master
+*.bbl
